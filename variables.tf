@@ -1,3 +1,6 @@
+##########################################
+# Common                                 #
+##########################################
 variable "namespace" {
   description = "A globally unique environment name for blob storage."
   type        = string
@@ -59,3 +62,37 @@ variable "deployment_is_private" {
     description = "If true, the load balancer will be placed in a private subnet, and the kubernetes API server endpoint will be private."
     default     = false
 }
+
+##########################################
+# Database                               #
+##########################################
+variable "db_admin" {
+    type        = string
+    description = "Username for the database instance. NOTE: Database is not publicly accessible by default."
+    default     = "wandb"
+    sensitive   = true
+}
+
+variable "db_password" {
+    type        = string
+    description = "Password for the database instance. NOTE: Database is not publicly accessible by default."
+    sensitive   = true
+}
+
+variable "mysql_version" {
+    type        = string
+    description = "Choose between 5.7 and 8.0 versions"
+    default     = "8.0"
+}
+
+##########################################
+# AKS                                    #
+##########################################
+
+##########################################
+# Blob Storage                           #
+##########################################
+
+##########################################
+# Logs Storage                           #
+##########################################
