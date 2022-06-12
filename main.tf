@@ -39,3 +39,9 @@ module "database" {
       azurerm_resource_group.wandb
     ]
 }
+
+module "file_storage" {
+    source = "./modules/file_storage"
+    namespace = var.namespace
+    region = var.region
+}
