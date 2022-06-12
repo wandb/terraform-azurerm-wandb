@@ -7,26 +7,25 @@ locals {
   request_routing_rule_name      = "${azurerm_virtual_network.wandb.name}-rqrt"
   redirect_configuration_name    = "${azurerm_virtual_network.wandb.name}-rdrcfg"
   # TODO: this might break if Azure changes the name
-  app_gateway_uid_name = "ingressapplicationgateway-${var.namespace}-k8s"
-  app_gateway_subnet_name = "${var.namespace}-appgw-subnet"
-  k8s_gateway_subnet_name = "${var.namespace}-k8s-subnet"
+  app_gateway_uid_name           = "ingressapplicationgateway-${var.namespace}-k8s"
+  app_gateway_subnet_name        = "${var.namespace}-appgw-subnet"
+  k8s_gateway_subnet_name        = "${var.namespace}-k8s-subnet"
 }
 
-resource "azurerm_resource_group" "wandb" {
-  name     = var.namespace
-  location = var.region
+data "azurerm_resource_group" "wandb" {
+    name  = "${var.namespace}"
 }
 
 resource "azurerm_virtual_network" "wandb" {
-  name                = "${var.namespace}-vpc"
+  name                = "${var.namespace}-vnet"
   address_space       = [var.vpc_cidr_block]
-  location            = azurerm_resource_group.wandb.location
-  resource_group_name = azurerm_resource_group.wandb.name
+  location            = data.azurerm_resource_group.wandb.location
+  resource_group_name = data.azurerm_resource_group.wandb.name
 }
 
 resource "azurerm_subnet" "backend" {
   name                 = local.k8s_gateway_subnet_name
-  resource_group_name  = azurerm_resource_group.wandb.name
+  resource_group_name  = data.azurerm_resource_group.wandb.name
   virtual_network_name = azurerm_virtual_network.wandb.name
   address_prefixes     = [var.private_subnet_cidrs]
 
@@ -37,7 +36,7 @@ resource "azurerm_subnet" "backend" {
 
 resource "azurerm_subnet" "frontend" {
   name                 = local.app_gateway_subnet_name
-  resource_group_name  = azurerm_resource_group.wandb.name
+  resource_group_name  = data.azurerm_resource_group.wandb.name
   virtual_network_name = azurerm_virtual_network.wandb.name
   address_prefixes     = [var.public_subnet_cidrs]
 }
@@ -45,16 +44,16 @@ resource "azurerm_subnet" "frontend" {
 resource "azurerm_public_ip" "wandb" {
   name                = "wandb-public-ip"
   sku                 = "Standard"
-  location            = azurerm_resource_group.wandb.location
-  resource_group_name = azurerm_resource_group.wandb.name
+  location            = data.azurerm_resource_group.wandb.location
+  resource_group_name = data.azurerm_resource_group.wandb.name
   allocation_method   = "Static"
   domain_name_label   = var.namespace
 }
 
 resource "azurerm_web_application_firewall_policy" "wandb" {
   name                = "wandb-wafpolicy"
-  resource_group_name = azurerm_resource_group.wandb.name
-  location            = azurerm_resource_group.wandb.location
+  resource_group_name = data.azurerm_resource_group.wandb.name
+  location            = data.azurerm_resource_group.wandb.location
   tags                = {}
 
   custom_rules {
@@ -140,8 +139,8 @@ resource "azurerm_network_security_group" "wandb" {
   # This rule blocks all internet access to the gateway and is only used if
   # var.deployment_is_private
   name                = "wandb-private-deployment-security-group"
-  location            = azurerm_resource_group.wandb.location
-  resource_group_name = azurerm_resource_group.wandb.name
+  location            = data.azurerm_resource_group.wandb.location
+  resource_group_name = data.azurerm_resource_group.wandb.name
 
   security_rule {
     name                       = "asg-required-management-ports"
@@ -164,8 +163,8 @@ resource "azurerm_subnet_network_security_group_association" "wandb" {
 
 resource "azurerm_application_gateway" "wandb" {
   name                = "wandb-appgateway"
-  resource_group_name = azurerm_resource_group.wandb.name
-  location            = azurerm_resource_group.wandb.location
+  resource_group_name = data.azurerm_resource_group.wandb.name
+  location            = data.azurerm_resource_group.wandb.location
 
   sku {
     name     = var.use_web_application_firewall ? "WAF_v2" : "Standard_v2"
@@ -253,7 +252,7 @@ resource "azurerm_application_gateway" "wandb" {
 
 data "azurerm_application_gateway" "wandb" {
   name                = "wandb-appgateway"
-  resource_group_name = azurerm_resource_group.wandb.name
+  resource_group_name = data.azurerm_resource_group.wandb.name
 
   depends_on = [
     azurerm_application_gateway.wandb
