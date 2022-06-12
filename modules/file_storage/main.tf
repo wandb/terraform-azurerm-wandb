@@ -42,7 +42,6 @@ resource "azurerm_eventgrid_system_topic" "wandb" {
 
 resource "azurerm_eventgrid_system_topic_event_subscription" "wandb" {
   name = "wandb-file-metadata-subscription"
-  # scope                = data.azurerm_resource_group.wandb.id
   system_topic         = azurerm_eventgrid_system_topic.wandb.name
   resource_group_name  = data.azurerm_resource_group.wandb.name
   included_event_types = ["Microsoft.Storage.BlobCreated"]

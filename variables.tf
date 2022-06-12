@@ -88,6 +88,11 @@ variable "mysql_version" {
 ##########################################
 # AKS                                    #
 ##########################################
+variable "kubernetes_api_is_private" {
+  description = "If true, the kubernetes API server endpoint will be private."
+  type        = bool
+  default     = false
+}
 
 ##########################################
 # File Storage                           #

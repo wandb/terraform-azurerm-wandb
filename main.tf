@@ -45,3 +45,11 @@ module "file_storage" {
     namespace = var.namespace
     region = var.region
 }
+
+module "app_aks" {
+    source = "./modules/app_aks"
+    namespace = var.namespace
+    region = var.region
+
+    kubernetes_api_is_private = var.kubernetes_api_is_private
+}
