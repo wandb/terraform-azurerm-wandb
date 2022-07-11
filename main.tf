@@ -1,9 +1,14 @@
-locals {
-  fqdn = var.subdomain == null ? var.domain_name : "${var.subdomain}.${var.domain_name}"
+
+resource "azurerm_resource_group" "default" {
+  name     = var.namespace
+  location = var.location
 }
 
-module "storage" {
-    count = local.create_bucket ? 1 : 0
-    source = "./modules/storage"
-    namespace = var.namespace
+module "database" {
+  source              = "./modules/database"
+  namespace           = var.namespace
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+
+  database_version = var.database_version
 }
