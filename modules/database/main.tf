@@ -20,36 +20,45 @@ locals {
   master_instance_name = "${var.namespace}-${random_pet.mysql.id}"
 }
 
-resource "azurerm_mysql_server" "default" {
-  name                = var.database_name
+resource "azurerm_mysql_flexible_server" "default" {
+  name                = local.master_instance_name
   location            = var.location
   resource_group_name = var.resource_group_name
 
-  administrator_login          = var.master_username
-  administrator_login_password = var.master_password
+  administrator_login    = local.master_username
+  administrator_password = local.master_password
 
   sku_name = var.sku_name
   version  = var.database_version
 
-  storage_mb        = 5120
-  auto_grow_enabled = true
+  delegated_subnet_id = var.database_subnet_id
+  private_dns_zone_id = var.database_private_dns_zone_id
 
-  backup_retention_days             = 14
-  geo_redundant_backup_enabled      = false
-  infrastructure_encryption_enabled = true
-  public_network_access_enabled     = false
-  ssl_enforcement_enabled           = true
-  ssl_minimal_tls_version_enforced  = "TLS1_2"
+  backup_retention_days        = 14
+  geo_redundant_backup_enabled = false
 
-  lifecycle {
-    ignore_changes = [storage_mb]
+  zone = "1"
+
+  ingress_application_gateway {
+
   }
+
+  # high_availability {
+  #   mode = var.database_availability_mode
+  # }
+
+  storage {
+    auto_grow_enabled = true
+  }
+
+  tags = var.tags
 }
 
-resource "azurerm_mysql_database" "default" {
-  name                = "wandb"
-  resource_group_name = var.azurerm_resource_group
-  server_name         = azurerm_mysql_server.default.name
+resource "azurerm_mysql_flexible_database" "default" {
+  name                = local.database_name
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_mysql_flexible_server.default.name
   charset             = "utf8mb4"
   collation           = "utf8mb4_general_ci"
+
 }

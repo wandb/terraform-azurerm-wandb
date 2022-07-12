@@ -10,6 +10,12 @@ variable "location" {
   type = string
 }
 
+variable "tags" {
+  default     = {}
+  type        = map(string)
+  description = "Map of tags for resource"
+}
+
 variable "deletion_protection" {
   description = "If the instance should have deletion protection enabled. The database / Bucket can't be deleted when this value is set to `true`."
   type        = bool
@@ -88,11 +94,11 @@ variable "ssl" {
 variable "database_version" {
   description = "Version for MySQL"
   type        = string
-  default     = "8.0"
+  default     = "8.0.21"
 
   validation {
-    condition     = contains(["5.7", "8.0"], var.database_version)
-    error_message = "We only support MySQL: \"5.7\"; \"8.0\"."
+    condition     = contains(["5.7", "8.0.21"], var.database_version)
+    error_message = "We only support MySQL: \"5.7\"; \"8.0.21\"."
   }
 }
 
