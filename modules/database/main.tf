@@ -39,10 +39,6 @@ resource "azurerm_mysql_flexible_server" "default" {
 
   zone = "1"
 
-  ingress_application_gateway {
-
-  }
-
   # high_availability {
   #   mode = var.database_availability_mode
   # }
