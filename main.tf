@@ -1,3 +1,10 @@
+locals {
+  fqdn                  = var.subdomain == null ? var.domain_name : "${var.subdomain}.${var.domain_name}"
+  url_prefix            = var.ssl ? "https" : "http"
+  url                   = "${local.url_prefix}://${local.fqdn}"
+  create_blob_container = var.blob_container == ""
+}
+
 
 resource "azurerm_resource_group" "default" {
   name     = var.namespace
@@ -49,32 +56,37 @@ module "storage" {
   tags = var.tags
 }
 
-# module "aks_app" {
-#   source  = "wandb/wandb/kubernetes"
-#   version = "1.1.2"
+locals {
+  blob_container = local.create_blob_container ? "${module.storage.account.name}/${module.storage.container.name}" : var.blob_container
+  queue          = var.use_internal_queue ? "internal://" : "az://${module.storage.account.name}/${module.storage.queue.name}"
+}
 
-#   license = var.license
+module "aks_app" {
+  source  = "wandb/wandb/kubernetes"
+  version = "1.1.2"
 
-#   host                       = local.url
-#   bucket                     = "gs://${local.bucket}"
-#   bucket_queue               = local.bucket_queue
-#   database_connection_string = "mysql://${module.database.connection_string}"
-#   redis_connection_string    = local.redis_connection_string
-#   redis_ca_cert              = local.redis_certificate
+  license = var.license
 
-#   oidc_client_id   = var.oidc_client_id
-#   oidc_issuer      = var.oidc_issuer
-#   oidc_auth_method = var.oidc_auth_method
+  host                       = local.url
+  bucket                     = "az://${local.blob_container}"
+  bucket_queue               = local.queue
+  database_connection_string = "mysql://${module.database.connection_string}"
+  # redis_connection_string    = local.redis_connection_string
+  # redis_ca_cert              = local.redis_certificate
 
-#   wandb_image   = var.wandb_image
-#   wandb_version = var.wandb_version
+  oidc_client_id   = var.oidc_client_id
+  oidc_issuer      = var.oidc_issuer
+  oidc_auth_method = var.oidc_auth_method
 
-#   # If we dont wait, tf will start trying to deploy while the work group is
-#   # still spinning up
-#   depends_on = [
-#     module.database,
-#     module.redis,
-#     module.storage,
-#     module.app_aks
-#   ]
-# }
+  wandb_image   = var.wandb_image
+  wandb_version = var.wandb_version
+
+  # If we dont wait, tf will start trying to deploy while the work group is
+  # still spinning up
+  depends_on = [
+    module.database,
+    # module.redis,
+    module.storage,
+    module.app_aks
+  ]
+}

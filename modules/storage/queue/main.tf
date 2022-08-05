@@ -1,10 +1,10 @@
 resource "azurerm_storage_queue" "default" {
-  name                 = "wandb-file-metadata"
+  name                 = "${var.namespace}-file-metadata"
   storage_account_name = var.storage_account.name
 }
 
 resource "azurerm_eventgrid_system_topic" "default" {
-  name                   = "wandb-file-metadata-topic"
+  name                   = "${var.namespace}-file-metadata"
   location               = var.location
   resource_group_name    = var.resource_group_name
   source_arm_resource_id = var.storage_account.id
@@ -12,10 +12,10 @@ resource "azurerm_eventgrid_system_topic" "default" {
 }
 
 resource "azurerm_eventgrid_system_topic_event_subscription" "default" {
-  name = "wandb-file-metadata-subscription"
-  # scope                = azurerm_resource_group.wandb.id
+  name = "${var.namespace}-file-metadata"
+
   system_topic         = azurerm_eventgrid_system_topic.default.name
-  resource_group_name  = var.storage_account.name
+  resource_group_name  = var.resource_group_name
   included_event_types = ["Microsoft.Storage.BlobCreated"]
 
   subject_filter {

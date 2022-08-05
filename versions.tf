@@ -1,9 +1,9 @@
 terraform {
   required_version = "~> 1.0"
   required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "~> 3.13"
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.17"
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"

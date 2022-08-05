@@ -117,7 +117,7 @@ variable "create_redis" {
 # Most users will not need these settings. They are ment for users who want a
 # bucket in a different account.
 
-variable "bucket_name" {
+variable "blob_container" {
   type        = string
   description = "Use an existing bucket."
   default     = ""

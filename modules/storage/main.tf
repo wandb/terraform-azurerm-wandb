@@ -23,10 +23,10 @@ resource "azurerm_storage_container" "default" {
   container_access_type = "private"
 }
 
-module "pubsub" {
+module "queue" {
   count = var.create_queue ? 1 : 0
 
-  source    = "./pubsub"
+  source    = "./queue"
   namespace = var.namespace
 
   resource_group_name = var.resource_group_name
