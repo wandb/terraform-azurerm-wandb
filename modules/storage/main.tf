@@ -15,6 +15,16 @@ resource "azurerm_storage_account" "default" {
       max_age_in_seconds = 3600
     }
   }
+
+  queue_properties {
+    logging {
+      delete                = true
+      read                  = true
+      write                 = true
+      version               = "1.0"
+      retention_policy_days = 10
+    }
+  }
 }
 
 resource "azurerm_storage_container" "default" {
