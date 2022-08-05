@@ -9,6 +9,15 @@ provider "kubernetes" {
   client_certificate     = base64decode(module.wandb.cluster_client_certificate)
 }
 
+provider "helm" {
+  kubernetes {
+    host                   = module.wandb.cluster_host
+    cluster_ca_certificate = base64decode(module.wandb.cluster_ca_certificate)
+    client_key             = base64decode(module.wandb.cluster_client_key)
+    client_certificate     = base64decode(module.wandb.cluster_client_certificate)
+  }
+}
+
 # Spin up all required services
 module "wandb" {
   source = "../../"

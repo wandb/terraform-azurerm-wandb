@@ -61,6 +61,17 @@ locals {
   queue          = var.use_internal_queue ? "internal://" : "az://${module.storage.account.name}/${module.storage.queue.name}"
 }
 
+module "cert_manager" {
+  source = "./modules/cert_manager"
+
+  ingress_class              = "azure/application-gateway"
+  cert_manager_email         = "sysadmin@wandb.com"
+  cert_manager_chart_version = "v1.9.1"
+  tags                       = var.tags
+
+  depends_on = [module.aks_app]
+}
+
 module "app_lb" {
   source              = "./modules/app_lb"
   namespace           = var.namespace
@@ -68,6 +79,8 @@ module "app_lb" {
   location            = azurerm_resource_group.default.location
   network             = module.networking.network
   public_subnet       = module.networking.public_subnet
+
+  depends_on = [module.cert_manager]
 }
 
 # module "aks_app" {

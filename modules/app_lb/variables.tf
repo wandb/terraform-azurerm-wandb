@@ -22,3 +22,14 @@ variable "network" {
 variable "public_subnet" {
   type = object({ id = string })
 }
+
+variable "create_kubernetes_ingress" {
+  type    = bool
+  default = true
+}
+
+variable "tags" {
+  default     = {}
+  type        = map(string)
+  description = "Map of tags for resource"
+}
