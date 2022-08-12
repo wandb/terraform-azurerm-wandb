@@ -36,13 +36,20 @@ module "database" {
 }
 
 module "storage" {
-  source = "./modules/storage"
-
+  source              = "./modules/storage"
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
+  tags                = var.tags
+}
 
-  tags = var.tags
+module "app_lb" {
+  source              = "./modules/app_lb"
+  namespace           = var.namespace
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+  network             = module.networking.network
+  public_subnet       = module.networking.public_subnet
 }
 
 module "app_aks" {
@@ -51,7 +58,7 @@ module "app_aks" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
-  storage_account   = module.storage.account
+  gateway           = module.app_lb.gateway
   cluster_subnet_id = module.networking.private_subnet.id
 
   tags = var.tags
@@ -108,14 +115,9 @@ module "cert_manager" {
   depends_on = [module.app_aks]
 }
 
-module "app_lb" {
-  source              = "./modules/app_lb"
-  fqdn                = local.fqdn
-  namespace           = var.namespace
-  resource_group_name = azurerm_resource_group.default.name
-  location            = azurerm_resource_group.default.location
-  network             = module.networking.network
-  public_subnet       = module.networking.public_subnet
+module "app_ingress" {
+  source = "./modules/app_ingress"
+  fqdn   = local.fqdn
 
   depends_on = [
     module.aks_app,

@@ -18,11 +18,9 @@ variable "cluster_subnet_id" {
   description = "Network subnet id for cluster"
 }
 
-variable "storage_account" {
-  type        = object({ id = string })
-  description = "Storage account to grant aks access too."
+variable "gateway" {
+  type = object({ id = string })
 }
-
 
 variable "tags" {
   default     = {}

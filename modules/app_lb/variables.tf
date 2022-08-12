@@ -1,8 +1,3 @@
-variable "fqdn" {
-  type        = string
-  description = "Fully qualified domain name."
-}
-
 variable "namespace" {
   type        = string
   description = "Friendly name prefix used for tagging and naming Azure resources."
@@ -26,11 +21,6 @@ variable "network" {
 
 variable "public_subnet" {
   type = object({ id = string })
-}
-
-variable "create_kubernetes_ingress" {
-  type    = bool
-  default = true
 }
 
 variable "tags" {
