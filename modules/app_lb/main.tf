@@ -18,31 +18,16 @@ locals {
   redirect_configuration_name    = "${var.network.name}-rdrcfg"
 }
 
-resource "azurerm_web_application_firewall_policy" "default" {
-  name                = "${var.namespace}-wafpolicy"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-
-  managed_rules {
-    managed_rule_set {
-      version = "3.2"
-    }
-  }
-
-  tags = var.tags
-}
-
 resource "azurerm_application_gateway" "default" {
   name                = "${var.namespace}-ag"
   resource_group_name = var.resource_group_name
   location            = var.location
 
-  tags               = var.tags
-  firewall_policy_id = azurerm_web_application_firewall_policy.default.id
+  tags = var.tags
 
   sku {
-    name = "WAF_v2"
-    tier = "WAF_v2"
+    name = "Standard_v2"
+    tier = "Standard_v2"
   }
 
   autoscale_configuration {
@@ -116,49 +101,52 @@ resource "azurerm_application_gateway" "default" {
 
 locals {
   deployment_is_private = false
+  ssl_certificate_name  = null
+  tls_secret_name       = null
+  host                  = ""
 }
 
-resource "kubernetes_ingress" "wandb_ingress" {
-  count                  = var.enabled ? 1 : 0
-  wait_for_load_balancer = true
-  metadata {
-    name = "wandb"
-    annotations = {
-      "kubernetes.io/ingress.class"                       = "azure/application-gateway"
-      "appgw.ingress.kubernetes.io/appgw-ssl-certificate" = var.ssl_certificate_name
-      "appgw.ingress.kubernetes.io/use-private-ip"        = local.deployment_is_private ? "true" : null
-      "cert-manager.io/cluster-issuer"                    = local.deployment_is_private ? null : "issuer-letsencrypt-prod"
-      "cert-manager.io/acme-challenge-type"               = local.deployment_is_private ? null : "http01"
-    }
-  }
-  spec {
-    tls {
-      hosts       = local.deployment_is_private ? null : [local.host]
-      secret_name = local.deployment_is_private ? null : var.tls_secret_name
-    }
-    rule {
-      http {
-        path {
-          path = "/"
-          backend {
-            service_name = "wandb"
-            service_port = 80
-          }
-        }
-      }
-    }
-    rule {
-      host = local.host
-      http {
-        path {
-          path = "/"
-          backend {
-            service_name = "wandb"
-            service_port = 80
-          }
-        }
-      }
-    }
-  }
-}
+# resource "kubernetes_ingress" "wandb_ingress" {
+#   count                  = var.create_kubernetes_ingress ? 1 : 0
+#   wait_for_load_balancer = true
+#   metadata {
+#     name = "wandb"
+#     annotations = {
+#       "kubernetes.io/ingress.class"                       = "azure/application-gateway"
+#       "appgw.ingress.kubernetes.io/appgw-ssl-certificate" = local.ssl_certificate_name
+#       "appgw.ingress.kubernetes.io/use-private-ip"        = local.deployment_is_private ? "true" : null
+#       "cert-manager.io/cluster-issuer"                    = local.deployment_is_private ? null : "issuer-letsencrypt-prod"
+#       "cert-manager.io/acme-challenge-type"               = local.deployment_is_private ? null : "http01"
+#     }
+#   }
+#   spec {
+#     tls {
+#       hosts       = local.deployment_is_private ? null : [local.host]
+#       secret_name = local.deployment_is_private ? null : local.tls_secret_name
+#     }
+#     rule {
+#       http {
+#         path {
+#           path = "/"
+#           backend {
+#             service_name = "wandb"
+#             service_port = 80
+#           }
+#         }
+#       }
+#     }
+#     rule {
+#       host = local.host
+#       http {
+#         path {
+#           path = "/"
+#           backend {
+#             service_name = "wandb"
+#             service_port = 80
+#           }
+#         }
+#       }
+#     }
+#   }
+# }
 

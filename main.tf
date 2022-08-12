@@ -62,14 +62,15 @@ locals {
 }
 
 module "cert_manager" {
-  source = "./modules/cert_manager"
+  source    = "./modules/cert_manager"
+  namespace = var.namespace
 
   ingress_class              = "azure/application-gateway"
   cert_manager_email         = "sysadmin@wandb.com"
   cert_manager_chart_version = "v1.9.1"
   tags                       = var.tags
 
-  depends_on = [module.aks_app]
+  depends_on = [module.app_aks]
 }
 
 module "app_lb" {
@@ -110,6 +111,6 @@ module "app_lb" {
 #     # module.redis,
 #     module.storage,
 #     module.app_aks,
-#     # module.app_lb,
+#     module.app_lb,
 #   ]
 # }
