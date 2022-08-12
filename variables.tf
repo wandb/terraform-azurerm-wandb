@@ -24,7 +24,7 @@ variable "deletion_protection" {
 
 variable "use_internal_queue" {
   type        = bool
-  description = "Uses an internal redis queue instead of using azure pubsub."
+  description = "Uses an internal redis queue instead of using azure queue."
   default     = false
 }
 

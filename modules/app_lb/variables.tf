@@ -1,3 +1,8 @@
+variable "fqdn" {
+  type        = string
+  description = "Fully qualified domain name."
+}
+
 variable "namespace" {
   type        = string
   description = "Friendly name prefix used for tagging and naming Azure resources."

@@ -29,3 +29,15 @@ resource "azurerm_kubernetes_cluster" "default" {
 
   tags = var.tags
 }
+
+resource "azurerm_role_assignment" "storage" {
+  scope                = var.storage_account.id
+  role_definition_name = "Storage Blob Data Owner"
+  principal_id         = azurerm_kubernetes_cluster.default.identity.0.principal_id
+}
+
+resource "azurerm_role_assignment" "storage2" {
+  scope                = var.storage_account.id
+  role_definition_name = "Storage Blob Data Owner"
+  principal_id         = azurerm_kubernetes_cluster.default.kubelet_identity.0.object_id
+}
