@@ -60,7 +60,6 @@ resources that lack official modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_user_assigned_identity.wandb](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/user_assigned_identity) | data source |
 
 ## Inputs
 
