@@ -60,6 +60,13 @@ resource "azurerm_application_gateway" "default" {
     public_ip_address_id = azurerm_public_ip.default.id
   }
 
+  frontend_ip_configuration {
+    name                          = "${local.frontend_ip_configuration_name}-private"
+    subnet_id                     = var.public_subnet.id
+    private_ip_address_allocation = "Static"
+    private_ip_address            = "10.10.0.10"
+  }
+
   backend_address_pool {
     name = local.backend_address_pool_name
   }

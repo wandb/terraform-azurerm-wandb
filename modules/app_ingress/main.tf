@@ -2,12 +2,14 @@ locals {
   deployment_is_private = false
   ssl_certificate_name  = null
   tls_secret_name       = "wandb-ssl-cert"
-  host                  = var.fqdn
+  host                  = trimprefix(trimprefix(var.fqdn, "https://"), "http://")
   service_name          = "wandb"
-  service_port          = 80
+  service_port          = 8080
 }
 
 resource "kubernetes_ingress_v1" "default" {
+  wait_for_load_balancer = true
+  
   metadata {
     name = "wandb"
     annotations = {
