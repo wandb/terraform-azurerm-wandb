@@ -44,12 +44,12 @@ module "storage" {
 }
 
 module "app_lb" {
-  source              = "./modules/app_lb"
-  namespace           = var.namespace
-  resource_group_name = azurerm_resource_group.default.name
-  location            = azurerm_resource_group.default.location
-  network             = module.networking.network
-  public_subnet       = module.networking.public_subnet
+  source         = "./modules/app_lb"
+  namespace      = var.namespace
+  resource_group = azurerm_resource_group.default
+  location       = azurerm_resource_group.default.location
+  network        = module.networking.network
+  public_subnet  = module.networking.public_subnet
 }
 
 module "app_aks" {
@@ -62,6 +62,12 @@ module "app_aks" {
   cluster_subnet_id = module.networking.private_subnet.id
 
   tags = var.tags
+}
+
+locals {
+  cluster_identity_principal_id = module.app_aks.cluster.identity.0.principal_id
+  # TODO: this might break if Azure changes the name
+  app_gateway_uid_name = "ingressapplicationgateway-${var.namespace}-k8s"
 }
 
 locals {

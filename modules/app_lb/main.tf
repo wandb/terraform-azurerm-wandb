@@ -1,6 +1,27 @@
+resource "azurerm_user_assigned_identity" "default" {
+  resource_group_name = var.resource_group.name
+  location            = var.resource_group.location
+
+  name = "${var.namespace}-ag-identity"
+
+  tags = var.tags
+}
+
+resource "azurerm_role_assignment" "contributor" {
+  scope                = azurerm_application_gateway.default.id
+  role_definition_name = "Contributor"
+  principal_id         = azurerm_user_assigned_identity.default.principal_id
+}
+
+resource "azurerm_role_assignment" "reader" {
+  scope                = var.resource_group.id
+  role_definition_name = "Reader"
+  principal_id         = azurerm_user_assigned_identity.default.principal_id
+}
+
 resource "azurerm_public_ip" "default" {
   name                = "${var.namespace}-public-ip"
-  resource_group_name = var.resource_group_name
+  resource_group_name = var.resource_group.name
   location            = var.location
   sku                 = "Standard"
   allocation_method   = "Static"
@@ -20,10 +41,15 @@ locals {
 
 resource "azurerm_application_gateway" "default" {
   name                = "${var.namespace}-ag"
-  resource_group_name = var.resource_group_name
+  resource_group_name = var.resource_group.name
   location            = var.location
 
   tags = var.tags
+
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.default.id]
+  }
 
   sku {
     name = "Standard_v2"

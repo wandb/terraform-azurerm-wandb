@@ -8,8 +8,6 @@ locals {
 }
 
 resource "kubernetes_ingress_v1" "default" {
-  wait_for_load_balancer = true
-
   metadata {
     name = "wandb"
     annotations = {
@@ -55,7 +53,8 @@ resource "kubernetes_ingress_v1" "default" {
       host = local.host
       http {
         path {
-          path = "/"
+          path      = "/"
+          path_type = "Prefix"
           backend {
             service {
               name = local.service_name
@@ -69,4 +68,3 @@ resource "kubernetes_ingress_v1" "default" {
     }
   }
 }
-
