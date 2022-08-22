@@ -53,21 +53,17 @@ module "app_lb" {
 }
 
 module "app_aks" {
-  source              = "./modules/app_aks"
-  namespace           = var.namespace
-  resource_group_name = azurerm_resource_group.default.name
-  location            = azurerm_resource_group.default.location
+  source         = "./modules/app_aks"
+  namespace      = var.namespace
+  resource_group = azurerm_resource_group.default
+  location       = azurerm_resource_group.default.location
 
   gateway           = module.app_lb.gateway
   cluster_subnet_id = module.networking.private_subnet.id
 
   tags = var.tags
-}
 
-locals {
-  cluster_identity_principal_id = module.app_aks.cluster.identity.0.principal_id
-  # TODO: this might break if Azure changes the name
-  app_gateway_uid_name = "ingressapplicationgateway-${var.namespace}-k8s"
+  depends_on = [module.app_lb]
 }
 
 locals {
@@ -122,8 +118,8 @@ module "cert_manager" {
 }
 
 module "app_ingress" {
-  source = "./modules/app_ingress"
-  fqdn   = local.fqdn
+  source    = "./modules/app_ingress"
+  fqdn      = local.fqdn
   namespace = var.namespace
 
   depends_on = [

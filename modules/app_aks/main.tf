@@ -1,7 +1,7 @@
 resource "azurerm_kubernetes_cluster" "default" {
   name                = "${var.namespace}-cluster"
   location            = var.location
-  resource_group_name = var.resource_group_name
+  resource_group_name = var.resource_group.name
   dns_prefix          = var.namespace
 
   automatic_channel_upgrade         = "stable"
@@ -46,3 +46,19 @@ resource "azurerm_kubernetes_cluster" "default" {
 #   role_definition_name = "Storage Blob Data Owner"
 #   principal_id         = azurerm_kubernetes_cluster.default.kubelet_identity.0.object_id
 # }
+
+locals {
+  ingress_gateway_principal_id = azurerm_kubernetes_cluster.default.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
+}
+
+resource "azurerm_role_assignment" "contributor" {
+  scope                = var.gateway.id
+  role_definition_name = "Contributor"
+  principal_id         = local.ingress_gateway_principal_id
+}
+
+resource "azurerm_role_assignment" "reader" {
+  scope                = var.resource_group.id
+  role_definition_name = "Reader"
+  principal_id         = local.ingress_gateway_principal_id
+}

@@ -3,9 +3,9 @@ variable "namespace" {
   description = "Friendly name prefix used for tagging and naming Azure resources."
 }
 
-variable "resource_group_name" {
-  type        = string
-  description = "Specifies the Resource Group where the Managed Kubernetes Cluster should exist."
+variable "resource_group" {
+  type        = object({ name = string, id = string })
+  description = "Resource Group where the Managed Kubernetes Cluster should exist."
 }
 
 variable "location" {
