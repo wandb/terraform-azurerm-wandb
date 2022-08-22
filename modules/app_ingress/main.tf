@@ -8,7 +8,7 @@ locals {
 }
 
 resource "kubernetes_ingress_v1" "default" {
-  wait_for_load_balancer = true
+  wait_for_load_balancer = false
 
   metadata {
     name = "wandb"

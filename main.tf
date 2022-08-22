@@ -72,7 +72,7 @@ locals {
 }
 
 module "aks_app" {
-  source = "github.com/wandb/terraform-kubernetes-wandb?ref=genericenv"
+  source = "github.com/wandb/terraform-kubernetes-wandb"
 
   license = var.license
 
