@@ -109,6 +109,29 @@ module "aks_app" {
   ]
 }
 
+data "azurerm_user_assigned_identity" "wandb" {
+  resource_group_name = module.app_aks.cluster.node_resource_group
+  # The ingress_application_gateway creates a user identity with this name
+  # TODO: Figure out how to not rely on this convention
+  name = "ingressapplicationgateway-${module.app_aks.cluster.name}"
+}
+
+resource "azurerm_role_assignment" "ra3" {
+  scope                = module.app_lb.gateway.id
+  role_definition_name = "Contributor"
+  # TODO: we can likely use: data.azurerm_application_gateway.wandb.identity.identity_ids ?
+  principal_id = data.azurerm_user_assigned_identity.wandb.principal_id
+  depends_on   = [module.app_aks, module.app_lb]
+}
+
+resource "azurerm_role_assignment" "ra4" {
+  scope                = azurerm_resource_group.default.id
+  role_definition_name = "Reader"
+  # TODO: we can likely use: data.azurerm_application_gateway.wandb.identity.identity_ids ?
+  principal_id = data.azurerm_user_assigned_identity.wandb.principal_id
+  depends_on   = [module.app_aks, module.app_lb]
+}
+
 module "cert_manager" {
   source    = "./modules/cert_manager"
   namespace = var.namespace

@@ -6,7 +6,7 @@ resource "azurerm_kubernetes_cluster" "default" {
 
   automatic_channel_upgrade         = "stable"
   role_based_access_control_enabled = true
-  http_application_routing_enabled  = true
+  http_application_routing_enabled  = false
 
   ingress_application_gateway {
     gateway_id = var.gateway.id
