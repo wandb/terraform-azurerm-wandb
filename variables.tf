@@ -94,11 +94,22 @@ variable "ssl" {
 variable "database_version" {
   description = "Version for MySQL"
   type        = string
-  default     = "8.0.21"
+  default     = "5.7"
 
   validation {
     condition     = contains(["5.7", "8.0.21"], var.database_version)
     error_message = "We only support MySQL: \"5.7\"; \"8.0.21\"."
+  }
+}
+
+variable "database_availability_mode" {
+  description = ""
+  type        = string
+  default     = "SameZone"
+
+  validation {
+    condition     = contains(["ZoneRedundant", "SameZone"], var.database_availability_mode)
+    error_message = "Possible values: \"ZoneRedundant\"; \"SameZone\"."
   }
 }
 

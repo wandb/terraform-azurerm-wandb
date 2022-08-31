@@ -28,6 +28,7 @@ module "database" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
+  database_availability_mode   = var.database_availability
   database_version             = var.database_version
   database_private_dns_zone_id = module.networking.database_private_dns_zone.id
   database_subnet_id           = module.networking.database_subnet.id

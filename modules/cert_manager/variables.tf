@@ -7,7 +7,7 @@ variable "namespace" {
 variable "acme_server" {
   type        = string
   description = "The acme server to use. ACME Production server: https://acme-v02.api.letsencrypt.org/directory and ACME Staging: https://acme-staging-v02.api.letsencrypt.org/directory"
-  default     = "https://acme-staging-v02.api.letsencrypt.org/directory"
+  default     = "https://acme-v02.api.letsencrypt.org/directory"
 }
 
 variable "cert_manager_email" {
