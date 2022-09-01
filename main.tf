@@ -36,6 +36,8 @@ module "database" {
   deletion_protection = var.deletion_protection
 
   tags = var.tags
+
+  depends_on = [module.networking]
 }
 
 module "storage" {
