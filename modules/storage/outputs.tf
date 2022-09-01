@@ -7,5 +7,5 @@ output "container" {
 }
 
 output "queue" {
-  value = module.queue.0.queue
+  value = var.create_queue ? module.queue.0.queue : null
 }
