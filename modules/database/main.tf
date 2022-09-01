@@ -37,8 +37,12 @@ resource "azurerm_mysql_flexible_server" "default" {
   backup_retention_days        = 14
   geo_redundant_backup_enabled = false
 
-  high_availability {
-    mode = var.database_availability_mode
+  dynamic "high_availability" {
+    for_each = var.database_availability_mode == "ZoneRedundant" ? ["ZoneRedundant"] : []
+
+    content {
+      mode = var.database_availability_mode
+    }
   }
 
   storage {
