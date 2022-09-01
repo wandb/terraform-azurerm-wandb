@@ -37,12 +37,8 @@ resource "azurerm_mysql_flexible_server" "default" {
   backup_retention_days        = 14
   geo_redundant_backup_enabled = false
 
-  dynamic "high_availability" {
-    for_each = var.database_availability_mode == "ZoneRedundant" ? ["ZoneRedundant"] : []
-
-    content {
-      mode = var.database_availability_mode
-    }
+  high_availability {
+    mode = var.database_availability_mode
   }
 
   storage {
@@ -58,5 +54,4 @@ resource "azurerm_mysql_flexible_database" "default" {
   server_name         = azurerm_mysql_flexible_server.default.name
   charset             = "utf8mb4"
   collation           = "utf8mb4_general_ci"
-
 }
