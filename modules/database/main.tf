@@ -48,6 +48,14 @@ resource "azurerm_mysql_flexible_server" "default" {
   tags = var.tags
 }
 
+resource "azurerm_management_lock" "default" {
+  count      = var.deletion_protection ? 1 : 0
+  name       = "${var.namespace}-db"
+  scope      = azurerm_mysql_flexible_server.default.id
+  lock_level = "CanNotDelete"
+  notes      = "Deletion protection is enabled on the database."
+}
+
 resource "azurerm_mysql_flexible_database" "default" {
   name                = local.database_name
   resource_group_name = var.resource_group_name

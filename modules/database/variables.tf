@@ -56,3 +56,8 @@ variable "tags" {
   type        = map(string)
   description = "Map of tags for resource"
 }
+
+variable "deletion_protection" {
+  description = "If the instance should have deletion protection enabled. The database can't be deleted when this value is set to `true`."
+  type        = bool
+}

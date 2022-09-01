@@ -33,6 +33,8 @@ module "database" {
   database_private_dns_zone_id = module.networking.database_private_dns_zone.id
   database_subnet_id           = module.networking.database_subnet.id
 
+  deletion_protection = var.deletion_protection
+
   tags = var.tags
 }
 
@@ -42,7 +44,10 @@ module "storage" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   create_queue        = !var.use_internal_queue
-  tags                = var.tags
+
+  deletion_protection = var.deletion_protection
+
+  tags = var.tags
 }
 
 module "app_lb" {
