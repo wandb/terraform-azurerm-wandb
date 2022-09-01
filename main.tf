@@ -41,6 +41,7 @@ module "storage" {
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
+  create_queue        = !var.use_internal_queue
   tags                = var.tags
 }
 
