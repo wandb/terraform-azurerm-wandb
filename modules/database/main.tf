@@ -45,6 +45,13 @@ resource "azurerm_mysql_flexible_server" "default" {
     auto_grow_enabled = true
   }
 
+  lifecycle {
+    ignore_changes = [
+      zone,
+      high_availability.0.standby_availability_zone
+    ]
+  }
+
   tags = var.tags
 }
 
