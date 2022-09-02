@@ -45,7 +45,22 @@ resource "azurerm_mysql_flexible_server" "default" {
     auto_grow_enabled = true
   }
 
+  lifecycle {
+    ignore_changes = [
+      zone,
+      high_availability.0.standby_availability_zone
+    ]
+  }
+
   tags = var.tags
+}
+
+resource "azurerm_management_lock" "default" {
+  count      = var.deletion_protection ? 1 : 0
+  name       = "${var.namespace}-db"
+  scope      = azurerm_mysql_flexible_server.default.id
+  lock_level = "CanNotDelete"
+  notes      = "Deletion protection is enabled on the database."
 }
 
 resource "azurerm_mysql_flexible_database" "default" {
@@ -54,5 +69,4 @@ resource "azurerm_mysql_flexible_database" "default" {
   server_name         = azurerm_mysql_flexible_server.default.name
   charset             = "utf8mb4"
   collation           = "utf8mb4_general_ci"
-
 }

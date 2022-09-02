@@ -28,12 +28,16 @@ module "database" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
-  database_availability_mode   = var.database_availability
+  database_availability_mode   = var.database_availability_mode
   database_version             = var.database_version
   database_private_dns_zone_id = module.networking.database_private_dns_zone.id
   database_subnet_id           = module.networking.database_subnet.id
 
+  deletion_protection = var.deletion_protection
+
   tags = var.tags
+
+  depends_on = [module.networking]
 }
 
 module "storage" {
@@ -41,7 +45,11 @@ module "storage" {
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
-  tags                = var.tags
+  create_queue        = !var.use_internal_queue
+
+  deletion_protection = var.deletion_protection
+
+  tags = var.tags
 }
 
 module "app_lb" {
@@ -87,6 +95,7 @@ module "aks_app" {
   oidc_client_id   = var.oidc_client_id
   oidc_issuer      = var.oidc_issuer
   oidc_auth_method = var.oidc_auth_method
+  oidc_secret      = var.oidc_secret
 
   wandb_image   = var.wandb_image
   wandb_version = var.wandb_version

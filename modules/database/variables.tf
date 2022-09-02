@@ -29,12 +29,6 @@ variable "database_private_dns_zone_id" {
   description = "The identity of the private DNS zone in which the database will be deployed."
 }
 
-variable "database_availability" {
-  type        = string
-  description = "database availability"
-  default     = "SameZone"
-}
-
 variable "database_version" {
   description = "Version for MYSQL"
   type        = string
@@ -61,4 +55,9 @@ variable "tags" {
   default     = {}
   type        = map(string)
   description = "Map of tags for resource"
+}
+
+variable "deletion_protection" {
+  description = "If the instance should have deletion protection enabled. The database can't be deleted when this value is set to `true`."
+  type        = bool
 }
