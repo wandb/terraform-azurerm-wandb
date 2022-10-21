@@ -41,7 +41,6 @@ module "database" {
 }
 
 module "storage" {
-  count               = local.create_blob_container ? 1 : 0
   source              = "./modules/storage"
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
@@ -77,8 +76,8 @@ module "app_aks" {
 }
 
 locals {
-  blob_container = local.create_blob_container ? "${module.storage.0.account.name}/${module.storage.0.container.name}" : var.blob_container
-  queue          = var.use_internal_queue ? "internal://" : "az://${module.storage.0.account.name}/${module.storage.0.queue.name}"
+  blob_container = local.create_blob_container ? "${module.storage.account.name}/${module.storage.container.name}" : var.blob_container
+  queue          = var.use_internal_queue ? "internal://" : "az://${module.storage.account.name}/${module.storage.queue.name}"
 }
 
 module "aks_app" {
@@ -102,8 +101,8 @@ module "aks_app" {
   wandb_version = var.wandb_version
 
   other_wandb_env = {
-    "AZURE_STORAGE_KEY"     = local.create_blob_container ? module.storage.0.account.primary_access_key:var.storage_key
-    "AZURE_STORAGE_ACCOUNT" = local.create_blob_container ? module.storage.0.account.name:var.storage_account
+    "AZURE_STORAGE_KEY"     = module.storage.account.primary_access_key,
+    "AZURE_STORAGE_ACCOUNT" = module.storage.account.name,
   }
 
   # If we dont wait, tf will start trying to deploy while the work group is
