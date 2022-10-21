@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.0.1...v1.1.0) (2022-10-21)
+
+
+### Features
+
+* Add storage account creds ([2d543be](https://github.com/wandb/terraform-azurerm-wandb/commit/2d543bea5562e28591da6e49fa57e98d83d2fa92))
+
 ### [1.0.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.0.0...v1.0.1) (2022-09-02)
 
 
