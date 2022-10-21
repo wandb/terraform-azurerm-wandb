@@ -139,7 +139,7 @@ variable "create_redis" {
 ##########################################
 # External Bucket                        #
 ##########################################
-# Most users will not need these settings. They are meant for users who want a
+# Most users will not need these settings. They are ment for users who want a
 # bucket in a different account.
 
 variable "blob_container" {
@@ -147,6 +147,7 @@ variable "blob_container" {
   description = "Use an existing bucket."
   default     = ""
 }
+<<<<<<< HEAD
 
 variable "storage_account" {
   type        = string
@@ -171,3 +172,5 @@ variable "external_bucket_region" {
   type        = string
   default     = ""
 }
+=======
+>>>>>>> 630ce59 (Revert "feat: Add storage account creds")

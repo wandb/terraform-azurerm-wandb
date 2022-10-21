@@ -30,6 +30,7 @@ output "cluster_ca_certificate" {
 }
 
 output "storage_account" {
+<<<<<<< HEAD
   value = var.external_bucket != "" ? "" : coalesce(var.storage_account, local.account_name, "")
 }
 
@@ -39,4 +40,11 @@ output "storage_container" {
 
 output "external_bucket" {
   value = var.external_bucket != "" ? var.external_bucket : ""
+=======
+  value = module.storage.account
+}
+
+output "storage_container" {
+  value = module.storage.container
+>>>>>>> 630ce59 (Revert "feat: Add storage account creds")
 }
