@@ -30,13 +30,9 @@ output "cluster_ca_certificate" {
 }
 
 output "storage_account" {
-  value = local.create_blob_container ? module.storage.0.account:null
+  value = local.create_blob_container ? module.storage.0.account : null
 }
 
 output "storage_container" {
-  value = local.create_blob_container ? module.storage.0.container:null
-}
-
-output "blob_container" {
-  value = local.blob_container
+  value = local.create_blob_container ? module.storage.0.container : null
 }
