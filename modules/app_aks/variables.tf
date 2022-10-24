@@ -27,3 +27,14 @@ variable "tags" {
   type        = map(string)
   description = "Map of tags for resource"
 }
+
+variable "use_azure_defender" {
+  default     = false
+  type        = bool
+  description = "Either uses Microsoft Defender for Containers or not. If true, the attribute `input_log_analytics_workspace_id` need to be supplied."
+}
+
+variable "log_analytics_workspace_id" {
+  type        = string
+  description = "Log analytics ID for cluster where Microsoft Defender for Containers feature is enabled"
+}

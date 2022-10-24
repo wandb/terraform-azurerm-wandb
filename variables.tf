@@ -75,6 +75,21 @@ variable "oidc_auth_method" {
 }
 
 ##########################################
+# AKS                                    #
+##########################################
+variable "use_azure_defender" {
+  default     = false
+  type        = bool
+  description = "Either use Azure Defender or not"
+}
+
+variable "log_analytics_workspace_id" {
+  default     = "null"
+  type        = string
+  description = "Log analytics ID for cluster where Microsoft Defender is enforced"
+}
+
+##########################################
 # DNS                                    #
 ##########################################
 variable "domain_name" {
