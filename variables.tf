@@ -147,11 +147,23 @@ variable "create_redis" {
 ##########################################
 # External Bucket                        #
 ##########################################
-# Most users will not need these settings. They are ment for users who want a
+# Most users will not need these settings. They are meant for users who want a
 # bucket in a different account.
 
 variable "blob_container" {
   type        = string
   description = "Use an existing bucket."
+  default     = ""
+}
+
+variable "storage_account" {
+  type        = string
+  description = "Azure storage account name"
+  default     = ""
+}
+
+variable "storage_key" {
+  type        = string
+  description = "Azure primary storage access key"
   default     = ""
 }
