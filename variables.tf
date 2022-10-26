@@ -77,7 +77,7 @@ variable "oidc_auth_method" {
 ##########################################
 # AKS                                    #
 ##########################################
-variable "use_azure_defender" {
+variable "use_microsoft_defender" {
   default     = false
   type        = bool
   description = "Either use Azure Defender or not"

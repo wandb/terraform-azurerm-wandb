@@ -33,7 +33,7 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 
   dynamic "microsoft_defender" {
-    for_each = var.use_azure_defender ? [1] : []
+    for_each = var.use_microsoft_defender ? [1] : []
     content {
       log_analytics_workspace_id = var.log_analytics_workspace_id
     }

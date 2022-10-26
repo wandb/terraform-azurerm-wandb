@@ -71,7 +71,7 @@ module "app_aks" {
   gateway           = module.app_lb.gateway
   cluster_subnet_id = module.networking.private_subnet.id
 
-  use_microsoft_defender         = var.use_microsoft_defender
+  use_microsoft_defender     = var.use_microsoft_defender
   log_analytics_workspace_id = var.log_analytics_workspace_id
 
   tags = var.tags
@@ -105,8 +105,8 @@ module "aks_app" {
   wandb_version = var.wandb_version
 
   other_wandb_env = {
-    "AZURE_STORAGE_KEY"     = local.create_blob_container ? module.storage.0.account.primary_access_key:var.storage_key
-    "AZURE_STORAGE_ACCOUNT" = local.create_blob_container ? module.storage.0.account.name:var.storage_account
+    "AZURE_STORAGE_KEY"     = local.create_blob_container ? module.storage.0.account.primary_access_key : var.storage_key
+    "AZURE_STORAGE_ACCOUNT" = local.create_blob_container ? module.storage.0.account.name : var.storage_account
   }
 
   # If we dont wait, tf will start trying to deploy while the work group is
