@@ -36,7 +36,3 @@ output "storage_account" {
 output "storage_container" {
   value = local.create_blob_container ? module.storage.0.container : null
 }
-
-output "blob_container" {
-  value = local.blob_container
-}

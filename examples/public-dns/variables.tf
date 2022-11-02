@@ -1,10 +1,16 @@
+variable "subscription_id" {
+  type    = string
+  default = null
+}
+
 variable "namespace" {
   type        = string
   description = "String used for prefix resources."
 }
 
 variable "location" {
-  type = string
+  type    = string
+  default = "East US"
 }
 
 variable "oidc_issuer" {
