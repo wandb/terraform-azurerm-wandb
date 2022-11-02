@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.1.0...v1.2.0) (2022-11-02)
+
+
+### Features
+
+* BYOB ([375d83b](https://github.com/wandb/terraform-azurerm-wandb/commit/375d83bc9a43e051844b02864be346d8e298106a))
+* BYOB ([9e4fecc](https://github.com/wandb/terraform-azurerm-wandb/commit/9e4fecc240ce8f50992490bf5550bb8adff6d586))
+
 ## [1.1.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.0.1...v1.1.0) (2022-10-21)
 
 
