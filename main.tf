@@ -5,7 +5,6 @@ locals {
   create_blob_container = var.blob_container == ""
 }
 
-
 resource "azurerm_resource_group" "default" {
   name     = var.namespace
   location = var.location
@@ -77,8 +76,10 @@ module "app_aks" {
 }
 
 locals {
-  blob_container = local.create_blob_container ? "${module.storage.0.account.name}/${module.storage.0.container.name}" : var.blob_container
-  queue          = var.use_internal_queue ? "internal://" : "az://${module.storage.0.account.name}/${module.storage.0.queue.name}"
+  blob_container  = local.create_blob_container ? module.storage.0.container.name : var.blob_container
+  storage_account = local.create_blob_container ? module.storage.0.account.name : var.storage_account
+  storage_key     = local.create_blob_container ? module.storage.0.account.primary_access_key : var.storage_key
+  queue           = var.use_internal_queue ? "internal://" : "az://${module.storage.0.account.name}/${module.storage.0.queue.name}"
 }
 
 module "aks_app" {
@@ -87,7 +88,7 @@ module "aks_app" {
   license = var.license
 
   host                       = local.url
-  bucket                     = "az://${local.blob_container}"
+  bucket                     = "az://${local.storage_account}/${local.blob_container}"
   bucket_queue               = local.queue
   database_connection_string = "mysql://${module.database.connection_string}"
   # redis_connection_string    = local.redis_connection_string
@@ -102,8 +103,8 @@ module "aks_app" {
   wandb_version = var.wandb_version
 
   other_wandb_env = {
-    "AZURE_STORAGE_KEY"     = local.create_blob_container ? module.storage.0.account.primary_access_key:var.storage_key
-    "AZURE_STORAGE_ACCOUNT" = local.create_blob_container ? module.storage.0.account.name:var.storage_account
+    "AZURE_STORAGE_KEY"     = local.storage_key
+    "AZURE_STORAGE_ACCOUNT" = local.storage_account
   }
 
   # If we dont wait, tf will start trying to deploy while the work group is
