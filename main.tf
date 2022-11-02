@@ -79,7 +79,7 @@ locals {
   blob_container  = local.create_blob_container ? module.storage.0.container.name : var.blob_container
   storage_account = local.create_blob_container ? module.storage.0.account.name : var.storage_account
   storage_key     = local.create_blob_container ? module.storage.0.account.primary_access_key : var.storage_key
-  queue           = var.use_internal_queue ? "internal://" : "az://${module.storage.0.account.name}/${module.storage.0.queue.name}"
+  queue           = var.use_internal_queue || !local.create_blob_container ? "internal://" : "az://${module.storage.0.account.name}/${module.storage.0.queue.name}"
 }
 
 module "aks_app" {
