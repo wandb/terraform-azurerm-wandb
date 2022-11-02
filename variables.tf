@@ -84,7 +84,7 @@ variable "use_microsoft_defender" {
 }
 
 variable "log_analytics_workspace_id" {
-  default     = "null"
+  default     = null
   type        = string
   description = "Log analytics ID for cluster where Microsoft Defender is enforced"
 }
