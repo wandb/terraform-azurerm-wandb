@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.2.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.2.0...v1.2.1) (2022-11-07)
+
+
+### Bug Fixes
+
+* Fix byob logic for queue ([94a27ad](https://github.com/wandb/terraform-azurerm-wandb/commit/94a27add94e1f7b0f1b06a04750849cdc26ca4fe))
+
 ## [1.2.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.1.0...v1.2.0) (2022-11-02)
 
 
