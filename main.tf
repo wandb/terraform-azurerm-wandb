@@ -102,10 +102,10 @@ module "aks_app" {
   wandb_image   = var.wandb_image
   wandb_version = var.wandb_version
 
-  other_wandb_env = {
+  other_wandb_env = merge(var.other_wandb_env, {
     "AZURE_STORAGE_KEY"     = local.storage_key
     "AZURE_STORAGE_ACCOUNT" = local.storage_account
-  }
+  })
 
   # If we dont wait, tf will start trying to deploy while the work group is
   # still spinning up
