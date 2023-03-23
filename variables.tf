@@ -159,3 +159,15 @@ variable "storage_key" {
   description = "Azure primary storage access key"
   default     = ""
 }
+
+variable "external_bucket" {
+  description = "External bucket"
+  type        = string
+  default     = ""
+}
+
+variable "region" {
+  description = "When using external bucket the Region is mandatory"
+  type        = string
+  default     = ""
+}

@@ -2,7 +2,7 @@ locals {
   fqdn                  = var.subdomain == null ? var.domain_name : "${var.subdomain}.${var.domain_name}"
   url_prefix            = var.ssl ? "https" : "http"
   url                   = "${local.url_prefix}://${local.fqdn}"
-  create_blob_container = var.blob_container == ""
+  create_blob_container = var.blob_container && var.external_bucket == ""
 }
 
 resource "azurerm_resource_group" "default" {
@@ -40,7 +40,8 @@ module "database" {
 }
 
 module "storage" {
-  count               = local.create_blob_container ? 1 : 0
+  # count               = local.create_blob_container ? 1 : 0
+  count               = var.blob_container && var.external_bucket == "" ? 1 : 0
   source              = "./modules/storage"
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
@@ -76,10 +77,10 @@ module "app_aks" {
 }
 
 locals {
-  blob_container  = local.create_blob_container ? module.storage.0.container.name : var.blob_container
-  storage_account = local.create_blob_container ? module.storage.0.account.name : var.storage_account
-  storage_key     = local.create_blob_container ? module.storage.0.account.primary_access_key : var.storage_key
-  queue           = var.use_internal_queue || !local.create_blob_container ? "internal://" : "az://${module.storage.0.account.name}/${module.storage.0.queue.name}"
+  blob_container  = var.blob_container && var.external_bucket == "" ? module.storage.0.container.name : (var.external_bucket ? var.external_bucket : var.blob_container)
+  storage_account = var.blob_container && var.external_bucket == "" ? module.storage.0.account.name : (var.external_bucket ? var.external_bucket : "")
+  storage_key     = var.blob_container && var.external_bucket == "" ? module.storage.0.account.primary_access_key : (var.external_bucket ? var.external_bucket : "")
+  queue           = var.use_internal_queue || !(var.blob_container && var.external_bucket == "") ? "internal://" : "az://${module.storage.0.account.name}/${module.storage.0.queue.name}"
 }
 
 module "aks_app" {
@@ -88,7 +89,7 @@ module "aks_app" {
   license = var.license
 
   host                       = local.url
-  bucket                     = "az://${local.storage_account}/${local.blob_container}"
+  bucket                     = var.external_bucket ? var.external_bucket : "az://${local.storage_account}/${local.blob_container}"
   bucket_queue               = local.queue
   database_connection_string = "mysql://${module.database.connection_string}"
   # redis_connection_string    = local.redis_connection_string
@@ -105,6 +106,7 @@ module "aks_app" {
   other_wandb_env = merge(var.other_wandb_env, {
     "AZURE_STORAGE_KEY"     = local.storage_key
     "AZURE_STORAGE_ACCOUNT" = local.storage_account
+    "AWS_REGION"            = var.region
   })
 
   # If we dont wait, tf will start trying to deploy while the work group is
