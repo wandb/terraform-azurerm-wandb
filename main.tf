@@ -1,8 +1,7 @@
 locals {
-  fqdn                  = var.subdomain == null ? var.domain_name : "${var.subdomain}.${var.domain_name}"
-  url_prefix            = var.ssl ? "https" : "http"
-  url                   = "${local.url_prefix}://${local.fqdn}"
-  create_blob_container = var.blob_container == "" && var.external_bucket == ""
+  fqdn       = var.subdomain == null ? var.domain_name : "${var.subdomain}.${var.domain_name}"
+  url_prefix = var.ssl ? "https" : "http"
+  url        = "${local.url_prefix}://${local.fqdn}"
 }
 
 resource "azurerm_resource_group" "default" {
@@ -40,7 +39,6 @@ module "database" {
 }
 
 module "storage" {
-  # count               = local.create_blob_container ? 1 : 0
   count               = var.blob_container == "" && var.external_bucket == "" ? 1 : 0
   source              = "./modules/storage"
   namespace           = var.namespace

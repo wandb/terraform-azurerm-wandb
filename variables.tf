@@ -161,7 +161,7 @@ variable "storage_key" {
 }
 
 variable "external_bucket" {
-  description = "External bucket"
+  description = "String to configure a non Azure bucket (s3://user:pass@bucket)"
   type        = string
   default     = ""
 }

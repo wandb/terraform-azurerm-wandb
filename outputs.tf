@@ -30,9 +30,9 @@ output "cluster_ca_certificate" {
 }
 
 output "storage_account" {
-  value = local.create_blob_container ? module.storage.0.account : null
+  value = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.container.name : (var.external_bucket != "" ? var.external_bucket : var.blob_container)
 }
 
 output "storage_container" {
-  value = local.create_blob_container ? module.storage.0.container : null
+  value = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.container.name : (var.external_bucket != "" ? var.external_bucket : var.blob_container)
 }
