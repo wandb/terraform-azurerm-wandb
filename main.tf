@@ -106,7 +106,7 @@ module "aks_app" {
   other_wandb_env = merge(var.other_wandb_env, {
     "AZURE_STORAGE_KEY"     = local.storage_key
     "AZURE_STORAGE_ACCOUNT" = local.storage_account
-    "AWS_REGION"            = var.region
+    "AWS_REGION"            = var.external_bucket_region
   })
 
   # If we dont wait, tf will start trying to deploy while the work group is

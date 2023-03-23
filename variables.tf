@@ -166,7 +166,7 @@ variable "external_bucket" {
   default     = ""
 }
 
-variable "region" {
+variable "external_bucket_region" {
   description = "When using external bucket the Region is mandatory"
   type        = string
   default     = ""
