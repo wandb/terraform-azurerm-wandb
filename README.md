@@ -71,7 +71,7 @@ resources that lack official modules.
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version for MySQL | `string` | `"5.7"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | If the instance should have deletion protection enabled. The database / Bucket can't be deleted when this value is set to `true`. | `bool` | `true` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain for accessing the Weights & Biases UI. | `string` | `null` | no |
-| <a name="input_external_bucket"></a> [external\_bucket](#input\_external\_bucket) | External bucket | `string` | `""` | no |
+| <a name="input_external_bucket"></a> [external\_bucket](#input\_external\_bucket) | String to configure a non Azure bucket (s3://user:pass@bucket) | `string` | `""` | no |
 | <a name="input_external_bucket_region"></a> [external\_bucket\_region](#input\_external\_bucket\_region) | When using external bucket the Region is mandatory | `string` | `""` | no |
 | <a name="input_license"></a> [license](#input\_license) | Your wandb/local license | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
