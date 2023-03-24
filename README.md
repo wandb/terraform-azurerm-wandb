@@ -47,7 +47,7 @@ resources that lack official modules.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_aks_app"></a> [aks\_app](#module\_aks\_app) | github.com/wandb/terraform-kubernetes-wandb | n/a |
+| <a name="module_aks_app"></a> [aks\_app](#module\_aks\_app) | wandb/wandb/kubernetes | 1.6.0 |
 | <a name="module_app_aks"></a> [app\_aks](#module\_app\_aks) | ./modules/app_aks | n/a |
 | <a name="module_app_ingress"></a> [app\_ingress](#module\_app\_ingress) | ./modules/app_ingress | n/a |
 | <a name="module_app_lb"></a> [app\_lb](#module\_app\_lb) | ./modules/app_lb | n/a |
@@ -100,7 +100,5 @@ resources that lack official modules.
 | <a name="output_cluster_client_key"></a> [cluster\_client\_key](#output\_cluster\_client\_key) | n/a |
 | <a name="output_cluster_host"></a> [cluster\_host](#output\_cluster\_host) | n/a |
 | <a name="output_fqdn"></a> [fqdn](#output\_fqdn) | The FQDN to the W&B application |
-| <a name="output_storage_account"></a> [storage\_account](#output\_storage\_account) | n/a |
-| <a name="output_storage_container"></a> [storage\_container](#output\_storage\_container) | n/a |
 | <a name="output_url"></a> [url](#output\_url) | The URL to the W&B application |
 <!-- END_TF_DOCS -->
