@@ -39,7 +39,7 @@ module "database" {
 }
 
 module "storage" {
-  count               = var.blob_container == "" && var.external_bucket == "" ? 1 : 0
+  count               = (var.blob_container == "" && var.external_bucket == "") ? 1 : 0
   source              = "./modules/storage"
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
@@ -75,14 +75,15 @@ module "app_aks" {
 }
 
 locals {
-  blob_container  = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.container.name : (var.external_bucket != "" ? var.external_bucket : var.blob_container)
-  storage_account = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.account.name : (var.external_bucket == "" ? var.external_bucket : "")
-  storage_key     = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.account.primary_access_key : (var.external_bucket == "" ? var.external_bucket : "")
-  queue           = var.use_internal_queue || !(var.blob_container == "" && var.external_bucket == "") ? "internal://" : "az://${module.storage.0.account.name}/${module.storage.0.queue.name}"
+  blob_container  = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.container.name : var.external_bucket != "" ? var.external_bucket : var.blob_container
+  storage_account = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.account.name : var.external_bucket == "" ? var.storage_account : ""
+  storage_key     = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.account.primary_access_key : var.external_bucket == "" ? var.storage_key : ""
+  queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == "") ? "internal://" : "az://${module.storage.0.account.name}/${module.storage.0.queue.name}"
 }
 
 module "aks_app" {
-  source = "github.com/wandb/terraform-kubernetes-wandb"
+  source  = "wandb/wandb/kubernetes"
+  version = "1.6.0"
 
   license = var.license
 

@@ -29,10 +29,10 @@ output "cluster_ca_certificate" {
   sensitive = true
 }
 
-output "storage_account" {
-  value = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.container.name : (var.external_bucket != "" ? var.external_bucket : var.blob_container)
-}
+# output "storage_account" {
+#   value = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.container.name : (var.external_bucket != "" ? var.external_bucket : var.blob_container)
+# }
 
-output "storage_container" {
-  value = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.container.name : (var.external_bucket != "" ? var.external_bucket : var.blob_container)
-}
+# output "storage_container" {
+#   value = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.container.name : (var.external_bucket != "" ? var.external_bucket : var.blob_container)
+# }
