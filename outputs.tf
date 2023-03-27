@@ -30,11 +30,11 @@ output "cluster_ca_certificate" {
 }
 
 output "storage_account" {
-  value = var.storage_account == "" ? module.storage.0.account.name : var.storage_account
+  value = var.external_bucket != "" ? "" : coalesce(var.storage_account, local.account_name, "")
 }
 
 output "storage_container" {
-  value = var.blob_container == "" ? module.storage.0.container.name : var.blob_container
+  value = coalesce(var.external_bucket, var.blob_container, local.container_name)
 }
 
 output "external_bucket" {

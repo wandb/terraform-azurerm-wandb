@@ -74,11 +74,17 @@ module "app_aks" {
   depends_on = [module.app_lb]
 }
 
+
 locals {
-  blob_container  = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.container.name : var.external_bucket != "" ? var.external_bucket : var.blob_container
-  storage_account = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.account.name : var.external_bucket == "" ? var.storage_account : ""
-  storage_key     = var.blob_container == "" && var.external_bucket == "" ? module.storage.0.account.primary_access_key : var.external_bucket == "" ? var.storage_key : ""
-  queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == "") ? "internal://" : "az://${module.storage.0.account.name}/${module.storage.0.queue.name}"
+  container_name  = try(module.storage[0].container.name, "")
+  account_name    = try(module.storage[0].account.name, "")
+  access_key      = try(module.storage[0].account.primary_access_key, "")
+  queue_name      = try(module.storage[0].queue.name, "")
+  blob_container  = coalesce(var.external_bucket, var.blob_container, local.container_name)
+  storage_account = var.external_bucket != "" ? "" : coalesce(var.storage_account, local.account_name, "")
+  storage_key     = var.external_bucket != "" ? "" : coalesce(var.storage_key, local.access_key, "")
+  bucket          = var.external_bucket != "" ? var.external_bucket : "az://${local.storage_account}/${local.blob_container}"
+  queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == "") ? "internal://" : "az://${local.account_name}/${local.queue_name}"
 }
 
 module "aks_app" {
@@ -88,7 +94,7 @@ module "aks_app" {
   license = var.license
 
   host                       = local.url
-  bucket                     = var.external_bucket != "" ? var.external_bucket : "az://${local.storage_account}/${local.blob_container}"
+  bucket                     = local.bucket
   bucket_queue               = local.queue
   bucket_aws_region          = var.external_bucket_region
   database_connection_string = "mysql://${module.database.connection_string}"
