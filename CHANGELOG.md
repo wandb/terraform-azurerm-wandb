@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.2.1...v1.3.0) (2023-04-03)
+
+
+### Features
+
+* Enable non azure bucket ([#15](https://github.com/wandb/terraform-azurerm-wandb/issues/15)) ([2939eed](https://github.com/wandb/terraform-azurerm-wandb/commit/2939eedf4a101116c7301f6bad0af3883a07e7c4))
+
+
+### Bug Fixes
+
+* Enable non azure bucket ([7f1b9ba](https://github.com/wandb/terraform-azurerm-wandb/commit/7f1b9ba558d783d3db65f313f1f729834ca502f5))
+
 ### [1.2.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.2.0...v1.2.1) (2022-11-07)
 
 
