@@ -74,6 +74,13 @@ variable "oidc_auth_method" {
   }
 }
 
+variable "other_wandb_env" {
+  type        = map(any)
+  description = "Extra environment variables for W&B"
+  default     = {}
+}
+
+
 ##########################################
 # DNS                                    #
 ##########################################
@@ -150,5 +157,17 @@ variable "storage_account" {
 variable "storage_key" {
   type        = string
   description = "Azure primary storage access key"
+  default     = ""
+}
+
+variable "external_bucket" {
+  description = "String to configure a non Azure bucket (s3://user:pass@bucket)"
+  type        = string
+  default     = ""
+}
+
+variable "external_bucket_region" {
+  description = "When using external bucket the Region is mandatory"
+  type        = string
   default     = ""
 }
