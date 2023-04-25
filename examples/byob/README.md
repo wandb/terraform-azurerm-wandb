@@ -25,6 +25,8 @@ To retrieve the storage key, you can use the Azure CLI installed previously like
 
 ```basb
 az storage account keys list --account-name byobflamastorage --query '[].{key: value}' --output tsv
+1111111111111122222222222333333333334444444555555555
+5555555554444444333333333332222222222211111111111111
 ```
 
 You only need to provide one key.
