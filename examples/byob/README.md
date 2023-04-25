@@ -24,7 +24,7 @@ storage_key = <sensitive>
 To retrieve the storage key, you can use the Azure CLI installed previously like the example below.
 
 ```basb
-az storage account keys list --account-name byobflamastorage --query '[].{key: value}' --output tsv
+az storage account keys list --account-name rgnamestorage --query '[].{key: value}' --output tsv
 1111111111111122222222222333333333334444444555555555
 5555555554444444333333333332222222222211111111111111
 ```
@@ -32,3 +32,4 @@ az storage account keys list --account-name byobflamastorage --query '[].{key: v
 You only need to provide one key.
 
 * Note that all information about Storage Account and keys are mere examples, they are not valid.
+
