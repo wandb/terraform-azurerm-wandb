@@ -17,7 +17,7 @@ terraform apply -var-file=terraform.tfvars
 At the end of execution you will have the following output
 
 ```bash
-blob_container = "byobflamastorage/wandb"
+blob_container = "rgnamestorage/wandb"
 storage_key = <sensitive>
 ```
 
@@ -25,8 +25,8 @@ To retrieve the storage key, you can use the Azure CLI installed previously like
 
 ```basb
 az storage account keys list --account-name byobflamastorage --query '[].{key: value}' --output tsv
-1/u33nXLUAFj/SNpbQNPivCfVUv1zA5hCU9s9wFKxsWkyFNt+wy8LcPcvoss9teCmZh0ijondsUt+AStC/DfJg==
-ESEk9YCXHVNgUpqq9hoezFt+8CoPzSLtfIPG+ECL7f1THhXF9kspv0Fo8pf6+MfCO51220AfvH5x+AStQb9TZw==
+1111111111111122222222222333333333334444444555555555
+5555555554444444333333333332222222222211111111111111
 ```
 
 You only need to provide one key.
