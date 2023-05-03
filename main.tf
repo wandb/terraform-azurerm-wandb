@@ -1,10 +1,8 @@
 locals {
-  fqdn                  = var.subdomain == null ? var.domain_name : "${var.subdomain}.${var.domain_name}"
-  url_prefix            = var.ssl ? "https" : "http"
-  url                   = "${local.url_prefix}://${local.fqdn}"
-  create_blob_container = var.blob_container == ""
+  fqdn       = var.subdomain == null ? var.domain_name : "${var.subdomain}.${var.domain_name}"
+  url_prefix = var.ssl ? "https" : "http"
+  url        = "${local.url_prefix}://${local.fqdn}"
 }
-
 
 resource "azurerm_resource_group" "default" {
   name     = var.namespace
@@ -41,6 +39,13 @@ module "database" {
 }
 
 module "storage" {
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+  count               = (var.blob_container == "" && var.external_bucket == "") ? 1 : 0
+=======
+>>>>>>> 630ce59 (Revert "feat: Add storage account creds")
+>>>>>>> main
   source              = "./modules/storage"
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
@@ -75,20 +80,43 @@ module "app_aks" {
   depends_on = [module.app_lb]
 }
 
+
 locals {
+<<<<<<< HEAD
   blob_container = local.create_blob_container ? "${module.storage.account.name}/${module.storage.container.name}" : var.blob_container
   queue          = var.use_internal_queue ? "internal://" : "az://${module.storage.account.name}/${module.storage.queue.name}"
+=======
+<<<<<<< HEAD
+  container_name  = try(module.storage[0].container.name, "")
+  account_name    = try(module.storage[0].account.name, "")
+  access_key      = try(module.storage[0].account.primary_access_key, "")
+  queue_name      = try(module.storage[0].queue.name, "")
+  blob_container  = coalesce(var.external_bucket, var.blob_container, local.container_name)
+  storage_account = var.external_bucket != "" ? "" : coalesce(var.storage_account, local.account_name, "")
+  storage_key     = var.external_bucket != "" ? "" : coalesce(var.storage_key, local.access_key, "")
+  bucket          = var.external_bucket != "" ? var.external_bucket : "az://${local.storage_account}/${local.blob_container}"
+  queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == "") ? "internal://" : "az://${local.account_name}/${local.queue_name}"
+=======
+  blob_container = local.create_blob_container ? "${module.storage.account.name}/${module.storage.container.name}" : var.blob_container
+  queue          = var.use_internal_queue ? "internal://" : "az://${module.storage.account.name}/${module.storage.queue.name}"
+>>>>>>> 630ce59 (Revert "feat: Add storage account creds")
+>>>>>>> main
 }
 
 module "aks_app" {
   source  = "wandb/wandb/kubernetes"
+<<<<<<< HEAD
   version = var.kube_tf_version
+=======
+  version = "1.6.0"
+>>>>>>> main
 
   license = var.license
 
   host                       = local.url
-  bucket                     = "az://${local.blob_container}"
+  bucket                     = local.bucket
   bucket_queue               = local.queue
+  bucket_aws_region          = var.external_bucket_region
   database_connection_string = "mysql://${module.database.connection_string}"
   # redis_connection_string    = local.redis_connection_string
   # redis_ca_cert              = local.redis_certificate
@@ -101,10 +129,17 @@ module "aks_app" {
   wandb_image   = var.wandb_image
   wandb_version = var.wandb_version
 
+<<<<<<< HEAD
+  other_wandb_env = merge(var.other_wandb_env, {
+    "AZURE_STORAGE_KEY"     = local.storage_key
+    "AZURE_STORAGE_ACCOUNT" = local.storage_account
+  })
+=======
   other_wandb_env = {
     "AZURE_STORAGE_KEY"     = module.storage.account.primary_access_key,
     "AZURE_STORAGE_ACCOUNT" = module.storage.account.name,
   }
+>>>>>>> 630ce59 (Revert "feat: Add storage account creds")
 
   # If we dont wait, tf will start trying to deploy while the work group is
   # still spinning up

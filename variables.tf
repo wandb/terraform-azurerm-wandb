@@ -74,6 +74,13 @@ variable "oidc_auth_method" {
   }
 }
 
+variable "other_wandb_env" {
+  type        = map(any)
+  description = "Extra environment variables for W&B"
+  default     = {}
+}
+
+
 ##########################################
 # DNS                                    #
 ##########################################
@@ -140,9 +147,24 @@ variable "blob_container" {
   description = "Use an existing bucket."
   default     = ""
 }
+<<<<<<< HEAD
 
 variable "kube_tf_version" {
   type        = string
   description = "Kubernetes terraform version to use"
   default     = "1.7.0"
 }
+
+variable "external_bucket" {
+  description = "String to configure a non Azure bucket (s3://user:pass@bucket)"
+  type        = string
+  default     = ""
+}
+
+variable "external_bucket_region" {
+  description = "When using external bucket the Region is mandatory"
+  type        = string
+  default     = ""
+}
+=======
+>>>>>>> 630ce59 (Revert "feat: Add storage account creds")

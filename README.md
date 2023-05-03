@@ -47,7 +47,7 @@ resources that lack official modules.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_aks_app"></a> [aks\_app](#module\_aks\_app) | github.com/wandb/terraform-kubernetes-wandb | n/a |
+| <a name="module_aks_app"></a> [aks\_app](#module\_aks\_app) | wandb/wandb/kubernetes | 1.6.0 |
 | <a name="module_app_aks"></a> [app\_aks](#module\_app\_aks) | ./modules/app_aks | n/a |
 | <a name="module_app_ingress"></a> [app\_ingress](#module\_app\_ingress) | ./modules/app_ingress | n/a |
 | <a name="module_app_lb"></a> [app\_lb](#module\_app\_lb) | ./modules/app_lb | n/a |
@@ -71,6 +71,8 @@ resources that lack official modules.
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version for MySQL | `string` | `"5.7"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | If the instance should have deletion protection enabled. The database / Bucket can't be deleted when this value is set to `true`. | `bool` | `true` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain for accessing the Weights & Biases UI. | `string` | `null` | no |
+| <a name="input_external_bucket"></a> [external\_bucket](#input\_external\_bucket) | String to configure a non Azure bucket (s3://user:pass@bucket) | `string` | `""` | no |
+| <a name="input_external_bucket_region"></a> [external\_bucket\_region](#input\_external\_bucket\_region) | When using external bucket the Region is mandatory | `string` | `""` | no |
 | <a name="input_license"></a> [license](#input\_license) | Your wandb/local license | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | String used for prefix resources. | `string` | n/a | yes |
@@ -78,7 +80,10 @@ resources that lack official modules.
 | <a name="input_oidc_client_id"></a> [oidc\_client\_id](#input\_oidc\_client\_id) | The Client ID of application in your identity provider | `string` | `""` | no |
 | <a name="input_oidc_issuer"></a> [oidc\_issuer](#input\_oidc\_issuer) | A url to your Open ID Connect identity provider, i.e. https://cognito-idp.us-east-1.amazonaws.com/us-east-1_uiIFNdacd | `string` | `""` | no |
 | <a name="input_oidc_secret"></a> [oidc\_secret](#input\_oidc\_secret) | The Client secret of application in your identity provider | `string` | `""` | no |
+| <a name="input_other_wandb_env"></a> [other\_wandb\_env](#input\_other\_wandb\_env) | Extra environment variables for W&B | `map(any)` | `{}` | no |
 | <a name="input_ssl"></a> [ssl](#input\_ssl) | Enable SSL certificate | `bool` | `true` | no |
+| <a name="input_storage_account"></a> [storage\_account](#input\_storage\_account) | Azure storage account name | `string` | `""` | no |
+| <a name="input_storage_key"></a> [storage\_key](#input\_storage\_key) | Azure primary storage access key | `string` | `""` | no |
 | <a name="input_subdomain"></a> [subdomain](#input\_subdomain) | Subdomain for accessing the Weights & Biases UI. Default creates record at Route53 Route. | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Map of tags for resource | `map(string)` | `{}` | no |
 | <a name="input_use_internal_queue"></a> [use\_internal\_queue](#input\_use\_internal\_queue) | Uses an internal redis queue instead of using azure queue. | `bool` | `false` | no |
@@ -94,6 +99,7 @@ resources that lack official modules.
 | <a name="output_cluster_client_certificate"></a> [cluster\_client\_certificate](#output\_cluster\_client\_certificate) | n/a |
 | <a name="output_cluster_client_key"></a> [cluster\_client\_key](#output\_cluster\_client\_key) | n/a |
 | <a name="output_cluster_host"></a> [cluster\_host](#output\_cluster\_host) | n/a |
+| <a name="output_external_bucket"></a> [external\_bucket](#output\_external\_bucket) | n/a |
 | <a name="output_fqdn"></a> [fqdn](#output\_fqdn) | The FQDN to the W&B application |
 | <a name="output_storage_account"></a> [storage\_account](#output\_storage\_account) | n/a |
 | <a name="output_storage_container"></a> [storage\_container](#output\_storage\_container) | n/a |
