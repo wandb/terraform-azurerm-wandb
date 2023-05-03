@@ -147,7 +147,6 @@ variable "blob_container" {
   description = "Use an existing bucket."
   default     = ""
 }
-<<<<<<< HEAD
 
 variable "storage_account" {
   type        = string
@@ -172,5 +171,9 @@ variable "external_bucket_region" {
   type        = string
   default     = ""
 }
-=======
->>>>>>> 630ce59 (Revert "feat: Add storage account creds")
+
+variable "kube_tf_version" {
+  type        = string
+  description = "Kubernetes terraform version to use"
+  default     = "1.7.0"
+}
