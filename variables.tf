@@ -139,7 +139,7 @@ variable "create_redis" {
 ##########################################
 # External Bucket                        #
 ##########################################
-# Most users will not need these settings. They are ment for users who want a
+# Most users will not need these settings. They are meant for users who want a
 # bucket in a different account.
 
 variable "blob_container" {
