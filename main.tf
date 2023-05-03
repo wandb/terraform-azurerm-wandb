@@ -82,7 +82,7 @@ locals {
 
 module "aks_app" {
   source  = "wandb/wandb/kubernetes"
-  version = "1.7.0"
+  version = var.kube_tf_version
 
   license = var.license
 
