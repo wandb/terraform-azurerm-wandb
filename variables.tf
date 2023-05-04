@@ -171,9 +171,3 @@ variable "external_bucket_region" {
   type        = string
   default     = ""
 }
-
-variable "kube_tf_version" {
-  type        = string
-  description = "Kubernetes terraform version to use"
-  default     = "1.7.0"
-}
