@@ -32,12 +32,7 @@ variable "database_private_dns_zone_id" {
 variable "database_version" {
   description = "Version for MYSQL"
   type        = string
-  default     = "8.0.21"
-
-  validation {
-    condition     = contains(["5.7", "8.0.21"], var.database_version)
-    error_message = "We only support MySQL: \"5.7\"; \"8.0.21\"."
-  }
+  default     = "5.7"
 }
 
 variable "database_availability_mode" {

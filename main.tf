@@ -39,10 +39,7 @@ module "database" {
 }
 
 module "storage" {
-<<<<<<< HEAD
   count               = (var.blob_container == "" && var.external_bucket == "") ? 1 : 0
-=======
->>>>>>> 630ce59 (Revert "feat: Add storage account creds")
   source              = "./modules/storage"
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
@@ -79,7 +76,6 @@ module "app_aks" {
 
 
 locals {
-<<<<<<< HEAD
   container_name  = try(module.storage[0].container.name, "")
   account_name    = try(module.storage[0].account.name, "")
   access_key      = try(module.storage[0].account.primary_access_key, "")
@@ -89,10 +85,6 @@ locals {
   storage_key     = var.external_bucket != "" ? "" : coalesce(var.storage_key, local.access_key, "")
   bucket          = var.external_bucket != "" ? var.external_bucket : "az://${local.storage_account}/${local.blob_container}"
   queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == "") ? "internal://" : "az://${local.account_name}/${local.queue_name}"
-=======
-  blob_container = local.create_blob_container ? "${module.storage.account.name}/${module.storage.container.name}" : var.blob_container
-  queue          = var.use_internal_queue ? "internal://" : "az://${module.storage.account.name}/${module.storage.queue.name}"
->>>>>>> 630ce59 (Revert "feat: Add storage account creds")
 }
 
 module "aks_app" {
@@ -117,17 +109,10 @@ module "aks_app" {
   wandb_image   = var.wandb_image
   wandb_version = var.wandb_version
 
-<<<<<<< HEAD
   other_wandb_env = merge(var.other_wandb_env, {
     "AZURE_STORAGE_KEY"     = local.storage_key
     "AZURE_STORAGE_ACCOUNT" = local.storage_account
   })
-=======
-  other_wandb_env = {
-    "AZURE_STORAGE_KEY"     = module.storage.account.primary_access_key,
-    "AZURE_STORAGE_ACCOUNT" = module.storage.account.name,
-  }
->>>>>>> 630ce59 (Revert "feat: Add storage account creds")
 
   # If we dont wait, tf will start trying to deploy while the work group is
   # still spinning up

@@ -109,11 +109,6 @@ variable "database_version" {
   description = "Version for MySQL"
   type        = string
   default     = "5.7"
-
-  validation {
-    condition     = contains(["5.7", "8.0.21"], var.database_version)
-    error_message = "We only support MySQL: \"5.7\"; \"8.0.21\"."
-  }
 }
 
 variable "database_availability_mode" {
@@ -147,7 +142,6 @@ variable "blob_container" {
   description = "Use an existing bucket."
   default     = ""
 }
-<<<<<<< HEAD
 
 variable "storage_account" {
   type        = string
@@ -172,5 +166,3 @@ variable "external_bucket_region" {
   type        = string
   default     = ""
 }
-=======
->>>>>>> 630ce59 (Revert "feat: Add storage account creds")
