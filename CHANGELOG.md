@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.3.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.3.0...v1.3.1) (2023-08-15)
+
+
+### Bug Fixes
+
+* Create LICENSE ([#19](https://github.com/wandb/terraform-azurerm-wandb/issues/19)) ([0dcb3e5](https://github.com/wandb/terraform-azurerm-wandb/commit/0dcb3e59573b06c1a0e295ac667b5d90771b2ee6))
+* Remove db version validation ([#20](https://github.com/wandb/terraform-azurerm-wandb/issues/20)) ([0a787ba](https://github.com/wandb/terraform-azurerm-wandb/commit/0a787ba69b27a6b12442e1e4936017dd5c6665cc))
+
 ## [1.3.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.2.1...v1.3.0) (2023-04-03)
 
 
