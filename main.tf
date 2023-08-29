@@ -147,3 +147,37 @@ module "app_ingress" {
     module.app_aks,
   ]
 }
+
+module "wandb" {
+  source  = "wandb/wandb/helm"
+  version = "1.1.0"
+
+  depends_on = [ module.cert_manager ]
+
+  spec = {
+    values = {
+      global = {
+        host = local.url
+
+        storage = { connectionString = local.bucket }
+
+        mysql = {
+          name     = module.database.database_name
+          user     = module.database.username
+          password = module.database.password
+          database = module.database.database_name
+          host     = module.database.address
+          port     = 3306
+        }
+      }
+
+      ingress = {
+        issuer = { create = true }
+        class  = "azure/application-gateway"
+      }
+
+      redis = { install = true }
+      mysql = { install = false }
+    }
+  }
+}
