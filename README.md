@@ -55,6 +55,7 @@ resources that lack official modules.
 | <a name="module_database"></a> [database](#module\_database) | ./modules/database | n/a |
 | <a name="module_networking"></a> [networking](#module\_networking) | ./modules/networking | n/a |
 | <a name="module_storage"></a> [storage](#module\_storage) | ./modules/storage | n/a |
+| <a name="module_wandb"></a> [wandb](#module\_wandb) | wandb/wandb/helm | 1.1.0 |
 
 ## Resources
 
