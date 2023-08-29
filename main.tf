@@ -74,7 +74,6 @@ module "app_aks" {
   depends_on = [module.app_lb]
 }
 
-
 locals {
   container_name  = try(module.storage[0].container.name, "")
   account_name    = try(module.storage[0].account.name, "")
@@ -136,14 +135,54 @@ module "cert_manager" {
   depends_on = [module.app_aks]
 }
 
-module "app_ingress" {
-  source    = "./modules/app_ingress"
-  fqdn      = local.fqdn
-  namespace = var.namespace
+module "wandb" {
+  source  = "wandb/wandb/helm"
+  version = "1.2.0"
 
   depends_on = [
     module.aks_app,
     module.cert_manager,
     module.app_aks,
   ]
+
+  spec = {
+    values = {
+      global = {
+        host = local.url
+
+        bucket = {
+          provider = "azure"
+          name     = local.storage_account
+          path     = local.blob_container
+        }
+
+        mysql = {
+          host     = module.database.host
+          port     = module.database.port
+          database = module.database.database
+          user     = module.database.user
+          password = module.database.password
+        }
+      }
+
+      ingress = {
+        // TODO: For now we will use the existing issuer. We can move this into
+        // the operator after testing. Trying to reduce the diff.
+        issuer = { create = false }
+
+        annotations = {
+          "kubernetes.io/ingress.class"         = "azure/application-gateway"
+          "cert-manager.io/cluster-issuer"      = "cert-issuer"
+          "cert-manager.io/acme-challenge-type" = "http01"
+        }
+
+        tls = [
+          { hosts = trimprefix(trimprefix(local.url, "https://"), "http://"), secretName = "wandb-ssl-cert" }
+        ]
+      }
+
+      mysql = { install = false }
+      redis = { install = true }
+    }
+  }
 }
