@@ -146,7 +146,7 @@ module "wandb" {
     module.storage,
   ]
   operator_chart_version = "1.1.0"
-  controller_image_tag   = "1.8.9"
+  controller_image_tag   = "1.8.11"
 
   spec = {
     values = {
@@ -183,6 +183,12 @@ module "wandb" {
         tls = [
           { hosts = [trimprefix(trimprefix(local.url, "https://"), "http://")], secretName = "wandb-ssl-cert" }
         ]
+      }
+
+      weave = {
+        persistence = {
+          provider = "azurefile"
+        }
       }
 
       mysql = { install = false }
