@@ -86,42 +86,42 @@ locals {
   queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == "") ? "internal://" : "az://${local.account_name}/${local.queue_name}"
 }
 
-module "aks_app" {
-  source  = "wandb/wandb/kubernetes"
-  version = "1.6.0"
+# module "aks_app" {
+#   source  = "wandb/wandb/kubernetes"
+#   version = "1.6.0"
 
-  license = var.license
+#   license = var.license
 
-  host                       = local.url
-  bucket                     = local.bucket
-  bucket_queue               = local.queue
-  bucket_aws_region          = var.external_bucket_region
-  database_connection_string = "mysql://${module.database.connection_string}"
-  # redis_connection_string    = local.redis_connection_string
-  # redis_ca_cert              = local.redis_certificate
+#   host                       = local.url
+#   bucket                     = local.bucket
+#   bucket_queue               = local.queue
+#   bucket_aws_region          = var.external_bucket_region
+#   database_connection_string = "mysql://${module.database.connection_string}"
+#   # redis_connection_string    = local.redis_connection_string
+#   # redis_ca_cert              = local.redis_certificate
 
-  oidc_client_id   = var.oidc_client_id
-  oidc_issuer      = var.oidc_issuer
-  oidc_auth_method = var.oidc_auth_method
-  oidc_secret      = var.oidc_secret
+#   oidc_client_id   = var.oidc_client_id
+#   oidc_issuer      = var.oidc_issuer
+#   oidc_auth_method = var.oidc_auth_method
+#   oidc_secret      = var.oidc_secret
 
-  wandb_image   = var.wandb_image
-  wandb_version = var.wandb_version
+#   wandb_image   = var.wandb_image
+#   wandb_version = var.wandb_version
 
-  other_wandb_env = merge(var.other_wandb_env, {
-    "AZURE_STORAGE_KEY"     = local.storage_key
-    "AZURE_STORAGE_ACCOUNT" = local.storage_account
-  })
+#   other_wandb_env = merge(var.other_wandb_env, {
+#     "AZURE_STORAGE_KEY"     = local.storage_key
+#     "AZURE_STORAGE_ACCOUNT" = local.storage_account
+#   })
 
-  # If we dont wait, tf will start trying to deploy while the work group is
-  # still spinning up
-  depends_on = [
-    module.database,
-    # module.redis,
-    module.storage,
-    module.app_aks,
-  ]
-}
+#   # If we dont wait, tf will start trying to deploy while the work group is
+#   # still spinning up
+#   depends_on = [
+#     module.database,
+#     # module.redis,
+#     module.storage,
+#     module.app_aks,
+#   ]
+# }
 
 module "cert_manager" {
   source    = "./modules/cert_manager"
@@ -140,28 +140,32 @@ module "wandb" {
   version = "1.2.0"
 
   depends_on = [
-    module.aks_app,
-    module.cert_manager,
     module.app_aks,
+    module.cert_manager,
+    module.database,
+    module.storage,
   ]
-
+  operator_chart_version = "1.1.0"
+  controller_image_tag   = "1.8.9"
+  
   spec = {
     values = {
       global = {
         host = local.url
 
         bucket = {
-          provider = "azure"
-          name     = local.storage_account
-          path     = local.blob_container
+          provider  = "azure"
+          name      = local.storage_account
+          path      = local.blob_container
+          accessKey = local.storage_key
         }
 
         mysql = {
-          host     = module.database.host
-          port     = module.database.port
-          database = module.database.database
-          user     = module.database.user
+          host     = module.database.address
+          database = module.database.database_name
+          user     = module.database.username
           password = module.database.password
+          port     = 3306
         }
       }
 
