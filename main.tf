@@ -147,7 +147,7 @@ module "wandb" {
   ]
   operator_chart_version = "1.1.0"
   controller_image_tag   = "1.8.9"
-  
+
   spec = {
     values = {
       global = {
@@ -181,7 +181,7 @@ module "wandb" {
         }
 
         tls = [
-          { hosts = trimprefix(trimprefix(local.url, "https://"), "http://"), secretName = "wandb-ssl-cert" }
+          { hosts = [trimprefix(trimprefix(local.url, "https://"), "http://")], secretName = "wandb-ssl-cert" }
         ]
       }
 
