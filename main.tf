@@ -154,7 +154,7 @@ module "wandb" {
         host = local.url
 
         bucket = {
-          provider  = "azure"
+          provider  = "az"
           name      = local.storage_account
           path      = local.blob_container
           accessKey = local.storage_key
