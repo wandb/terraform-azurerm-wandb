@@ -151,7 +151,8 @@ module "wandb" {
   spec = {
     values = {
       global = {
-        host = local.url
+        host    = local.url
+        license = var.license
 
         bucket = {
           provider  = "az"
