@@ -89,7 +89,7 @@ locals {
 
 module "aks_app" {
   source  = "wandb/wandb/kubernetes"
-  version = "1.11.4"
+  version = "1.12.0"
 
   license = var.license
 
