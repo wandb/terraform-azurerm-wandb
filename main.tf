@@ -146,7 +146,7 @@ module "wandb" {
     module.storage,
   ]
   operator_chart_version = "1.1.0"
-  controller_image_tag   = "1.9.1"
+  controller_image_tag   = "1.9.3"
 
   spec = {
     values = {
