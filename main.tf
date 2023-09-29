@@ -69,6 +69,9 @@ module "app_aks" {
   gateway           = module.app_lb.gateway
   cluster_subnet_id = module.networking.private_subnet.id
 
+  use_microsoft_defender     = var.use_microsoft_defender
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+
   tags = var.tags
 
   depends_on = [module.app_lb]
