@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.3.1...v1.4.0) (2023-09-13)
+
+
+### Features
+
+* Update to terraform-kubernetes-wandb v1.12.0 ([#26](https://github.com/wandb/terraform-azurerm-wandb/issues/26)) ([edd006e](https://github.com/wandb/terraform-azurerm-wandb/commit/edd006e94c4cba4c4504def73ec2b45f3435f551))
+
 ### [1.3.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.3.0...v1.3.1) (2023-08-15)
 
 
