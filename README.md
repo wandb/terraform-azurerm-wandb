@@ -47,7 +47,6 @@ resources that lack official modules.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_aks_app"></a> [aks\_app](#module\_aks\_app) | wandb/wandb/kubernetes | 1.12.0 |
 | <a name="module_app_aks"></a> [app\_aks](#module\_app\_aks) | ./modules/app_aks | n/a |
 | <a name="module_app_lb"></a> [app\_lb](#module\_app\_lb) | ./modules/app_lb | n/a |
 | <a name="module_cert_manager"></a> [cert\_manager](#module\_cert\_manager) | ./modules/cert_manager | n/a |
