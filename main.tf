@@ -114,6 +114,9 @@ module "aks_app" {
     "AZURE_STORAGE_ACCOUNT" = local.storage_account
   })
 
+  resource_limits   = var.resource_limits
+  resource_requests = var.resource_requests
+
   # If we dont wait, tf will start trying to deploy while the work group is
   # still spinning up
   depends_on = [

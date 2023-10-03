@@ -166,3 +166,24 @@ variable "external_bucket_region" {
   type        = string
   default     = ""
 }
+
+##########################################
+# K8s                                    #
+##########################################
+variable "resource_limits" {
+  description = "Specifies the resource limits for the wandb deployment"
+  type        = map(string)
+  default = {
+    cpu    = null
+    memory = null
+  }
+}
+
+variable "resource_requests" {
+  description = "Specifies the resource requests for the wandb deployment"
+  type        = map(string)
+  default = {
+    cpu    = "2000m"
+    memory = "2G"
+  }
+}
