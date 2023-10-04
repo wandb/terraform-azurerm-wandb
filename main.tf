@@ -67,6 +67,7 @@ module "app_aks" {
   location       = azurerm_resource_group.default.location
 
   gateway           = module.app_lb.gateway
+  public_subnet     = module.networking.public_subnet
   cluster_subnet_id = module.networking.private_subnet.id
 
   tags = var.tags

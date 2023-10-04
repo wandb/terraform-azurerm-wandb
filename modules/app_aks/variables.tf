@@ -22,6 +22,10 @@ variable "gateway" {
   type = object({ id = string })
 }
 
+variable "public_subnet" {
+  type = object({ id = string })
+}
+
 variable "tags" {
   default     = {}
   type        = map(string)
