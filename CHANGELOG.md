@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.4.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.4.0...v1.4.1) (2023-10-04)
+
+
+### Bug Fixes
+
+* Add perms for ingress to update the public subnet as well ([#28](https://github.com/wandb/terraform-azurerm-wandb/issues/28)) ([959c50f](https://github.com/wandb/terraform-azurerm-wandb/commit/959c50fe3a7379dd37350443d1b14787d9587ba2))
+
 ## [1.4.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.3.1...v1.4.0) (2023-09-13)
 
 
