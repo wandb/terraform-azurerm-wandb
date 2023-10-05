@@ -47,7 +47,7 @@ resources that lack official modules.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_aks_app"></a> [aks\_app](#module\_aks\_app) | wandb/wandb/kubernetes | 1.12.0 |
+| <a name="module_aks_app"></a> [aks\_app](#module\_aks\_app) | wandb/wandb/kubernetes | 1.13.0 |
 | <a name="module_app_aks"></a> [app\_aks](#module\_app\_aks) | ./modules/app_aks | n/a |
 | <a name="module_app_ingress"></a> [app\_ingress](#module\_app\_ingress) | ./modules/app_ingress | n/a |
 | <a name="module_app_lb"></a> [app\_lb](#module\_app\_lb) | ./modules/app_lb | n/a |
