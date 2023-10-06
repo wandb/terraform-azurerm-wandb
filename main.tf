@@ -101,7 +101,7 @@ locals {
   bucket          = var.external_bucket != "" ? var.external_bucket : "az://${local.storage_account}/${local.blob_container}"
   queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == "") ? "internal://" : "az://${local.account_name}/${local.queue_name}"
 
-  redis_connection_string = "redis://:${module.redis.instance.primary_access_key}@${module.redis.instance.hostname}:${module.redis.instance.port}/1"
+  redis_connection_string = "redis://:${module.redis.instance.primary_access_key}@${module.redis.instance.hostname}:${module.redis.instance.port}"
 }
 
 module "aks_app" {
@@ -128,7 +128,6 @@ module "aks_app" {
   other_wandb_env = merge(var.other_wandb_env, {
     "AZURE_STORAGE_KEY"     = local.storage_key
     "AZURE_STORAGE_ACCOUNT" = local.redis_connection_string,
-    "LOGGING_ENABLED" = "true"
   })
 
   # If we dont wait, tf will start trying to deploy while the work group is

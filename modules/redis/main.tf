@@ -6,7 +6,7 @@ resource "azurerm_redis_cache" "default" {
   family              = var.family
   sku_name            = var.sku_name
 
-  enable_non_ssl_port = false
+  enable_non_ssl_port = true
 
   redis_configuration {
   }
