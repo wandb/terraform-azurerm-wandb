@@ -38,6 +38,17 @@ module "database" {
   depends_on = [module.networking]
 }
 
+module "redis" {
+  source              = "./modules/redis"
+  namespace           = var.namespace
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+
+
+
+  depends_on = [module.networking]
+}
+
 module "storage" {
   count               = (var.blob_container == "" && var.external_bucket == "") ? 1 : 0
   source              = "./modules/storage"
@@ -66,6 +77,9 @@ module "app_aks" {
   resource_group = azurerm_resource_group.default
   location       = azurerm_resource_group.default.location
 
+  node_pool_vm_size  = var.kubernetes_instance_type
+  node_pool_vm_count = var.kubernetes_node_count
+
   gateway           = module.app_lb.gateway
   public_subnet     = module.networking.public_subnet
   cluster_subnet_id = module.networking.private_subnet.id
@@ -85,44 +99,9 @@ locals {
   storage_key     = var.external_bucket != "" ? "" : coalesce(var.storage_key, local.access_key, "")
   bucket          = var.external_bucket != "" ? var.external_bucket : "az://${local.storage_account}/${local.blob_container}"
   queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == "") ? "internal://" : "az://${local.account_name}/${local.queue_name}"
+
+  redis_connection_string = "redis://:${module.redis.instance.primary_access_key}@${module.redis.instance.hostname}:${module.redis.instance.port}"
 }
-
-# module "aks_app" {
-#   source  = "wandb/wandb/kubernetes"
-#   version = "1.12.0"
-
-#   license = var.license
-
-#   host                       = local.url
-#   bucket                     = local.bucket
-#   bucket_queue               = local.queue
-#   bucket_aws_region          = var.external_bucket_region
-#   database_connection_string = "mysql://${module.database.connection_string}"
-#   # redis_connection_string    = local.redis_connection_string
-#   # redis_ca_cert              = local.redis_certificate
-
-#   oidc_client_id   = var.oidc_client_id
-#   oidc_issuer      = var.oidc_issuer
-#   oidc_auth_method = var.oidc_auth_method
-#   oidc_secret      = var.oidc_secret
-
-#   wandb_image   = var.wandb_image
-#   wandb_version = var.wandb_version
-
-#   other_wandb_env = merge(var.other_wandb_env, {
-#     "AZURE_STORAGE_KEY"     = local.storage_key
-#     "AZURE_STORAGE_ACCOUNT" = local.storage_account
-#   })
-
-#   # If we dont wait, tf will start trying to deploy while the work group is
-#   # still spinning up
-#   depends_on = [
-#     module.database,
-#     # module.redis,
-#     module.storage,
-#     module.app_aks,
-#   ]
-# }
 
 module "cert_manager" {
   source    = "./modules/cert_manager"
@@ -169,6 +148,12 @@ module "wandb" {
           password = module.database.password
           port     = 3306
         }
+            
+        redis = {
+          host     = module.redis.instance.hostname
+          password = module.redis.instance.primary_access_key
+          port     = module.redis.instance.port
+        }
       }
 
       ingress = {
@@ -194,7 +179,7 @@ module "wandb" {
       }
 
       mysql = { install = false }
-      redis = { install = true }
+      redis = { install = false }
     }
   }
 }

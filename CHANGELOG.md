@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.4.2...v1.5.0) (2023-10-06)
+
+
+### Features
+
+* Enable redis ([#31](https://github.com/wandb/terraform-azurerm-wandb/issues/31)) ([ad587d4](https://github.com/wandb/terraform-azurerm-wandb/commit/ad587d46cc2b2a326dd99f51ce389cb6976ad166))
+
+### [1.4.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.4.1...v1.4.2) (2023-10-04)
+
+
+### Bug Fixes
+
+* Add perms for ingress to update the public subnet as well ([#29](https://github.com/wandb/terraform-azurerm-wandb/issues/29)) ([0af4bf3](https://github.com/wandb/terraform-azurerm-wandb/commit/0af4bf3310979e972cd04e19ee6d06cfec313742))
+
 ### [1.4.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.4.0...v1.4.1) (2023-10-04)
 
 

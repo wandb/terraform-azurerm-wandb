@@ -166,3 +166,15 @@ variable "external_bucket_region" {
   type        = string
   default     = ""
 }
+
+
+variable "kubernetes_instance_type" {
+  type        = string
+  description = "Use for the Kubernetes cluster."
+  default     = "Standard_D4s_v3"
+}
+
+variable "kubernetes_node_count" {
+  default = 2
+  type    = number
+}

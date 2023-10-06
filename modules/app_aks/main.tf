@@ -57,7 +57,7 @@ resource "azurerm_role_assignment" "resource_group" {
   principal_id         = local.ingress_gateway_principal_id
 }
 
-resource "azurerm_role_assignment" "gateway" {
+resource "azurerm_role_assignment" "public_subnet" {
   scope                = var.public_subnet.id
   role_definition_name = "Contributor"
   principal_id         = local.ingress_gateway_principal_id
