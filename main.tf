@@ -38,6 +38,17 @@ module "database" {
   depends_on = [module.networking]
 }
 
+module "redis" {
+  source              = "./modules/redis"
+  namespace           = var.namespace
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+
+
+
+  depends_on = [module.networking]
+}
+
 module "storage" {
   count               = (var.blob_container == "" && var.external_bucket == "") ? 1 : 0
   source              = "./modules/storage"
@@ -66,6 +77,9 @@ module "app_aks" {
   resource_group = azurerm_resource_group.default
   location       = azurerm_resource_group.default.location
 
+  node_pool_vm_size  = var.kubernetes_instance_type
+  node_pool_vm_count = var.kubernetes_node_count
+
   gateway           = module.app_lb.gateway
   public_subnet     = module.networking.public_subnet
   cluster_subnet_id = module.networking.private_subnet.id
@@ -86,6 +100,8 @@ locals {
   storage_key     = var.external_bucket != "" ? "" : coalesce(var.storage_key, local.access_key, "")
   bucket          = var.external_bucket != "" ? var.external_bucket : "az://${local.storage_account}/${local.blob_container}"
   queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == "") ? "internal://" : "az://${local.account_name}/${local.queue_name}"
+
+  redis_connection_string = "redis://:${module.redis.instance.primary_access_key}@${module.redis.instance.hostname}:${module.redis.instance.port}/1"
 }
 
 module "aks_app" {
@@ -99,8 +115,7 @@ module "aks_app" {
   bucket_queue               = local.queue
   bucket_aws_region          = var.external_bucket_region
   database_connection_string = "mysql://${module.database.connection_string}"
-  # redis_connection_string    = local.redis_connection_string
-  # redis_ca_cert              = local.redis_certificate
+  redis_connection_string    = local.redis_connection_string
 
   oidc_client_id   = var.oidc_client_id
   oidc_issuer      = var.oidc_issuer
@@ -112,7 +127,8 @@ module "aks_app" {
 
   other_wandb_env = merge(var.other_wandb_env, {
     "AZURE_STORAGE_KEY"     = local.storage_key
-    "AZURE_STORAGE_ACCOUNT" = local.storage_account
+    "AZURE_STORAGE_ACCOUNT" = local.redis_connection_string,
+    "LOGGING_ENABLED" = "true"
   })
 
   # If we dont wait, tf will start trying to deploy while the work group is
