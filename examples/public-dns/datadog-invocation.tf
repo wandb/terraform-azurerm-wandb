@@ -16,7 +16,7 @@ variable "dd_site" {
    #source             = "git::https://github.com/wandb/terraform-wandb-modules.git//datadog?ref=working"
    source = "../../../terraform-wandb-modules/datadog/"
    cloud_provider_tag = "azure"
-   cluster_name       = module.wandb.cluster_id
+   cluster_name       = "wandb-${var.namespace}"
    database_tag       = "managed"
    api_key            = var.dd_api_key
    app_key            = var.dd_app_key
@@ -27,10 +27,16 @@ variable "dd_site" {
    k8s_token                  = null
    k8s_client_certificate     = base64decode(module.wandb.cluster_client_certificate)
    k8s_client_key             = base64decode(module.wandb.cluster_client_key)
-   
-
    namespace       = var.namespace
    objectstore_tag = "managed"
+
+   node_labels_as_tags        = [ 
+    "node.kubernetes.io/instance-type: azure-instance-type",
+    "kubernetes.azure.com/cluster: k8s-cluster"
+   ]
+   
+
+
 }
 
 

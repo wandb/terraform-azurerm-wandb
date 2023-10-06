@@ -8,23 +8,23 @@ output "cluster_ca_certificate" {
 }
 
 output "cluster_client_certificate" {
-  value = module.app_aks.client_certificate
+  value = module.app_aks.cluster_client_certificate
 }
 
 output "cluster_client_key" {
-  value = module.app_aks.client_key
+  value = module.app_aks.cluster_client_key
 }
 
 output "cluster_host" {
-  value = module.app_aks.host
+  value = module.app_aks.cluster_host
 }
 
 output "cluster_id" {
-  value = module.app_aks.id
+  value = module.app_aks.cluster_id
 }
 
 output "cluster_identity" {
-  value = module.app_aks.identity
+  value = module.app_aks.cluster_identity
 }
 
 output "external_bucket" {
