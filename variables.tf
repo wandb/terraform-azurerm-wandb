@@ -167,14 +167,34 @@ variable "external_bucket_region" {
   default     = ""
 }
 
-
+##########################################
+# K8s                                    #
+##########################################
 variable "kubernetes_instance_type" {
   type        = string
   description = "Use for the Kubernetes cluster."
-  default     = "Standard_D4s_v3"
+  default     = "Standard_D4a_v4"
 }
 
 variable "kubernetes_node_count" {
   default = 2
   type    = number
+}
+
+variable "resource_limits" {
+  description = "Specifies the resource limits for the wandb deployment"
+  type        = map(string)
+  default = {
+    cpu    = null
+    memory = null
+  }
+}
+
+variable "resource_requests" {
+  description = "Specifies the resource requests for the wandb deployment"
+  type        = map(string)
+  default = {
+    cpu    = "2000m"
+    memory = "2G"
+  }
 }
