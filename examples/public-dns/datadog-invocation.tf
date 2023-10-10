@@ -37,11 +37,13 @@ module "datadog" {
   ]
 }
 
-resource "datadog_integration_azure" "wandb" {
-  tenant_name   = provider.azurerm.tenant_name
-  client_id     = provider.azurerm.client_id
-  client_secret = provider.azurerm.client_secret
-}
+ resource "datadog_integration_azure" "wandb" {
+
+   tenant_name   = provider.azurerm.tenant_name
+   client_id     = provider.azurerm.client_id
+   client_secret = provider.azurerm.client_secret
+ }
+
 
 
 # provider "kubernetes" {

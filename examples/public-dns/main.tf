@@ -3,6 +3,11 @@ provider "azurerm" {
   features {}
 }
 
+provider "datadog" {
+  api_key = var.dd_api_key
+  app_key = var.dd_app_key
+}
+
 provider "kubernetes" {
   host                   = module.wandb.cluster_host
   cluster_ca_certificate = base64decode(module.wandb.cluster_ca_certificate)

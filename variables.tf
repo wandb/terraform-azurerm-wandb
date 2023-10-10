@@ -198,3 +198,19 @@ variable "resource_requests" {
     memory = "2G"
   }
 }
+
+##########################################
+# K8s                                    #
+##########################################
+variable "dd_api_key" {
+  nullable = true
+  type     = string
+}
+variable "dd_app_key" {
+  nullable = true
+  type     = string
+}
+variable "dd_site" {
+  nullable = true
+  type     = string
+}
