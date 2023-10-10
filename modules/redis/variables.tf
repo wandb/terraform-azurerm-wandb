@@ -20,11 +20,11 @@ variable "sku_name" {
 }
 
 variable "family" {
-  type        = string
-  default     = "C"
+  type    = string
+  default = "C"
 }
 
 variable "capacity" {
-  type        = number
-  default     = 2
+  type    = number
+  default = 2
 }

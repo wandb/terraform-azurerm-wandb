@@ -5,13 +5,17 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 3.17"
     }
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "~> 2.23"
+    datadog = {
+      source  = "DataDog/datadog"
+      version = "3.30.0"
     }
     helm = {
       source  = "hashicorp/helm"
       version = "~> 2.6"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.23"
     }
   }
 }

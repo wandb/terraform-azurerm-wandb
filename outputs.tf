@@ -43,6 +43,7 @@ output "storage_account" {
 output "storage_container" {
   value = coalesce(var.external_bucket, var.blob_container, local.container_name)
 }
+
 output "url" {
   value       = local.url
   description = "The URL to the W&B application"

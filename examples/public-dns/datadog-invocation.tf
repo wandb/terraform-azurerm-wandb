@@ -12,33 +12,36 @@ variable "dd_site" {
 }
 
 
- module "datadog" {
-   #source             = "git::https://github.com/wandb/terraform-wandb-modules.git//datadog?ref=working"
-   source = "../../../terraform-wandb-modules/datadog/"
-   cloud_provider_tag = "azure"
-   cluster_name       = "wandb-${var.namespace}"
-   database_tag       = "managed"
-   api_key            = var.dd_api_key
-   app_key            = var.dd_app_key
-   site               = var.dd_site
-   environment_tag    = "managed-install"
-   k8s_cluster_ca_certificate = base64decode(module.wandb.cluster_ca_certificate)
-   k8s_host                   = module.wandb.cluster_host
-   k8s_token                  = null
-   k8s_client_certificate     = base64decode(module.wandb.cluster_client_certificate)
-   k8s_client_key             = base64decode(module.wandb.cluster_client_key)
-   namespace       = var.namespace
-   objectstore_tag = "managed"
+module "datadog" {
+  #source             = "git::https://github.com/wandb/terraform-wandb-modules.git//datadog?ref=working"
+  source = "../../../terraform-wandb-modules/datadog/"
 
-   node_labels_as_tags        = [ 
+  cloud_provider_tag         = "azure"
+  cluster_name               = "wandb-${var.namespace}"
+  database_tag               = "managed"
+  api_key                    = var.dd_api_key
+  app_key                    = var.dd_app_key
+  site                       = var.dd_site
+  environment_tag            = "managed-install"
+  k8s_cluster_ca_certificate = base64decode(module.wandb.cluster_ca_certificate)
+  k8s_host                   = module.wandb.cluster_host
+  k8s_token                  = null
+  k8s_client_certificate     = base64decode(module.wandb.cluster_client_certificate)
+  k8s_client_key             = base64decode(module.wandb.cluster_client_key)
+  namespace                  = var.namespace
+  objectstore_tag            = "managed"
+
+  node_labels_as_tags = [
     "node.kubernetes.io/instance-type: azure-instance-type",
     "kubernetes.azure.com/cluster: k8s-cluster"
-   ]
-   
-
-
+  ]
 }
 
+resource "datadog_integration_azure" "wandb" {
+  tenant_name   = provider.azurerm.tenant_name
+  client_id     = provider.azurerm.client_id
+  client_secret = provider.azurerm.client_secret
+}
 
 
 # provider "kubernetes" {
