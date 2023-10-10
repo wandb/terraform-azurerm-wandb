@@ -144,6 +144,10 @@ module "aks_app" {
     "azure.workload.identity/client-id" = module.identity.identity.client_id
   }
 
+  service_account_labels = {
+    "azure.workload.identity/use" = "true"
+  }
+
   license = var.license
 
   host                       = local.url
