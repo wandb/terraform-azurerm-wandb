@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.5.0...v1.6.0) (2023-10-09)
+
+
+### Features
+
+* Update resource reqs and limits ([#27](https://github.com/wandb/terraform-azurerm-wandb/issues/27)) ([bd2355e](https://github.com/wandb/terraform-azurerm-wandb/commit/bd2355edc497fd00934890e8d0203c3222ebe7fd))
+
 ## [1.5.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.4.2...v1.5.0) (2023-10-06)
 
 
