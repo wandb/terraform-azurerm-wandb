@@ -2,6 +2,8 @@ output "address" {
   value = module.app_lb.address
 }
 
+
+
 output "cluster_ca_certificate" {
   value     = module.app_aks.cluster_ca_certificate
   sensitive = true
@@ -44,6 +46,9 @@ output "storage_container" {
   value = coalesce(var.external_bucket, var.blob_container, local.container_name)
 }
 
+output "tenant_id" {
+  value = data.azurerm_subscription.current.tenant_id
+}
 output "url" {
   value       = local.url
   description = "The URL to the W&B application"

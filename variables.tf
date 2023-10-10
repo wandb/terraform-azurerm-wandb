@@ -199,18 +199,3 @@ variable "resource_requests" {
   }
 }
 
-##########################################
-# K8s                                    #
-##########################################
-variable "dd_api_key" {
-  nullable = true
-  type     = string
-}
-variable "dd_app_key" {
-  nullable = true
-  type     = string
-}
-variable "dd_site" {
-  nullable = true
-  type     = string
-}
