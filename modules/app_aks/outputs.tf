@@ -18,3 +18,7 @@ output "cluster_ca_certificate" {
   value     = azurerm_kubernetes_cluster.default.kube_config.0.cluster_ca_certificate
   sensitive = true
 }
+
+output "oidc_issuer_url" {
+  value = azurerm_kubernetes_cluster.default.oidc_issuer_url
+}

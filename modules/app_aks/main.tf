@@ -8,6 +8,10 @@ resource "azurerm_kubernetes_cluster" "default" {
   role_based_access_control_enabled = true
   http_application_routing_enabled  = false
 
+  azure_policy_enabled      = true
+  oidc_issuer_enabled       = true
+  workload_identity_enabled = true
+
   ingress_application_gateway {
     gateway_id = var.gateway.id
   }
@@ -23,7 +27,8 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 
   identity {
-    type = "SystemAssigned"
+    type         = "UserAssigned"
+    identity_ids = [var.identity.id]
   }
 
   network_profile {
@@ -33,13 +38,11 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 
   tags = var.tags
-}
 
-# resource "azurerm_role_assignment" "storage" {
-#   scope                = var.storage_account.id
-#   role_definition_name = "Storage Blob Data Owner"
-#   principal_id         = azurerm_kubernetes_cluster.default.identity.0.principal_id
-# }
+  lifecycle {
+    ignore_changes = [microsoft_defender]
+  }
+}
 
 locals {
   ingress_gateway_principal_id = azurerm_kubernetes_cluster.default.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
