@@ -5,10 +5,6 @@ provider "azurerm" {
 
 data "azurerm_subscription" "current" {}
 
-provider "azuread" {
-  tenant_id = data.azurerm_subscription.current.tenant_id
-}
-
 provider "kubernetes" {
   host                   = module.wandb.cluster_host
   cluster_ca_certificate = base64decode(module.wandb.cluster_ca_certificate)
