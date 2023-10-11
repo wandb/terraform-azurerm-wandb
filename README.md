@@ -73,7 +73,7 @@ resources that lack official modules.
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain for accessing the Weights & Biases UI. | `string` | `null` | no |
 | <a name="input_external_bucket"></a> [external\_bucket](#input\_external\_bucket) | String to configure a non Azure bucket (s3://user:pass@bucket) | `string` | `""` | no |
 | <a name="input_external_bucket_region"></a> [external\_bucket\_region](#input\_external\_bucket\_region) | When using external bucket the Region is mandatory | `string` | `""` | no |
-| <a name="input_kubernetes_instance_type"></a> [kubernetes\_instance\_type](#input\_kubernetes\_instance\_type) | Use for the Kubernetes cluster. | `string` | `"Standard_D4s_v3"` | no |
+| <a name="input_kubernetes_instance_type"></a> [kubernetes\_instance\_type](#input\_kubernetes\_instance\_type) | Use for the Kubernetes cluster. | `string` | `"Standard_D4a_v4"` | no |
 | <a name="input_kubernetes_node_count"></a> [kubernetes\_node\_count](#input\_kubernetes\_node\_count) | n/a | `number` | `2` | no |
 | <a name="input_license"></a> [license](#input\_license) | Your wandb/local license | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
