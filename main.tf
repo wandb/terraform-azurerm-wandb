@@ -170,10 +170,8 @@ module "aks_app" {
   other_wandb_env = merge(var.other_wandb_env, {
     "AZURE_STORAGE_KEY"     = local.storage_key
     "AZURE_STORAGE_ACCOUNT" = local.redis_connection_string,
-
-    "GORILLA_CUSTOMER_SECRET_STORE" = "azure-secretmanager://"
-    "AZURE_TENANT_ID" = data.azurerm_client_config.current.tenant_id
-    "AZURE_CLIENT_ID" = module.identity.identity.client_id
+    "GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
+    "GORILLA_CUSTOMER_SECRET_STORE_SOURCE" = "az-secretmanager://wandb",
   })
 
   resource_limits   = var.resource_limits
