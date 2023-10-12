@@ -136,10 +136,8 @@ resource "azurerm_federated_identity_credential" "app" {
 data "azurerm_client_config" "current" {}
 
 module "aks_app" {
-  # source  = "wandb/wandb/kubernetes"
-  # version = "1.12.0"
-
-  source = "../terraform-kubernetes-wandb"
+  source  = "wandb/wandb/kubernetes"
+  version = "1.14.0"
 
   service_account_name = local.service_account_name
   service_account_annotations = {
