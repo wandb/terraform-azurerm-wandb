@@ -1,8 +1,13 @@
 
 data "azurerm_client_config" "current" {}
 
+locals {
+  vault_name           = "${var.namespace}-vault"
+  vault_truncated_name = substr(local.vault_name, 0, min(length(local.vault_name), 24))
+}
+
 resource "azurerm_key_vault" "default" {
-  name                        = "${var.namespace}-vault"
+  name                        = trim(local.vault_truncated_name, "-")
   location                    = var.location
   resource_group_name         = var.resource_group.name
   tenant_id                   = data.azurerm_client_config.current.tenant_id
