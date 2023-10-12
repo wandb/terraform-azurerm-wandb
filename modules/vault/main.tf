@@ -7,7 +7,7 @@ locals {
 }
 
 resource "azurerm_key_vault" "default" {
-  name                        = local.vault_truncated_name
+  name                        = trim(local.vault_truncated_name, "-")
   location                    = var.location
   resource_group_name         = var.resource_group.name
   tenant_id                   = data.azurerm_client_config.current.tenant_id
