@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.6.0...v1.7.0) (2023-10-12)
+
+
+### Features
+
+* Enable azure secret store webhooks ([#33](https://github.com/wandb/terraform-azurerm-wandb/issues/33)) ([4739959](https://github.com/wandb/terraform-azurerm-wandb/commit/47399593843b6725c4eca5470ea471a0f3747033))
+
 ## [1.6.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.5.0...v1.6.0) (2023-10-09)
 
 
