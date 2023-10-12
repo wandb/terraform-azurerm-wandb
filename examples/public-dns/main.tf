@@ -3,6 +3,8 @@ provider "azurerm" {
   features {}
 }
 
+data "azurerm_subscription" "current" {}
+
 provider "kubernetes" {
   host                   = module.wandb.cluster_host
   cluster_ca_certificate = base64decode(module.wandb.cluster_ca_certificate)

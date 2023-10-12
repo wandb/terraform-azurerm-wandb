@@ -11,6 +11,14 @@ resource "azurerm_resource_group" "default" {
   tags = var.tags
 }
 
+module "identity" {
+  source = "./modules/identity"
+
+  namespace      = var.namespace
+  resource_group = azurerm_resource_group.default
+  location       = azurerm_resource_group.default.location
+}
+
 module "networking" {
   source              = "./modules/networking"
   namespace           = var.namespace
@@ -44,9 +52,16 @@ module "redis" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
-
-
   depends_on = [module.networking]
+}
+
+module "vault" {
+  source         = "./modules/vault"
+  namespace      = var.namespace
+  resource_group = azurerm_resource_group.default
+  location       = azurerm_resource_group.default.location
+
+  identity_object_id = module.identity.identity.principal_id
 }
 
 module "storage" {
@@ -80,6 +95,8 @@ module "app_aks" {
   node_pool_vm_size  = var.kubernetes_instance_type
   node_pool_vm_count = var.kubernetes_node_count
 
+  identity = module.identity.identity
+
   gateway           = module.app_lb.gateway
   public_subnet     = module.networking.public_subnet
   cluster_subnet_id = module.networking.private_subnet.id
@@ -88,7 +105,6 @@ module "app_aks" {
 
   depends_on = [module.app_lb]
 }
-
 
 locals {
   container_name  = try(module.storage[0].container.name, "")
@@ -104,9 +120,37 @@ locals {
   redis_connection_string = "redis://:${module.redis.instance.primary_access_key}@${module.redis.instance.hostname}:${module.redis.instance.port}"
 }
 
+locals {
+  service_account_name = "wandb-serviceaccount"
+}
+
+resource "azurerm_federated_identity_credential" "app" {
+  parent_id           = module.identity.identity.id
+  name                = "${var.namespace}-app-credentials"
+  resource_group_name = azurerm_resource_group.default.name
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = module.app_aks.oidc_issuer_url
+  subject             = "system:serviceaccount:default:${local.service_account_name}"
+}
+
+data "azurerm_client_config" "current" {}
+
 module "aks_app" {
   source  = "wandb/wandb/kubernetes"
-  version = "1.12.0"
+  version = "1.14.0"
+
+  service_account_name = local.service_account_name
+  service_account_annotations = {
+    "azure.workload.identity/client-id" = module.identity.identity.client_id
+  }
+
+  deployment_pod_labels = {
+    "azure.workload.identity/use" = "true"
+  }
+
+  service_account_labels = {
+    "azure.workload.identity/use" = "true"
+  }
 
   license = var.license
 
@@ -128,6 +172,8 @@ module "aks_app" {
   other_wandb_env = merge(var.other_wandb_env, {
     "AZURE_STORAGE_KEY"     = local.storage_key
     "AZURE_STORAGE_ACCOUNT" = local.redis_connection_string,
+    "GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
+    "GORILLA_CUSTOMER_SECRET_STORE_SOURCE" = "az-secretmanager://wandb",
   })
 
   resource_limits   = var.resource_limits
