@@ -17,13 +17,25 @@ resource "azurerm_key_vault" "default" {
   }
 }
 
+resource "azurerm_key_vault_access_policy" "parent" {
+  key_vault_id = azurerm_key_vault.default.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azurerm_client_config.current.object_id
+
+  key_permissions     = ["Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore", "Rotate", "GetRotationPolicy"]
+  secret_permissions  = ["Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore", "Set"]
+  storage_permissions = ["Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore"]
+
+  depends_on = [azurerm_key_vault.default]
+}
+
 resource "azurerm_key_vault_access_policy" "identity" {
   key_vault_id = azurerm_key_vault.default.id
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = var.identity_object_id
 
   key_permissions     = ["Get"]
-  secret_permissions  = ["Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore", "Set"]
+  secret_permissions  = ["Get", "Delete", "List", "Purge", "Recover", "Restore", "Set"]
   storage_permissions = ["Get"]
 
   depends_on = [azurerm_key_vault.default]
