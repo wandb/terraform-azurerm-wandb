@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.7.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.7.0...v1.7.1) (2023-10-12)
+
+
+### Bug Fixes
+
+* Long vault names ([#34](https://github.com/wandb/terraform-azurerm-wandb/issues/34)) ([8cdeafc](https://github.com/wandb/terraform-azurerm-wandb/commit/8cdeafc8637041bc8f4eb32cf641ab91655b7335))
+
 ## [1.7.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.6.0...v1.7.0) (2023-10-12)
 
 
