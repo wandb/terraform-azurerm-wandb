@@ -146,6 +146,10 @@ module "aks_app" {
     "azure.workload.identity/client-id" = module.identity.identity.client_id
   }
 
+  deployment_pod_labels = {
+    "azure.workload.identity/use" = "true"
+  }
+
   service_account_labels = {
     "azure.workload.identity/use" = "true"
   }
