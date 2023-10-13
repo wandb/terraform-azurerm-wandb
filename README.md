@@ -47,19 +47,23 @@ resources that lack official modules.
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_aks_app"></a> [aks\_app](#module\_aks\_app) | wandb/wandb/kubernetes | 1.14.0 |
 | <a name="module_app_aks"></a> [app\_aks](#module\_app\_aks) | ./modules/app_aks | n/a |
 | <a name="module_app_lb"></a> [app\_lb](#module\_app\_lb) | ./modules/app_lb | n/a |
 | <a name="module_cert_manager"></a> [cert\_manager](#module\_cert\_manager) | ./modules/cert_manager | n/a |
 | <a name="module_database"></a> [database](#module\_database) | ./modules/database | n/a |
+| <a name="module_identity"></a> [identity](#module\_identity) | ./modules/identity | n/a |
 | <a name="module_networking"></a> [networking](#module\_networking) | ./modules/networking | n/a |
 | <a name="module_redis"></a> [redis](#module\_redis) | ./modules/redis | n/a |
 | <a name="module_storage"></a> [storage](#module\_storage) | ./modules/storage | n/a |
 | <a name="module_wandb"></a> [wandb](#module\_wandb) | wandb/wandb/helm | 1.2.0 |
+| <a name="module_vault"></a> [vault](#module\_vault) | ./modules/vault | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
+| [azurerm_client_config.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) | data source |
 
 ## Inputs
 
