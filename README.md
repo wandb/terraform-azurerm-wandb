@@ -73,8 +73,7 @@ resources that lack official modules.
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version for MySQL | `string` | `"5.7"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | If the instance should have deletion protection enabled. The database / Bucket can't be deleted when this value is set to `true`. | `bool` | `true` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain for accessing the Weights & Biases UI. | `string` | `null` | no |
-| <a name="input_external_bucket"></a> [external\_bucket](#input\_external\_bucket) | String to configure a non Azure bucket (s3://user:pass@bucket) | `string` | `""` | no |
-| <a name="input_external_bucket_region"></a> [external\_bucket\_region](#input\_external\_bucket\_region) | When using external bucket the Region is mandatory | `string` | `""` | no |
+| <a name="input_external_bucket"></a> [external\_bucket](#input\_external\_bucket) | config an external bucket | `any` | `null` | no |
 | <a name="input_kubernetes_instance_type"></a> [kubernetes\_instance\_type](#input\_kubernetes\_instance\_type) | Use for the Kubernetes cluster. | `string` | `"Standard_D4a_v4"` | no |
 | <a name="input_kubernetes_node_count"></a> [kubernetes\_node\_count](#input\_kubernetes\_node\_count) | n/a | `number` | `2` | no |
 | <a name="input_license"></a> [license](#input\_license) | Your wandb/local license | `string` | n/a | yes |
@@ -85,8 +84,6 @@ resources that lack official modules.
 | <a name="input_oidc_issuer"></a> [oidc\_issuer](#input\_oidc\_issuer) | A url to your Open ID Connect identity provider, i.e. https://cognito-idp.us-east-1.amazonaws.com/us-east-1_uiIFNdacd | `string` | `""` | no |
 | <a name="input_oidc_secret"></a> [oidc\_secret](#input\_oidc\_secret) | The Client secret of application in your identity provider | `string` | `""` | no |
 | <a name="input_other_wandb_env"></a> [other\_wandb\_env](#input\_other\_wandb\_env) | Extra environment variables for W&B | `map(any)` | `{}` | no |
-| <a name="input_resource_limits"></a> [resource\_limits](#input\_resource\_limits) | Specifies the resource limits for the wandb deployment | `map(string)` | <pre>{<br>  "cpu": null,<br>  "memory": null<br>}</pre> | no |
-| <a name="input_resource_requests"></a> [resource\_requests](#input\_resource\_requests) | Specifies the resource requests for the wandb deployment | `map(string)` | <pre>{<br>  "cpu": "2000m",<br>  "memory": "2G"<br>}</pre> | no |
 | <a name="input_ssl"></a> [ssl](#input\_ssl) | Enable SSL certificate | `bool` | `true` | no |
 | <a name="input_storage_account"></a> [storage\_account](#input\_storage\_account) | Azure storage account name | `string` | `""` | no |
 | <a name="input_storage_key"></a> [storage\_key](#input\_storage\_key) | Azure primary storage access key | `string` | `""` | no |
