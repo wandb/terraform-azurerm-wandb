@@ -111,11 +111,11 @@ locals {
   account_name    = try(module.storage[0].account.name, "")
   access_key      = try(module.storage[0].account.primary_access_key, "")
   queue_name      = try(module.storage[0].queue.name, "")
-  blob_container  = coalesce(var.external_bucket, var.blob_container, local.container_name)
-  storage_account = var.external_bucket != "" ? "" : coalesce(var.storage_account, local.account_name, "")
-  storage_key     = var.external_bucket != "" ? "" : coalesce(var.storage_key, local.access_key, "")
-  bucket          = var.external_bucket != "" ? var.external_bucket : "az://${local.storage_account}/${local.blob_container}"
-  queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == "") ? "internal://" : "az://${local.account_name}/${local.queue_name}"
+  blob_container  = coalesce(var.blob_container, local.container_name)
+  storage_account = coalesce(var.storage_account, local.account_name, "")
+  storage_key     = coalesce(var.storage_key, local.access_key, "")
+  bucket          = "az://${local.storage_account}/${local.blob_container}"
+  queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == null) ? "internal://" : "az://${local.account_name}/${local.queue_name}"
 
   redis_connection_string = "redis://:${module.redis.instance.primary_access_key}@${module.redis.instance.hostname}:${module.redis.instance.port}"
 }
