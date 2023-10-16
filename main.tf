@@ -65,7 +65,7 @@ module "vault" {
 }
 
 module "storage" {
-  count               = (var.blob_container == "" && var.external_bucket == "") ? 1 : 0
+  count               = (var.blob_container == "" && var.external_bucket == null) ? 1 : 0
   source              = "./modules/storage"
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
@@ -164,12 +164,12 @@ module "wandb" {
         host    = local.url
         license = var.license
 
-        bucket = {
+        bucket = var.external_bucket == null  ? {
           provider  = "az"
           name      = local.storage_account
           path      = local.blob_container
           accessKey = local.storage_key
-        }
+        } : var.external_bucket
 
         mysql = {
           host     = module.database.address

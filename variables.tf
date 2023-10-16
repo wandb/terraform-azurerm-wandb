@@ -156,15 +156,9 @@ variable "storage_key" {
 }
 
 variable "external_bucket" {
-  description = "String to configure a non Azure bucket (s3://user:pass@bucket)"
-  type        = string
-  default     = ""
-}
-
-variable "external_bucket_region" {
-  description = "When using external bucket the Region is mandatory"
-  type        = string
-  default     = ""
+  description = "config an external bucket"
+  type        = any
+  default     = null
 }
 
 ##########################################
@@ -179,22 +173,4 @@ variable "kubernetes_instance_type" {
 variable "kubernetes_node_count" {
   default = 2
   type    = number
-}
-
-variable "resource_limits" {
-  description = "Specifies the resource limits for the wandb deployment"
-  type        = map(string)
-  default = {
-    cpu    = null
-    memory = null
-  }
-}
-
-variable "resource_requests" {
-  description = "Specifies the resource requests for the wandb deployment"
-  type        = map(string)
-  default = {
-    cpu    = "2000m"
-    memory = "2G"
-  }
 }
