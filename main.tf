@@ -172,8 +172,8 @@ module "wandb" {
         } : var.external_bucket
 
         datadog = {
-          api_key = var.dd_api_key
-          app_key = var.dd_app_key
+          apiKey = var.dd_api_key
+          appKey = var.dd_app_key
           site    = var.dd_site
         }
 
