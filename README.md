@@ -105,7 +105,6 @@ resources that lack official modules.
 | <a name="output_cluster_client_certificate"></a> [cluster\_client\_certificate](#output\_cluster\_client\_certificate) | n/a |
 | <a name="output_cluster_client_key"></a> [cluster\_client\_key](#output\_cluster\_client\_key) | n/a |
 | <a name="output_cluster_host"></a> [cluster\_host](#output\_cluster\_host) | n/a |
-| <a name="output_external_bucket"></a> [external\_bucket](#output\_external\_bucket) | n/a |
 | <a name="output_fqdn"></a> [fqdn](#output\_fqdn) | The FQDN to the W&B application |
 | <a name="output_storage_account"></a> [storage\_account](#output\_storage\_account) | n/a |
 | <a name="output_storage_container"></a> [storage\_container](#output\_storage\_container) | n/a |
