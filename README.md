@@ -71,9 +71,6 @@ resources that lack official modules.
 | <a name="input_create_redis"></a> [create\_redis](#input\_create\_redis) | Boolean indicating whether to provision an redis instance (true) or not (false). | `bool` | `false` | no |
 | <a name="input_database_availability_mode"></a> [database\_availability\_mode](#input\_database\_availability\_mode) | n/a | `string` | `"SameZone"` | no |
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version for MySQL | `string` | `"5.7"` | no |
-| <a name="input_dd_api_key"></a> [dd\_api\_key](#input\_dd\_api\_key) | ######################################### datadog                                # ######################################### | `string` | n/a | yes |
-| <a name="input_dd_app_key"></a> [dd\_app\_key](#input\_dd\_app\_key) | n/a | `string` | n/a | yes |
-| <a name="input_dd_site"></a> [dd\_site](#input\_dd\_site) | n/a | `string` | n/a | yes |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | If the instance should have deletion protection enabled. The database / Bucket can't be deleted when this value is set to `true`. | `bool` | `true` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain for accessing the Weights & Biases UI. | `string` | `null` | no |
 | <a name="input_external_bucket"></a> [external\_bucket](#input\_external\_bucket) | config an external bucket | `any` | `null` | no |
