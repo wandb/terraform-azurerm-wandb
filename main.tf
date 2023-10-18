@@ -111,9 +111,9 @@ locals {
   account_name    = try(module.storage[0].account.name, "")
   access_key      = try(module.storage[0].account.primary_access_key, "")
   queue_name      = try(module.storage[0].queue.name, "")
-  blob_container  = coalesce(var.blob_container, local.container_name)
-  storage_account = coalesce(var.storage_account, local.account_name, "")
-  storage_key     = coalesce(var.storage_key, local.access_key, "")
+  blob_container  = var.external_bucket == null ? coalesce(var.blob_container, local.container_name) : ""
+  storage_account = var.external_bucket == null ? coalesce(var.storage_account, local.account_name) : ""
+  storage_key     = var.external_bucket == null ? coalesce(var.storage_key, local.access_key) : ""
   bucket          = "az://${local.storage_account}/${local.blob_container}"
   queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == null) ? "internal://" : "az://${local.account_name}/${local.queue_name}"
 
