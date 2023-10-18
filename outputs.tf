@@ -30,13 +30,9 @@ output "cluster_ca_certificate" {
 }
 
 output "storage_account" {
-  value = var.external_bucket != "" ? "" : coalesce(var.storage_account, local.account_name, "")
+  value = var.external_bucket != null ? "" : coalesce(var.storage_account, local.account_name, "")
 }
 
 output "storage_container" {
-  value = coalesce(var.external_bucket, var.blob_container, local.container_name)
-}
-
-output "external_bucket" {
-  value = var.external_bucket != "" ? var.external_bucket : ""
+  value = var.external_bucket != null ? "" : coalesce(var.blob_container, local.container_name)
 }
