@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.7.1...v2.0.0) (2023-10-18)
+
+
+### ⚠ BREAKING CHANGES
+
+* Implement operator (#23)
+
+### Features
+
+* Implement operator ([#23](https://github.com/wandb/terraform-azurerm-wandb/issues/23)) ([26a4392](https://github.com/wandb/terraform-azurerm-wandb/commit/26a439278fed1f8a884142b3ce3feafb4e28ed8e))
+
 ### [1.7.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.7.0...v1.7.1) (2023-10-12)
 
 
