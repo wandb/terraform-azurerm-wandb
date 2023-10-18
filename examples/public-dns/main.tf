@@ -37,9 +37,6 @@ module "wandb" {
   create_redis       = true
   use_internal_queue = true
 
-  dd_api_key = var.dd_api_key
-  dd_app_key = var.dd_app_key
-  dd_site = var.dd_site
   deletion_protection = false
 
   tags = {

@@ -46,20 +46,3 @@ variable "license" {
   type        = string
   description = "Your wandb/local license"
 }
-
-
-##########################################
-# datadog                                #
-##########################################
-variable "dd_api_key" {
-  nullable = true
-  type     = string
-}
-variable "dd_app_key" {
-  nullable = true
-  type     = string
-}
-variable "dd_site" {
-  nullable = true
-  type     = string
-}
