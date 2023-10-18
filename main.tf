@@ -171,12 +171,6 @@ module "wandb" {
           accessKey = local.storage_key
         } : var.external_bucket
 
-        datadog = {
-          apiKey = var.dd_api_key
-          appKey = var.dd_app_key
-          site    = var.dd_site
-        }
-
         mysql = {
           host     = module.database.address
           database = module.database.database_name
