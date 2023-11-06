@@ -2,6 +2,50 @@ locals {
   fqdn       = var.subdomain == null ? var.domain_name : "${var.subdomain}.${var.domain_name}"
   url_prefix = var.ssl ? "https" : "http"
   url        = "${local.url_prefix}://${local.fqdn}"
+
+  # Specifications for t-shirt sized deployments
+  deployment_size = {
+      small = {
+        db = "Standard_E2ds_v4",
+        node_count = 2,
+        node_instance = "Standard_E2s_v5",
+        cache_sku_name = "Standard",
+        cache_family = "C",
+        cache_capacity = 3,
+      },
+      medium = {
+        db = "Standard_E4ds_v4",
+        node_count = 2,
+        node_instance = "Standard_E4s_v5",
+        cache_sku_name = "Standard",
+        cache_family = "C",
+        cache_capacity = 3,
+      },
+      large = {
+        db = "Standard_E8ds_v4",
+        node_count = 2,
+        node_instance = "Standard_E8s_v5",
+        cache_sku_name = "Standard",
+        cache_family = "C",
+        cache_capacity = 4,
+      },
+      xlarge = {
+        db = "Standard_E16ds_v4",
+        node_count = 3,
+        node_instance = "Standard_E8s_v5",
+        cache_sku_name = "Standard",
+        cache_family = "C",
+        cache_capacity = 4,
+      },
+      xxlarge = {
+        db = "Standard_E32ds_v4",
+        node_count = 3,
+        node_instance = "Standard_E16s_v5",
+        cache_sku_name = "Standard",
+        cache_family = "C",
+        cache_capacity = 5,
+      }
+  }
 }
 
 resource "azurerm_resource_group" "default" {
@@ -40,6 +84,7 @@ module "database" {
   database_subnet_id           = module.networking.database_subnet.id
 
   deletion_protection = var.deletion_protection
+  sku_name = coalesce(try(local.deployment_size[var.size].db, null), var.database_sku_name)
 
   tags = var.tags
 
@@ -52,6 +97,12 @@ module "redis" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
+  # Use the t-shirt sized deployment specifications if size is defined;
+  # if not, use the value of the corresponding variable that may have been manually defined;
+  # use the default value if neither has been defined
+  sku_name = coalesce(try(local.deployment_size[var.size].cache_sku_name, null), var.redis_sku_name)
+  family = coalesce(try(local.deployment_size[var.size].cache_family, null), var.redis_family)
+  capacity = coalesce(try(local.deployment_size[var.size].cache_capacity, null), var.redis_capacity)
   depends_on = [module.networking]
 }
 
@@ -92,8 +143,8 @@ module "app_aks" {
   resource_group = azurerm_resource_group.default
   location       = azurerm_resource_group.default.location
 
-  node_pool_vm_size  = var.kubernetes_instance_type
-  node_pool_vm_count = var.kubernetes_node_count
+  node_pool_vm_size  = coalesce(try(local.deployment_size[var.size].node_instance, null), var.kubernetes_instance_type)
+  node_pool_vm_count = coalesce(try(local.deployment_size[var.size].node_count, null), var.kubernetes_node_count)
 
   identity = module.identity.identity
 

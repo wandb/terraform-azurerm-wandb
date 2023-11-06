@@ -122,6 +122,12 @@ variable "database_availability_mode" {
   }
 }
 
+variable "database_sku_name" {
+  type        = string
+  default     = "GP_Standard_D4ds_v4"
+  description = "Specifies the SKU Name for this MySQL Server"
+}
+
 ##########################################
 # Redis                                  #
 ##########################################
@@ -129,6 +135,22 @@ variable "create_redis" {
   type        = bool
   description = "Boolean indicating whether to provision an redis instance (true) or not (false)."
   default     = false
+}
+
+variable "redis_sku_name" {
+  type        = string
+  default     = "Standard"
+  description = "Specifies the SKU Name for this Redis instance"
+}
+
+variable "redis_family" {
+  type    = string
+  default = "C"
+}
+
+variable "redis_capacity" {
+  type    = number
+  default = 2
 }
 
 ##########################################
@@ -197,4 +219,10 @@ variable "resource_requests" {
     cpu    = "2000m"
     memory = "2G"
   }
+}
+
+variable "size" {
+  description = "Deployment size for the instance"
+  type        = string
+  default = null
 }
