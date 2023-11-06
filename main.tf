@@ -5,46 +5,46 @@ locals {
 
   # Specifications for t-shirt sized deployments
   deployment_size = {
-      small = {
-        db = "Standard_E2ds_v4",
-        node_count = 2,
-        node_instance = "Standard_E2s_v5",
-        cache_sku_name = "Standard",
-        cache_family = "C",
-        cache_capacity = 3,
-      },
-      medium = {
-        db = "Standard_E4ds_v4",
-        node_count = 2,
-        node_instance = "Standard_E4s_v5",
-        cache_sku_name = "Standard",
-        cache_family = "C",
-        cache_capacity = 3,
-      },
-      large = {
-        db = "Standard_E8ds_v4",
-        node_count = 2,
-        node_instance = "Standard_E8s_v5",
-        cache_sku_name = "Standard",
-        cache_family = "C",
-        cache_capacity = 4,
-      },
-      xlarge = {
-        db = "Standard_E16ds_v4",
-        node_count = 3,
-        node_instance = "Standard_E8s_v5",
-        cache_sku_name = "Standard",
-        cache_family = "C",
-        cache_capacity = 4,
-      },
-      xxlarge = {
-        db = "Standard_E32ds_v4",
-        node_count = 3,
-        node_instance = "Standard_E16s_v5",
-        cache_sku_name = "Standard",
-        cache_family = "C",
-        cache_capacity = 5,
-      }
+    small = {
+      db = "Standard_E2ds_v4",
+      node_count = 2,
+      node_instance = "Standard_E2s_v5",
+      cache_sku_name = "Standard",
+      cache_family = "C",
+      cache_capacity = 3,
+    },
+    medium =
+      db = "Standard_E4ds_v4",
+      node_count = 2,
+      node_instance = "Standard_E4s_v5",
+      cache_sku_name = "Standard",
+      cache_family = "C",
+      cache_capacity = 3,
+    },
+    large = {
+      db = "Standard_E8ds_v4",
+      node_count = 2,
+      node_instance = "Standard_E8s_v5",
+      cache_sku_name = "Standard",
+      cache_family = "C",
+      cache_capacity = 4,
+    },
+    xlarge = {
+      db = "Standard_E16ds_v4",
+      node_count = 3,
+      node_instance = "Standard_E8s_v5",
+      cache_sku_name = "Standard",
+      cache_family = "C",
+      cache_capacity = 4,
+    },
+    xxlarge = {
+      db = "Standard_E32ds_v4",
+      node_count = 3,
+      node_instance = "Standard_E16s_v5",
+      cache_sku_name = "Standard",
+      cache_family = "C",
+      cache_capacity = 5,
+    }
   }
 }
 
