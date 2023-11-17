@@ -13,7 +13,7 @@ locals {
       cache_family = "C",
       cache_capacity = 3,
     },
-    medium =
+    medium = {
       db = "Standard_E4ds_v4",
       node_count = 2,
       node_instance = "Standard_E4s_v5",
