@@ -146,8 +146,10 @@ module "cert_manager" {
 }
 
 module "wandb" {
-  source  = "wandb/wandb/helm"
-  version = "1.2.0"
+  # source  = "wandb/wandb/helm"
+  # version = "1.2.0"
+  source = "git::https://github.com/wandb/terraform-helm-wandb.git?ref=yo-otel"
+
 
   depends_on = [
     module.app_aks,
