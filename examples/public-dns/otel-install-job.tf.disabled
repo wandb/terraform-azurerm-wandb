@@ -1,0 +1,81 @@
+resource "kubernetes_namespace" "otel-install" {
+  metadata {
+    name = "otel-install"
+  }
+}
+
+resource "kubernetes_cluster_role_binding" "otel-install" {
+  depends_on = [ kubernetes_namespace.otel-install ]
+  metadata {
+    name = "otel-install"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "cluster-admin"
+  }
+  subject {
+    kind = "ServiceAccount"
+    name = "default"
+    namespace = "otel-install"
+  }
+}
+
+
+resource "kubernetes_job" "otel-install" {
+  depends_on = [ kubernetes_namespace.otel-install ]
+  metadata {
+    name = "otel-install"
+    namespace = "otel-install"
+  }
+  spec {
+    ttl_seconds_after_finished = "300"
+    template {
+      metadata {}
+      spec {
+        service_account_name = "default"
+        automount_service_account_token = true
+        container {
+          name    = "otel-install"
+          image   = "docker.io/gls4wandb/k8s-job-otel-install:latest"
+          command = ["/bin/bash"]
+          args = ["/install-otel.sh"]
+          #command = ["sleep"]
+          #args    = ["9d"]  
+          env {
+            name  = "CLOUD"
+            value = "aws"
+          }
+
+          env {
+            name  = "CUSTOMER_NS"
+            value = var.namespace
+          }
+
+          env {
+            name  = "DATADOG_API_KEY"
+            value = var.dd_api_key
+          }
+
+          env {
+            name  = "DATADOG_SITE"
+            value = "datadoghq.com"
+          }
+
+          env {
+            name = "ENV"
+            value = "managed-install"
+          }
+        }
+
+        restart_policy = "Never"
+      }
+    }
+    backoff_limit = 10
+  }
+  wait_for_completion = true
+  timeouts {
+    create = "10m"
+    update = "10m"
+  }
+}
