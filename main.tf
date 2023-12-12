@@ -184,6 +184,9 @@ module "wandb" {
           password = module.redis.instance.primary_access_key
           port     = module.redis.instance.port
         }
+
+        extraEnv = var.other_wandb_env
+        
       }
             
       app = {
