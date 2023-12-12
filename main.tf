@@ -186,6 +186,7 @@ module "wandb" {
         }
 
         extraEnv = var.other_wandb_env
+        
       }
             
       app = {
