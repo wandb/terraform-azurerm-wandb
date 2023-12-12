@@ -138,8 +138,6 @@ module "app_aks" {
     },
     var.tags,
   )
-
-
 }
 
 locals {
