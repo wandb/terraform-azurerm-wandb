@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.0.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.0.0...v2.0.1) (2023-12-12)
+
+
+### Bug Fixes
+
+* Source extraEnv from other_wandb_env variable ([#36](https://github.com/wandb/terraform-azurerm-wandb/issues/36)) ([17cbde7](https://github.com/wandb/terraform-azurerm-wandb/commit/17cbde7351a9747d2a004d14c6bba10e05035caf))
+
 ## [2.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v1.7.1...v2.0.0) (2023-10-18)
 
 
