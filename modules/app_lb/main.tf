@@ -5,6 +5,7 @@ resource "azurerm_public_ip" "default" {
   sku                 = "Standard"
   allocation_method   = "Static"
   domain_name_label   = var.namespace
+  tags                = var.tags
 }
 
 locals {

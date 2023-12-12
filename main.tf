@@ -8,7 +8,13 @@ resource "azurerm_resource_group" "default" {
   name     = var.namespace
   location = var.location
 
-  tags = var.tags
+  tags = merge(
+    {
+      "customer-ns" = var.namespace,
+      "env"         = "managed-install"
+    },
+    var.tags,
+  )
 }
 
 module "identity" {
@@ -25,7 +31,13 @@ module "networking" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
-  tags = var.tags
+  tags = merge(
+    {
+      "customer-ns" = var.namespace,
+      "env"         = "managed-install"
+    },
+    var.tags,
+  )
 }
 
 module "database" {
@@ -41,7 +53,10 @@ module "database" {
 
   deletion_protection = var.deletion_protection
 
-  tags = var.tags
+  tags = {
+    "customer-ns" = var.namespace,
+    "env"         = "managed-install"
+  }
 
   depends_on = [module.networking]
 }
@@ -74,7 +89,13 @@ module "storage" {
 
   deletion_protection = var.deletion_protection
 
-  tags = var.tags
+  tags = merge(
+    {
+      "customer-ns" = var.namespace,
+      "env"         = "managed-install"
+    },
+    var.tags,
+  )
 }
 
 module "app_lb" {
@@ -84,10 +105,19 @@ module "app_lb" {
   location       = azurerm_resource_group.default.location
   network        = module.networking.network
   public_subnet  = module.networking.public_subnet
+
+  tags = merge(
+    {
+      "customer-ns" = var.namespace,
+      "env"         = "managed-install"
+    },
+    var.tags,
+  )
 }
 
 module "app_aks" {
   source         = "./modules/app_aks"
+  depends_on     = [module.app_lb]
   namespace      = var.namespace
   resource_group = azurerm_resource_group.default
   location       = azurerm_resource_group.default.location
@@ -101,9 +131,15 @@ module "app_aks" {
   public_subnet     = module.networking.public_subnet
   cluster_subnet_id = module.networking.private_subnet.id
 
-  tags = var.tags
+  tags = merge(
+    {
+      "customer-ns" = var.namespace,
+      "env"         = "managed-install"
+    },
+    var.tags,
+  )
 
-  depends_on = [module.app_lb]
+
 }
 
 locals {
@@ -164,7 +200,7 @@ module "wandb" {
         host    = local.url
         license = var.license
 
-        bucket = var.external_bucket == null  ? {
+        bucket = var.external_bucket == null ? {
           provider  = "az"
           name      = local.storage_account
           path      = local.blob_container
@@ -178,7 +214,7 @@ module "wandb" {
           password = module.database.password
           port     = 3306
         }
-            
+
         redis = {
           host     = module.redis.instance.hostname
           password = module.redis.instance.primary_access_key
@@ -186,9 +222,9 @@ module "wandb" {
         }
 
         extraEnv = var.other_wandb_env
-        
+
       }
-            
+
       app = {
         extraEnv = {
           "GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
