@@ -25,6 +25,8 @@ resource "azurerm_storage_account" "default" {
       retention_policy_days = 10
     }
   }
+
+  tags = var.tags
 }
 
 resource "azurerm_storage_container" "default" {

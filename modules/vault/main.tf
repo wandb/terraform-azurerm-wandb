@@ -7,10 +7,10 @@ locals {
 }
 
 resource "azurerm_key_vault" "default" {
-  name                        = trim(local.vault_truncated_name, "-")
-  location                    = var.location
-  resource_group_name         = var.resource_group.name
-  tenant_id                   = data.azurerm_client_config.current.tenant_id
+  name                = trim(local.vault_truncated_name, "-")
+  location            = var.location
+  resource_group_name = var.resource_group.name
+  tenant_id           = data.azurerm_client_config.current.tenant_id
 
   enabled_for_disk_encryption = true
 
@@ -19,6 +19,11 @@ resource "azurerm_key_vault" "default" {
   network_acls {
     bypass         = "AzureServices"
     default_action = "Allow"
+  }
+
+  tags = {
+    "customer-ns" = var.namespace,
+    "env"         = "managed-install"
   }
 }
 

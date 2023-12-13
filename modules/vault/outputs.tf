@@ -1,3 +1,3 @@
 output "vault" {
-    value = azurerm_key_vault.default
+  value = azurerm_key_vault.default
 }
