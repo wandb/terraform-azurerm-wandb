@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.1.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.0.1...v2.1.0) (2023-12-13)
+
+
+### Features
+
+* Add resource tags ([#38](https://github.com/wandb/terraform-azurerm-wandb/issues/38)) ([8ece24e](https://github.com/wandb/terraform-azurerm-wandb/commit/8ece24ea4df687473ce073e9afa937e132f01caf))
+
 ### [2.0.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.0.0...v2.0.1) (2023-12-12)
 
 
