@@ -24,6 +24,7 @@ resource "azurerm_kubernetes_cluster" "default" {
     type                = "VirtualMachineScaleSets"
     enable_auto_scaling = false
     zones               = ["1", "2"]
+    temporary_name_for_rotation = "foo"
   }
 
   identity {
