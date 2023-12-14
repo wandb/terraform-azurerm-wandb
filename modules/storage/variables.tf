@@ -18,13 +18,14 @@ variable "create_queue" {
   default = true
 }
 
-variable "tags" {
-  default     = {}
-  type        = map(string)
-  description = "Map of tags for resource"
-}
-
 variable "deletion_protection" {
   description = "If the instance should have deletion protection enabled. The storage container can't be deleted when this value is set to `true`."
   type        = bool
+}
+
+
+variable "tags" {
+  description = "Map of tags for resource"
+  nullable = "false"
+  type        = map(string)
 }

@@ -28,3 +28,10 @@ variable "capacity" {
   type    = number
   default = 2
 }
+
+
+variable "tags" {
+  description = "Map of tags for resource"
+  nullable = "false"
+  type        = map(string)
+}

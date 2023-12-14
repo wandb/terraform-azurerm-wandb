@@ -12,3 +12,4 @@ variable "location" {
   type        = string
   description = "The location where the Managed Kubernetes Cluster should be created."
 }
+

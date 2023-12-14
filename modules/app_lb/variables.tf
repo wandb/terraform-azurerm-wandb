@@ -28,7 +28,7 @@ variable "public_subnet" {
 }
 
 variable "tags" {
-  default     = {}
-  type        = map(string)
   description = "Map of tags for resource"
+  nullable = "false"
+  type        = map(string)
 }

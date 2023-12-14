@@ -26,8 +26,3 @@ variable "ingress_class" {
   description = "The ingress class to monitor for ingress"
   default     = "azure/application-gateway"
 }
-
-variable "tags" {
-  description = "Tags to be passed to created instances"
-  default     = {}
-}

@@ -30,16 +30,16 @@ variable "public_subnet" {
   type = object({ id = string })
 }
 
-variable "tags" {
-  default     = {}
-  type        = map(string)
-  description = "Map of tags for resource"
-}
-
 variable "node_pool_vm_size" {
   type = string
 }
 
 variable "node_pool_vm_count" {
   type = number
+}
+
+variable "tags" {
+  description = "Map of tags for resource"
+  nullable = "false"
+  type        = map(string)
 }

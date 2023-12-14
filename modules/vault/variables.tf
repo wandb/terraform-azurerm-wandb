@@ -16,3 +16,9 @@ variable "location" {
 variable "identity_object_id" {
   type = string
 }
+
+variable "tags" {
+  description = "Map of tags for resource"
+  nullable = "false"
+  type        = map(string)
+}
