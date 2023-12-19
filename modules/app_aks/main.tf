@@ -17,13 +17,14 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 
   default_node_pool {
-    name                = "default"
-    node_count          = 2
-    vm_size             = "Standard_D4s_v3"
-    vnet_subnet_id      = var.cluster_subnet_id
-    type                = "VirtualMachineScaleSets"
-    enable_auto_scaling = false
-    zones               = ["1", "2"]
+    name                        = "default"
+    node_count                  = var.node_pool_vm_count
+    vm_size                     = var.node_pool_vm_size
+    vnet_subnet_id              = var.cluster_subnet_id
+    type                        = "VirtualMachineScaleSets"
+    enable_auto_scaling         = false
+    zones                       = ["1", "2"]
+    temporary_name_for_rotation = "rotating"
   }
 
   identity {
