@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.1.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.0...v2.1.1) (2023-12-19)
+
+
+### Bug Fixes
+
+* Actually use node_pool_vm_count ([#39](https://github.com/wandb/terraform-azurerm-wandb/issues/39)) ([00274f1](https://github.com/wandb/terraform-azurerm-wandb/commit/00274f135f8fbf3d27146f8a45f4f522aa3ee25d))
+
 ## [2.1.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.0.1...v2.1.0) (2023-12-13)
 
 
