@@ -15,7 +15,7 @@ variable "location" {
 
 variable "sku_name" {
   type        = string
-  default     = "GP_Standard_D4ds_v4"
+  default     = "GP_Standard_D4ds_v5"
   description = "Specifies the SKU Name for this MySQL Server"
 }
 
