@@ -32,7 +32,7 @@ variable "database_private_dns_zone_id" {
 variable "database_version" {
   description = "Version for MYSQL"
   type        = string
-  default     = "5.7"
+  default     = "8.0"
 }
 
 variable "database_availability_mode" {
