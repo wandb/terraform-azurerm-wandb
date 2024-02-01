@@ -122,6 +122,12 @@ variable "database_availability_mode" {
   }
 }
 
+variable "database_sku_name" {
+  type        = string
+  default     = "GP_Standard_D4ds_v4"
+  description = "Specifies the SKU Name for this MySQL Server"
+}
+
 ##########################################
 # Redis                                  #
 ##########################################
