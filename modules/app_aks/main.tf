@@ -45,13 +45,12 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 
   key_management_service {
-    key_vault_key_id = var.etcd_key_vault_key_id
+    key_vault_key_id = azurerm_key_vault_key.etcd.id
   }
 }
 
 locals {
   ingress_gateway_principal_id = azurerm_kubernetes_cluster.default.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
-  
 }
 
 resource "azurerm_role_assignment" "gateway" {

@@ -21,7 +21,10 @@ resource "azurerm_key_vault" "default" {
     default_action = "Allow"
   }
 
-  tags = var.tags
+  tags = {
+    "customer-ns" = var.namespace,
+    "env"         = "managed-install"
+  }
 }
 
 resource "azurerm_key_vault_access_policy" "parent" {
@@ -29,9 +32,9 @@ resource "azurerm_key_vault_access_policy" "parent" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = data.azurerm_client_config.current.object_id
 
-  key_permissions     = ["Backup", "Create", "Decrypt", "Delete", "Get", "GetRotationPolicy", "List", "Purge", "Recover", "Restore", "Rotate"]
-  secret_permissions  = ["Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"]
-  storage_permissions = ["Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore"]
+  key_permissions     = ["Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore", "Rotate", "GetRotationPolicy"]
+  secret_permissions  = ["Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore", "Set"]
+  storage_permissions = ["Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore"]
 
   depends_on = [azurerm_key_vault.default]
 }
@@ -44,6 +47,7 @@ resource "azurerm_key_vault_access_policy" "identity" {
   key_permissions = ["Create", "Decrypt", "Get", "List"]
   secret_permissions = ["Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"]
   storage_permissions = ["Get","List"]
+
 
   depends_on = [azurerm_key_vault.default]
 }

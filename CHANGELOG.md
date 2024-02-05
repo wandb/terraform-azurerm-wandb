@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.1.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.1...v2.1.2) (2024-02-05)
+
+
+### Reverts
+
+* Revert "alphabetize variables" ([25522dc](https://github.com/wandb/terraform-azurerm-wandb/commit/25522dc6bbf86bef341a12f010d1fa393b72aa38))
+* Revert "pass etcd keystore key id to module" ([007ecb5](https://github.com/wandb/terraform-azurerm-wandb/commit/007ecb5aba0fa94d539783ad421d796512a4ebd7))
+* Revert "a little bit of cleanup" ([b3578ac](https://github.com/wandb/terraform-azurerm-wandb/commit/b3578ac7ab7713cfe43f58adb772d62550bc4830))
+
 ### [2.1.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.0...v2.1.1) (2023-12-19)
 
 
