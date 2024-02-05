@@ -3,12 +3,6 @@ variable "cluster_subnet_id" {
   description = "Network subnet id for cluster"
 }
 
-variable "etcd_key_vault_key_id" {
-  description = "The ID of the key (stored in Key Vault) used to encryypt etcd's persistent storage."
-  nullable    = false
-  type        = string
-}
-
 variable "gateway" {
   type = object({ id = string })
 }
