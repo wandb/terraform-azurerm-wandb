@@ -21,10 +21,7 @@ resource "azurerm_key_vault" "default" {
     default_action = "Allow"
   }
 
-  tags = {
-    "customer-ns" = var.namespace,
-    "env"         = "managed-install"
-  }
+  tags = var.tags
 }
 
 resource "azurerm_key_vault_access_policy" "parent" {
