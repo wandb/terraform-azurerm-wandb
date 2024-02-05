@@ -29,7 +29,7 @@ resource "azurerm_key_vault_access_policy" "parent" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = data.azurerm_client_config.current.object_id
 
-  key_permissions     = ["Backup", "Create", "Decrypt", "Delete", "Get", "GetRotationPolicy", "List", "Purge", "Recover", "Restore", "Rotate"]
+  key_permissions     = ["Backup", "Create", "Decrypt", "Delete", "Encrypt", "Get", "GetRotationPolicy", "List", "Purge", "Recover", "Restore", "Rotate"]
   secret_permissions  = ["Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"]
   storage_permissions = ["Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore"]
 
@@ -41,9 +41,9 @@ resource "azurerm_key_vault_access_policy" "identity" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = var.identity_object_id
 
-  key_permissions = ["Create", "Decrypt", "Get", "List"]
-  secret_permissions = ["Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"]
-  storage_permissions = ["Get","List"]
+  key_permissions     = ["Create", "Decrypt", "Encrypt", "Get", "List"]
+  secret_permissions  = ["Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"]
+  storage_permissions = ["Get", "List"]
 
 
   depends_on = [azurerm_key_vault.default]
@@ -55,12 +55,5 @@ resource "azurerm_key_vault_key" "etcd" {
   key_type     = "RSA"
   key_size     = 2048
 
-  key_opts = [
-    "decrypt",
-    "encrypt",
-    "sign",
-    "unwrapKey",
-    "verify",
-    "wrapKey",
-  ]
+  key_opts = ["decrypt", "encrypt", "sign", "unwrapKey", "verify", "wrapKey", ]
 }

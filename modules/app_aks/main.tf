@@ -51,7 +51,7 @@ resource "azurerm_kubernetes_cluster" "default" {
 
 locals {
   ingress_gateway_principal_id = azurerm_kubernetes_cluster.default.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
-  
+
 }
 
 resource "azurerm_role_assignment" "gateway" {
