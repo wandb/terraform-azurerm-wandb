@@ -41,9 +41,9 @@ resource "azurerm_key_vault_access_policy" "identity" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = var.identity_object_id
 
-  key_permissions = ["Create", "Decrypt", "Get"]
+  key_permissions = ["Create", "Decrypt", "Get", "List"]
   secret_permissions = ["Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"]
-  storage_permissions = ["Get"]
+  storage_permissions = ["Get","List"]
 
   depends_on = [azurerm_key_vault.default]
 }
