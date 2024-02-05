@@ -65,19 +65,19 @@ module "redis" {
 }
 
 module "vault" {
-  source = "./modules/vault"
+  source         = "./modules/vault"
 
   identity_object_id = module.identity.identity.principal_id
-  location           = azurerm_resource_group.default.location
-  namespace          = var.namespace
-  resource_group     = azurerm_resource_group.default
+  location       = azurerm_resource_group.default.location
+  namespace      = var.namespace
+  resource_group = azurerm_resource_group.default
 
   tags = var.tags
 }
 
 module "storage" {
-  count  = (var.blob_container == "" && var.external_bucket == null) ? 1 : 0
-  source = "./modules/storage"
+  count               = (var.blob_container == "" && var.external_bucket == null) ? 1 : 0
+  source              = "./modules/storage"
 
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
@@ -89,7 +89,7 @@ module "storage" {
 }
 
 module "app_lb" {
-  source = "./modules/app_lb"
+  source         = "./modules/app_lb"
 
   namespace      = var.namespace
   resource_group = azurerm_resource_group.default
