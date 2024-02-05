@@ -8,13 +8,7 @@ resource "azurerm_resource_group" "default" {
   name     = var.namespace
   location = var.location
 
-  tags = merge(
-    {
-      "customer-ns" = var.namespace,
-      "env"         = "managed-install"
-    },
-    var.tags,
-  )
+  tags = var.tags
 }
 
 module "identity" {
@@ -106,38 +100,25 @@ module "app_lb" {
   network        = module.networking.network
   public_subnet  = module.networking.public_subnet
 
-  tags = merge(
-    {
-      "customer-ns" = var.namespace,
-      "env"         = "managed-install"
-    },
-    var.tags,
-  )
+  tags = var.tags
 }
 
 module "app_aks" {
-  source         = "./modules/app_aks"
-  depends_on     = [module.app_lb]
-  namespace      = var.namespace
-  resource_group = azurerm_resource_group.default
-  location       = azurerm_resource_group.default.location
+  source     = "./modules/app_aks"
+  depends_on = [module.app_lb]
 
-  node_pool_vm_size  = var.kubernetes_instance_type
-  node_pool_vm_count = var.kubernetes_node_count
+  cluster_subnet_id     = module.networking.private_subnet.id
+  etcd_key_vault_key_id = azurerm_key_vault_key.etcd.id
+  gateway               = module.app_lb.gateway
+  identity              = module.identity.identity
+  location              = azurerm_resource_group.default.location
+  namespace             = var.namespace
+  node_pool_vm_count    = var.kubernetes_node_count
+  node_pool_vm_size     = var.kubernetes_instance_type
+  public_subnet         = module.networking.public_subnet
+  resource_group        = azurerm_resource_group.default
 
-  identity = module.identity.identity
-
-  gateway           = module.app_lb.gateway
-  public_subnet     = module.networking.public_subnet
-  cluster_subnet_id = module.networking.private_subnet.id
-
-  tags = merge(
-    {
-      "customer-ns" = var.namespace,
-      "env"         = "managed-install"
-    },
-    var.tags,
-  )
+  tags = var.tags
 }
 
 locals {
