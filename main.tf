@@ -66,31 +66,34 @@ module "redis" {
 
 module "vault" {
   source         = "./modules/vault"
-
-  identity_object_id = module.identity.identity.principal_id
-  location       = azurerm_resource_group.default.location
   namespace      = var.namespace
   resource_group = azurerm_resource_group.default
+  location       = azurerm_resource_group.default.location
 
-  tags = var.tags
+  identity_object_id = module.identity.identity.principal_id
 }
 
 module "storage" {
   count               = (var.blob_container == "" && var.external_bucket == null) ? 1 : 0
   source              = "./modules/storage"
-
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   create_queue        = !var.use_internal_queue
+
   deletion_protection = var.deletion_protection
 
-  tags = var.tags
+  tags = merge(
+    {
+      "customer-ns" = var.namespace,
+      "env"         = "managed-install"
+    },
+    var.tags,
+  )
 }
 
 module "app_lb" {
   source         = "./modules/app_lb"
-
   namespace      = var.namespace
   resource_group = azurerm_resource_group.default
   location       = azurerm_resource_group.default.location
@@ -105,7 +108,7 @@ module "app_aks" {
   depends_on = [module.app_lb]
 
   cluster_subnet_id     = module.networking.private_subnet.id
-  etcd_key_vault_key_id = module.vault.etcd_key_id
+  etcd_key_vault_key_id = azurerm_key_vault_key.etcd.id
   gateway               = module.app_lb.gateway
   identity              = module.identity.identity
   location              = azurerm_resource_group.default.location
