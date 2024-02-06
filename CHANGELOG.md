@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.1.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.2...v2.1.3) (2024-02-06)
+
+
+### Bug Fixes
+
+* Pass DB sku ([#42](https://github.com/wandb/terraform-azurerm-wandb/issues/42)) ([2cba3b4](https://github.com/wandb/terraform-azurerm-wandb/commit/2cba3b4e3d24df892f11c515874346739f9500c4))
+
 ### [2.1.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.1...v2.1.2) (2024-02-05)
 
 
