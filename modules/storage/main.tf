@@ -38,7 +38,7 @@ resource "azurerm_storage_container" "default" {
 resource "azurerm_management_lock" "default" {
   count      = var.deletion_protection ? 1 : 0
   name       = "${var.namespace}-container"
-  scope      = azurerm_storage_container.default.id
+  scope      = azurerm_storage_account.default.id
   lock_level = "CanNotDelete"
   notes      = "Deletion protection is enabled on the storage container."
 }
