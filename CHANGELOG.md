@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.1.5](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.4...v2.1.5) (2024-02-06)
+
+
+### Bug Fixes
+
+* Revert errant commits ([#47](https://github.com/wandb/terraform-azurerm-wandb/issues/47)) ([10c5ca9](https://github.com/wandb/terraform-azurerm-wandb/commit/10c5ca970c4b59d802b0ea14c6966bfd71e1e297))
+
 ### [2.1.4](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.3...v2.1.4) (2024-02-06)
 
 
