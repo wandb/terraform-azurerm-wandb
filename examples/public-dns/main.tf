@@ -31,6 +31,8 @@ module "wandb" {
   domain_name = var.domain_name
   subdomain   = var.subdomain
 
+  database_sku_name = var.database_sku_name
+
   wandb_version = var.wandb_version
   wandb_image   = var.wandb_image
 

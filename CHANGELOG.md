@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.1.5](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.4...v2.1.5) (2024-02-06)
+
+
+### Bug Fixes
+
+* Revert errant commits ([#47](https://github.com/wandb/terraform-azurerm-wandb/issues/47)) ([10c5ca9](https://github.com/wandb/terraform-azurerm-wandb/commit/10c5ca970c4b59d802b0ea14c6966bfd71e1e297))
+
+### [2.1.4](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.3...v2.1.4) (2024-02-06)
+
+
+### Bug Fixes
+
+* Fix deletion protection for Azure storage ([1bdbdf6](https://github.com/wandb/terraform-azurerm-wandb/commit/1bdbdf64706b843fb0f6d2d7e718df0a1c451e36))
+
+### [2.1.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.2...v2.1.3) (2024-02-06)
+
+
+### Bug Fixes
+
+* Pass DB sku ([#42](https://github.com/wandb/terraform-azurerm-wandb/issues/42)) ([2cba3b4](https://github.com/wandb/terraform-azurerm-wandb/commit/2cba3b4e3d24df892f11c515874346739f9500c4))
+
 ### [2.1.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.1...v2.1.2) (2024-02-05)
 
 
