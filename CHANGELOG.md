@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.1.4](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.3...v2.1.4) (2024-02-06)
+
+
+### Bug Fixes
+
+* Fix deletion protection for Azure storage ([1bdbdf6](https://github.com/wandb/terraform-azurerm-wandb/commit/1bdbdf64706b843fb0f6d2d7e718df0a1c451e36))
+
 ### [2.1.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.2...v2.1.3) (2024-02-06)
 
 
