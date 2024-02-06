@@ -43,10 +43,6 @@ resource "azurerm_kubernetes_cluster" "default" {
   lifecycle {
     ignore_changes = [microsoft_defender]
   }
-
-  key_management_service {
-    key_vault_key_id = azurerm_key_vault_key.etcd.id
-  }
 }
 
 locals {

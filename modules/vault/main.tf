@@ -50,19 +50,3 @@ resource "azurerm_key_vault_access_policy" "identity" {
 
   depends_on = [azurerm_key_vault.default]
 }
-
-resource "azurerm_key_vault_key" "etcd" {
-  name         = "generated-etcd-key"
-  key_vault_id = azurerm_key_vault.default.id
-  key_type     = "RSA"
-  key_size     = 2048
-
-  key_opts = [
-    "decrypt",
-    "encrypt",
-    "sign",
-    "unwrapKey",
-    "verify",
-    "wrapKey",
-  ]
-}
