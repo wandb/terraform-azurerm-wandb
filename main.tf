@@ -25,13 +25,7 @@ module "networking" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
-  tags = merge(
-    {
-      "customer-ns" = var.namespace,
-      "env"         = "managed-install"
-    },
-    var.tags,
-  )
+  tags = var.tags
 }
 
 module "database" {

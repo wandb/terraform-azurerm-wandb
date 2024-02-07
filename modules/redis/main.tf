@@ -11,8 +11,4 @@ resource "azurerm_redis_cache" "default" {
   redis_configuration {
   }
 
-  tags = {
-    "customer-ns" = var.namespace,
-    "env"         = "managed-install"
-  }
 }
