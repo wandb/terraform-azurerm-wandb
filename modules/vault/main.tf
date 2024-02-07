@@ -50,7 +50,7 @@ resource "azurerm_key_vault_access_policy" "identity" {
 }
 
 resource "azurerm_key_vault_key" "etcd" {
-  depends_on = [ azurerm_key_vault_access_policy.parent, azurerm_key_vault_access_policy.identity ]
+  depends_on = [azurerm_key_vault_access_policy.parent, azurerm_key_vault_access_policy.identity]
 
   name         = "generated-etcd-key"
   key_vault_id = azurerm_key_vault.default.id
