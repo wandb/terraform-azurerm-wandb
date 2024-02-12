@@ -33,11 +33,6 @@ resource "azurerm_storage_account" "default" {
       identity_ids = [var.identity_ids]
     }
   }
-  # identity {
-  #   type         = "UserAssigned"
-  #   identity_ids = [var.identity_ids]
-  # }
-
   dynamic "customer_managed_key" {
     for_each = var.create_cmk == true ? [1] : []
     content {
@@ -45,13 +40,6 @@ resource "azurerm_storage_account" "default" {
       key_vault_key_id          = var.wb_managed_key_id
     }
   }
-
-  # customer_managed_key {
-  #   user_assigned_identity_id = var.identity_ids
-  #   key_vault_key_id          = var.wb_managed_key_id
-  # }
-
-
   tags = var.tags
 }
 
