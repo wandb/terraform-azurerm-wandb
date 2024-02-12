@@ -11,6 +11,7 @@ resource "azurerm_key_vault" "default" {
   location            = var.location
   resource_group_name = var.resource_group.name
   tenant_id           = data.azurerm_client_config.current.tenant_id
+  purge_protection_enabled = true
 
   enabled_for_disk_encryption = true
 
@@ -32,7 +33,7 @@ resource "azurerm_key_vault_access_policy" "parent" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = data.azurerm_client_config.current.object_id
 
-  key_permissions     = ["Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore", "Rotate", "GetRotationPolicy"]
+  key_permissions     = ["Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore", "Rotate", "GetRotationPolicy","Create"]
   secret_permissions  = ["Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore", "Set"]
   storage_permissions = ["Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore"]
 
@@ -44,7 +45,7 @@ resource "azurerm_key_vault_access_policy" "identity" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = var.identity_object_id
 
-  key_permissions     = ["Get"]
+  key_permissions     = ["Get", "List", "Encrypt", "Decrypt","UnwrapKey","WrapKey"]
   secret_permissions  = ["Get", "Delete", "List", "Purge", "Recover", "Restore", "Set"]
   storage_permissions = ["Get"]
 

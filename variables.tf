@@ -180,3 +180,23 @@ variable "kubernetes_node_count" {
   default = 2
   type    = number
 }
+
+# ##########################################
+# # vault key                               #
+# ##########################################
+
+variable "key_type" {
+  default = "RSA"
+  type = string
+}
+
+variable "key_size" {
+  default = 2048
+ type = number
+}
+
+variable "curve" {
+  type = string
+  default = "P-256"
+  
+}

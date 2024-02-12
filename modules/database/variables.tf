@@ -56,3 +56,12 @@ variable "deletion_protection" {
   description = "If the instance should have deletion protection enabled. The database can't be deleted when this value is set to `true`."
   type        = bool
 }
+
+
+variable "wb_managed_key_id" {
+    type        = string
+}
+
+variable "identity_ids" {
+  type = string
+}

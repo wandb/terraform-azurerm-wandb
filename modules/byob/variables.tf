@@ -1,6 +1,10 @@
 variable "resource_group_name" {
-  description = "Resource Group name"
-  type        = string
+
+  type = object({
+    name = string,
+    id = string
+  })
+  
 }
 
 variable "location" {
@@ -17,4 +21,13 @@ variable "deletion_protection" {
   description = "If the instance should have deletion protection enabled. The storage container can't be deleted when this value is set to `true`."
   type        = bool
   default     = true
+}
+
+variable "rg_name" {
+    type        = string
+}
+
+
+variable "create_cmk" {
+  type = bool
 }
