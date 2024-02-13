@@ -30,6 +30,7 @@ module "networking" {
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
+  private_link         = var.create_private_link
 
   tags = merge(
     {
@@ -106,6 +107,8 @@ module "app_lb" {
   location       = azurerm_resource_group.default.location
   network        = module.networking.network
   public_subnet  = module.networking.public_subnet
+  private_subnet = module.networking.private_subnet.id
+  private_link   = var.create_private_link
 
   tags = merge(
     {
