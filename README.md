@@ -68,6 +68,7 @@ resources that lack official modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_blob_container"></a> [blob\_container](#input\_blob\_container) | Use an existing bucket. | `string` | `""` | no |
+| <a name="input_create_cmk_rds"></a> [create\_cmk\_rds](#input\_create\_cmk\_rds) | n/a | `bool` | n/a | yes |
 | <a name="input_create_redis"></a> [create\_redis](#input\_create\_redis) | Boolean indicating whether to provision an redis instance (true) or not (false). | `bool` | `false` | no |
 | <a name="input_curve"></a> [curve](#input\_curve) | n/a | `string` | `"P-256"` | no |
 | <a name="input_database_availability_mode"></a> [database\_availability\_mode](#input\_database\_availability\_mode) | n/a | `string` | `"SameZone"` | no |
