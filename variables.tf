@@ -200,3 +200,8 @@ variable "curve" {
   default = "P-256"
   
 }
+
+variable "create_cmk_rds" {
+  type = bool
+  
+}

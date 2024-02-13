@@ -65,3 +65,8 @@ variable "wb_managed_key_id" {
 variable "identity_ids" {
   type = string
 }
+
+variable "create_cmk_rds" {
+  type    = bool
+  default = false
+}

@@ -51,11 +51,13 @@ module "database" {
   database_version             = var.database_version
   database_private_dns_zone_id = module.networking.database_private_dns_zone.id
   database_subnet_id           = module.networking.database_subnet.id
-  sku_name            = var.database_sku_name
-  deletion_protection = var.deletion_protection
+  sku_name                     = var.database_sku_name
+  deletion_protection          = var.deletion_protection
 
   wb_managed_key_id = azurerm_key_vault_key.Vault_key.id
   identity_ids      = module.identity.identity.id
+
+  create_cmk_rds = var.create_cmk_rds
 
   tags = {
     "customer-ns" = var.namespace,
