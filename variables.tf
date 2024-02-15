@@ -137,6 +137,22 @@ variable "create_redis" {
   default     = false
 }
 
+variable "redis_sku_name" {
+  type        = string
+  default     = "Standard"
+  description = "Specifies the SKU Name for this Redis instance"
+}
+
+variable "redis_family" {
+  type    = string
+  default = "C"
+}
+
+variable "redis_capacity" {
+  type    = number
+  default = 2
+}
+
 ##########################################
 # External Bucket                        #
 ##########################################
@@ -179,4 +195,10 @@ variable "kubernetes_instance_type" {
 variable "kubernetes_node_count" {
   default = 2
   type    = number
+}
+
+variable "size" {
+  description = "Deployment size for the instance"
+  type        = string
+  default     = null
 }
