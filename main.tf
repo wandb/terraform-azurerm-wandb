@@ -54,7 +54,6 @@ module "database" {
   sku_name                     = var.database_sku_name
   deletion_protection          = false
 
-  # wb_managed_key_id = azurerm_key_vault_key.Vault_key.id
   wb_managed_key_id = local.wb_managed_key_id_rds
   identity_ids      = module.identity.identity.id
 
@@ -87,7 +86,7 @@ module "vault" {
 }
 
 resource "azurerm_key_vault_key" "Vault_key" {
-  # count        = (var.create_generic_cmk_key && !var.create_sep_cmk_key ) ? 1 : 0
+  count        = (var.create_cmk_key && !var.create_seprate_cmk_key) ? 1 : 0
   name         = "WB-managed-key"
   key_vault_id = module.vault.vault_id
   key_type     = var.key_type
@@ -109,7 +108,7 @@ resource "azurerm_key_vault_key" "Vault_key" {
 }
 
 resource "azurerm_key_vault_key" "storage_Vault_key" {
-  # count        = (var.create_sep_cmk_key && !var.create_generic_cmk_key) ? 1 : 0
+  count        = (var.create_seprate_cmk_key && !var.create_cmk_key) ? 1 : 0
   name         = "WB-managed-key-storage"
   key_vault_id = module.vault.vault_id
   key_type     = var.key_type
@@ -131,14 +130,13 @@ resource "azurerm_key_vault_key" "storage_Vault_key" {
 }
 
 locals {
+  wb_managed_key_id_storage = (var.create_cmk_key && !var.create_seprate_cmk_key )? length(azurerm_key_vault_key.Vault_key) > 0 ? azurerm_key_vault_key.Vault_key[0].versionless_id : null : length(azurerm_key_vault_key.storage_Vault_key) > 0 ? azurerm_key_vault_key.storage_Vault_key[0].versionless_id : null
+  wb_managed_key_id_rds = (var.create_cmk_key && !var.create_seprate_cmk_key )? length(azurerm_key_vault_key.Vault_key) > 0 ? azurerm_key_vault_key.Vault_key[0].id : null : length(azurerm_key_vault_key.db_Vault_key) > 0 ? azurerm_key_vault_key.db_Vault_key[0].id : null
 
-  wb_managed_key_id_storage= (var.create_cmk_key && !var.create_seprate_cmk_key) ? azurerm_key_vault_key.Vault_key.versionless_id : azurerm_key_vault_key.storage_Vault_key.versionless_id
-
-  wb_managed_key_id_rds = (var.create_cmk_key && !var.create_seprate_cmk_key)  ? azurerm_key_vault_key.Vault_key.id : azurerm_key_vault_key.db_Vault_key.id
 }
 
 resource "azurerm_key_vault_key" "db_Vault_key" {
-  # count        = (var.create_sep_cmk_key && !var.create_generic_cmk_key) ? 1 : 0
+  count        = (var.create_seprate_cmk_key && !var.create_cmk_key) ? 1 : 0
   name         = "WB-managed-key-db"
   key_vault_id = module.vault.vault_id
   key_type     = var.key_type
@@ -168,10 +166,10 @@ module "storage" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   create_queue        = !var.use_internal_queue
-  wb_managed_key_id = local.wb_managed_key_id_storage
+  wb_managed_key_id   = local.wb_managed_key_id_storage
   identity_ids        = module.identity.identity.id
 
-  dynamic_create_cmk = var.enable_encryption
+  dynamic_create_cmk  = var.enable_encryption
   deletion_protection = var.deletion_protection
 
   tags = merge(

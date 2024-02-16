@@ -208,10 +208,8 @@ variable "enable_encryption" {
 
 variable "create_cmk_key" {
   type    = bool
-  default = false
 }
 
 variable "create_seprate_cmk_key" {
   type    = bool
-  default = false
 }
