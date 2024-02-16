@@ -181,9 +181,9 @@ variable "kubernetes_node_count" {
   type    = number
 }
 
-# ##########################################
-# # vault key                               #
-# ##########################################
+##########################################
+# vault key                              #
+##########################################
 
 variable "key_type" {
   default = "RSA"
@@ -201,7 +201,17 @@ variable "curve" {
   
 }
 
-variable "create_cmk_rds" {
+variable "enable_encryption" {
   type = bool
-  
+  default = false
+}
+
+variable "create_cmk_key" {
+  type    = bool
+  default = false
+}
+
+variable "create_seprate_cmk_key" {
+  type    = bool
+  default = false
 }

@@ -66,7 +66,7 @@ variable "identity_ids" {
   type = string
 }
 
-variable "create_cmk_rds" {
+variable "dynamic_cmk_rds" {
   type    = bool
   default = false
 }

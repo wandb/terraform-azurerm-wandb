@@ -38,7 +38,7 @@ variable "identity_ids" {
   type = string
 }
 
-variable "create_cmk" {
+variable "dynamic_create_cmk" {
   type    = bool
   default = false
 }
