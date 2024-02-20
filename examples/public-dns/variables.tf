@@ -52,3 +52,9 @@ variable "database_sku_name" {
   default     = "GP_Standard_D4ds_v4"
   description = "Specifies the SKU Name for this MySQL Server"
 }
+
+variable "size" {
+  description = "Deployment size for the instance"
+  type        = string
+  default     = "small"
+}

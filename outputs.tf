@@ -36,3 +36,23 @@ output "storage_account" {
 output "storage_container" {
   value = var.external_bucket != null ? "" : coalesce(var.blob_container, local.container_name)
 }
+
+output "aks_node_count" {
+  value = local.deployment_size[var.size].node_count
+}
+
+output "aks_node_instance_type" {
+  value = local.deployment_size[var.size].node_instance
+}
+
+output "database_instance_type" {
+  value = local.deployment_size[var.size].db
+}
+
+output "redis_instance_type" {
+  value = join("-", [local.deployment_size[var.size].cache_sku_name, local.deployment_size[var.size].cache_family, local.deployment_size[var.size].cache_capacity])
+}
+
+output "standardized_size" {
+  value = var.size
+}

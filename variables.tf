@@ -200,5 +200,5 @@ variable "kubernetes_node_count" {
 variable "size" {
   description = "Deployment size for the instance"
   type        = string
-  default     = null
+  default     = "small"
 }
