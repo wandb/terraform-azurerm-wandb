@@ -6,8 +6,7 @@ locals {
   # Specifications for t-shirt sized deployments
   deployment_size = {
     small = {
-#      db             = "GP_Standard_E2ds_v4",
-    db = "GP_Standard_D2ds_v4",
+      db             = "GP_Standard_E2ds_v4",
       node_count     = 2,
       node_instance  = "Standard_E2s_v5",
       cache_sku_name = "Standard",
