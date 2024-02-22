@@ -130,8 +130,8 @@ resource "azurerm_key_vault_key" "storage_Vault_key" {
 }
 
 locals {
-  wb_managed_key_id_storage = (var.create_cmk_key && !var.create_seprate_cmk_key )? length(azurerm_key_vault_key.Vault_key) > 0 ? azurerm_key_vault_key.Vault_key[0].versionless_id : null : length(azurerm_key_vault_key.storage_Vault_key) > 0 ? azurerm_key_vault_key.storage_Vault_key[0].versionless_id : null
-  wb_managed_key_id_rds = (var.create_cmk_key && !var.create_seprate_cmk_key )? length(azurerm_key_vault_key.Vault_key) > 0 ? azurerm_key_vault_key.Vault_key[0].id : null : length(azurerm_key_vault_key.db_Vault_key) > 0 ? azurerm_key_vault_key.db_Vault_key[0].id : null
+  wb_managed_key_id_storage = (var.create_cmk_key && !var.create_seprate_cmk_key) ? length(azurerm_key_vault_key.Vault_key) > 0 ? azurerm_key_vault_key.Vault_key[0].versionless_id : null : length(azurerm_key_vault_key.storage_Vault_key) > 0 ? azurerm_key_vault_key.storage_Vault_key[0].versionless_id : null
+  wb_managed_key_id_rds     = (var.create_cmk_key && !var.create_seprate_cmk_key) ? length(azurerm_key_vault_key.Vault_key) > 0 ? azurerm_key_vault_key.Vault_key[0].id : null : length(azurerm_key_vault_key.db_Vault_key) > 0 ? azurerm_key_vault_key.db_Vault_key[0].id : null
 
 }
 

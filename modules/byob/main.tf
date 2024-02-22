@@ -7,7 +7,7 @@ module "storage" {
   deletion_protection = var.deletion_protection
   wb_managed_key_id   = var.create_cmk == true ? azurerm_key_vault_key.Vault_key[0].versionless_id : null
   identity_ids        = var.create_cmk == true ? module.identity[0].identity.id : null
-  create_cmk          = var.create_cmk
+  dynamic_create_cmk  = var.create_cmk
 
 }
 
