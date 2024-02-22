@@ -68,14 +68,16 @@ resources that lack official modules.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_blob_container"></a> [blob\_container](#input\_blob\_container) | Use an existing bucket. | `string` | `""` | no |
-| <a name="input_create_cmk_rds"></a> [create\_cmk\_rds](#input\_create\_cmk\_rds) | n/a | `bool` | n/a | yes |
+| <a name="input_create_cmk_key"></a> [create\_cmk\_key](#input\_create\_cmk\_key) | n/a | `bool` | n/a | yes |
 | <a name="input_create_redis"></a> [create\_redis](#input\_create\_redis) | Boolean indicating whether to provision an redis instance (true) or not (false). | `bool` | `false` | no |
+| <a name="input_create_seprate_cmk_key"></a> [create\_seprate\_cmk\_key](#input\_create\_seprate\_cmk\_key) | n/a | `bool` | n/a | yes |
 | <a name="input_curve"></a> [curve](#input\_curve) | n/a | `string` | `"P-256"` | no |
 | <a name="input_database_availability_mode"></a> [database\_availability\_mode](#input\_database\_availability\_mode) | n/a | `string` | `"SameZone"` | no |
 | <a name="input_database_sku_name"></a> [database\_sku\_name](#input\_database\_sku\_name) | Specifies the SKU Name for this MySQL Server | `string` | `"GP_Standard_D4ds_v4"` | no |
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version for MySQL | `string` | `"5.7"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | If the instance should have deletion protection enabled. The database / Bucket can't be deleted when this value is set to `true`. | `bool` | `true` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain for accessing the Weights & Biases UI. | `string` | `null` | no |
+| <a name="input_enable_encryption"></a> [enable\_encryption](#input\_enable\_encryption) | n/a | `bool` | `false` | no |
 | <a name="input_external_bucket"></a> [external\_bucket](#input\_external\_bucket) | config an external bucket | `any` | `null` | no |
 | <a name="input_key_size"></a> [key\_size](#input\_key\_size) | n/a | `number` | `2048` | no |
 | <a name="input_key_type"></a> [key\_type](#input\_key\_type) | n/a | `string` | `"RSA"` | no |
