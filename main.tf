@@ -133,6 +133,7 @@ locals {
 locals {
   service_account_name = "wandb-app"
   private_endpoint_approval_sa = "private-endpoint-sa"
+  allowed_subscriptions = var.allowed_subscriptions
 }
 
 resource "azurerm_federated_identity_credential" "app" {
@@ -181,7 +182,8 @@ resource "helm_release" "cron_job" {
     subscriptionId: "${data.azurerm_subscription.current.subscription_id}"
     resourceGroupName: "${azurerm_resource_group.default.name}"
     applicationGatewayName: "${module.app_lb.gateway.name}"
-
+    allowedSubscriptions: "${local.allowed_subscriptions}"
+    cron_schedule: "*/30 * * * *"
     EOT 
   ]
 }

@@ -4,7 +4,7 @@ metadata:
   name: endpoint-approval-app
   namespace: {{ .Values.namespace }}
 spec:
-  schedule:  "*/30 * * * *"
+  schedule:  {{ .Values.cron_schedule }}
   jobTemplate:
     spec:
       template:
@@ -31,6 +31,8 @@ spec:
                 value: {{ .Values.resourceGroupName }}
               - name: APPLICATION_GATEWAY_NAME
                 value: {{ .Values.applicationGatewayName }}
+              - name: ALLOWED_SUBSCRIPTIONS
+                value: {{ .Values.allowedSubscriptions }}
             volumeMounts:
             - name: script-volume
               mountPath: /app-config/run.py

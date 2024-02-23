@@ -4,3 +4,5 @@ serviceaccountName:
 subscriptionId:
 resourceGroupName: 
 applicationGatewayName:
+allowedSubscriptions:
+cron_schedule:

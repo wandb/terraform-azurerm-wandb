@@ -188,3 +188,7 @@ variable "create_private_link" {
   default     = true
   description = "Use for the azure private link."
 }
+variable "allowed_subscriptions" {
+  type        = list(string)
+  default = [ "" ]
+}
