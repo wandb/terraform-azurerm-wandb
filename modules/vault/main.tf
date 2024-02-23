@@ -21,10 +21,7 @@ resource "azurerm_key_vault" "default" {
     default_action = "Allow"
   }
 
-  tags = {
-    "customer-ns" = var.namespace,
-    "env"         = "managed-install"
-  }
+  tags = var.tags
 }
 
 resource "azurerm_key_vault_access_policy" "parent" {
@@ -32,9 +29,9 @@ resource "azurerm_key_vault_access_policy" "parent" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = data.azurerm_client_config.current.object_id
 
-  key_permissions     = ["Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore", "Rotate", "GetRotationPolicy"]
-  secret_permissions  = ["Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore", "Set"]
-  storage_permissions = ["Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore"]
+  key_permissions     = ["Backup", "Create", "Decrypt", "Delete", "Encrypt", "Get", "GetRotationPolicy", "List", "Purge", "Recover", "Restore", "Rotate"]
+  secret_permissions  = ["Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"]
+  storage_permissions = ["Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore"]
 
   depends_on = [azurerm_key_vault.default]
 }
@@ -44,9 +41,21 @@ resource "azurerm_key_vault_access_policy" "identity" {
   tenant_id    = data.azurerm_client_config.current.tenant_id
   object_id    = var.identity_object_id
 
-  key_permissions     = ["Get"]
-  secret_permissions  = ["Get", "Delete", "List", "Purge", "Recover", "Restore", "Set"]
-  storage_permissions = ["Get"]
+  key_permissions     = ["Create", "Decrypt", "Encrypt", "Get", "List"]
+  secret_permissions  = ["Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"]
+  storage_permissions = ["Get", "List"]
+
 
   depends_on = [azurerm_key_vault.default]
+}
+
+resource "azurerm_key_vault_key" "etcd" {
+  depends_on = [azurerm_key_vault_access_policy.parent, azurerm_key_vault_access_policy.identity]
+
+  name         = "generated-etcd-key"
+  key_vault_id = azurerm_key_vault.default.id
+  key_type     = "RSA"
+  key_size     = 2048
+
+  key_opts = ["decrypt", "encrypt", "sign", "unwrapKey", "verify", "wrapKey", ]
 }
