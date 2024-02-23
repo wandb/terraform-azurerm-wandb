@@ -160,6 +160,7 @@ locals {
 
 locals {
   service_account_name = "wandb-app"
+  private_endpoint_approval_sa = "private-endpoint-sa"
 }
 
 resource "azurerm_federated_identity_credential" "app" {
@@ -169,6 +170,48 @@ resource "azurerm_federated_identity_credential" "app" {
   audience            = ["api://AzureADTokenExchange"]
   issuer              = module.app_aks.oidc_issuer_url
   subject             = "system:serviceaccount:default:${local.service_account_name}"
+}
+
+# aks workload identity resources for private endpoint approval application
+module "pod_identity" {
+  source = "./modules/identity"
+  depends_on     = [module.app_aks]
+  namespace      = "${var.namespace}-private-endpoint-pod"
+  resource_group = azurerm_resource_group.default
+  location       = azurerm_resource_group.default.location
+}
+
+resource "azurerm_federated_identity_credential" "pod" {
+  parent_id           = module.pod_identity.identity.id
+  name                = "${var.namespace}-app-credentials"
+  resource_group_name = azurerm_resource_group.default.name
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = module.app_aks.oidc_issuer_url
+  subject             = "system:serviceaccount:default:${local.private_endpoint_approval_sa}"
+}
+
+resource "azurerm_role_assignment" "gateway_role" {
+  scope                = "${module.app_lb.gateway.id}"
+  role_definition_name = "Contributor"
+  principal_id         = "${module.pod_identity.identity.principal_id}"
+}
+
+# private endpoint approval application deployed as a cronjob in default namespace
+resource "helm_release" "cron_job" {
+  depends_on = [ module.pod_identity ]
+  name       = "private-endpoint-approval-pod"
+  chart      = "./modules/cron_job"
+  values = [
+    <<EOT
+    namespace: "default"   
+    client_id: "${module.pod_identity.identity.client_id}"
+    serviceaccountName: "${local.private_endpoint_approval_sa}"
+    subscriptionId: "${data.azurerm_subscription.current.subscription_id}"
+    resourceGroupName: "${azurerm_resource_group.default.name}"
+    applicationGatewayName: "${module.app_lb.gateway.name}"
+
+    EOT 
+  ]
 }
 
 module "cert_manager" {

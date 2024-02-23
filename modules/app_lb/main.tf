@@ -145,6 +145,7 @@ resource "azurerm_application_gateway" "default" {
       http_listener,
       backend_http_settings,
       backend_address_pool,
+      private_link_configuration,
       tags
     ]
   }
