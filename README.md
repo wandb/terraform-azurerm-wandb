@@ -42,6 +42,7 @@ resources that lack official modules.
 | Name | Version |
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 3.17 |
+| <a name="provider_helm"></a> [helm](#provider\_helm) | ~> 2.6 |
 
 ## Modules
 
@@ -53,6 +54,7 @@ resources that lack official modules.
 | <a name="module_database"></a> [database](#module\_database) | ./modules/database | n/a |
 | <a name="module_identity"></a> [identity](#module\_identity) | ./modules/identity | n/a |
 | <a name="module_networking"></a> [networking](#module\_networking) | ./modules/networking | n/a |
+| <a name="module_pod_identity"></a> [pod\_identity](#module\_pod\_identity) | ./modules/identity | n/a |
 | <a name="module_redis"></a> [redis](#module\_redis) | ./modules/redis | n/a |
 | <a name="module_storage"></a> [storage](#module\_storage) | ./modules/storage | n/a |
 | <a name="module_vault"></a> [vault](#module\_vault) | ./modules/vault | n/a |
@@ -62,6 +64,7 @@ resources that lack official modules.
 
 | Name | Type |
 |------|------|
+| [azurerm_subscription.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subscription) | data source |
 
 ## Inputs
 
