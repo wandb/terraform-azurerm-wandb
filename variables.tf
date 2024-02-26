@@ -180,15 +180,22 @@ variable "kubernetes_node_count" {
   default = 2
   type    = number
 }
-# ##########################################
-# # Application gateway private link       #
-# ##########################################
+###########################################
+# Application gateway private link        #
+###########################################
 variable "create_private_link" {
   type        = bool
   default     = true
   description = "Use for the azure private link."
 }
+
 variable "allowed_subscriptions" {
+  type        = string
+  description = "List of allowed customer subscriptions coma seperated values"
+  default = "" 
+}
+variable "allowed_ip_ranges" {
+  description = "List of allowed public/private IP addresses or CIDR ranges"
   type        = list(string)
-  default = [ "" ]
+  default = [ "0.0.0.0/0" ]
 }

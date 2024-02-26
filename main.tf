@@ -25,7 +25,7 @@ module "networking" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   private_link         = var.create_private_link
-
+  allowed_ip_ranges   = var.allowed_ip_ranges
   tags = var.tags
 }
 
@@ -133,7 +133,7 @@ locals {
 locals {
   service_account_name = "wandb-app"
   private_endpoint_approval_sa = "private-endpoint-sa"
-  allowed_subscriptions = var.allowed_subscriptions
+  allowed_subscriptions = var.allowed_subscriptions == "" ? data.azurerm_subscription.current.subscription_id : var.allowed_subscriptions
 }
 
 resource "azurerm_federated_identity_credential" "app" {
@@ -145,8 +145,9 @@ resource "azurerm_federated_identity_credential" "app" {
   subject             = "system:serviceaccount:default:${local.service_account_name}"
 }
 
-# aks workload identity resources for private endpoint approval application
+# # aks workload identity resources for private endpoint approval application
 module "pod_identity" {
+  count = var.create_private_link ? 1 : 0
   source = "./modules/identity"
   depends_on     = [module.app_aks]
   namespace      = "${var.namespace}-private-endpoint-pod"
@@ -155,7 +156,8 @@ module "pod_identity" {
 }
 
 resource "azurerm_federated_identity_credential" "pod" {
-  parent_id           = module.pod_identity.identity.id
+  count = var.create_private_link ? 1 : 0
+  parent_id           = module.pod_identity[0].identity.id
   name                = "${var.namespace}-app-credentials"
   resource_group_name = azurerm_resource_group.default.name
   audience            = ["api://AzureADTokenExchange"]
@@ -164,26 +166,28 @@ resource "azurerm_federated_identity_credential" "pod" {
 }
 
 resource "azurerm_role_assignment" "gateway_role" {
+  count = var.create_private_link ? 1 : 0
   scope                = "${module.app_lb.gateway.id}"
   role_definition_name = "Contributor"
-  principal_id         = "${module.pod_identity.identity.principal_id}"
+  principal_id         = "${module.pod_identity[0].identity.principal_id}"
 }
 
-# private endpoint approval application deployed as a cronjob in default namespace
+# # private endpoint approval application deployed as a cronjob in default namespace
+
 resource "helm_release" "cron_job" {
+  count = var.create_private_link ? 1 : 0
   depends_on = [ module.pod_identity ]
   name       = "private-endpoint-approval-pod"
   chart      = "./modules/cron_job"
   values = [
     <<EOT
     namespace: "default"   
-    client_id: "${module.pod_identity.identity.client_id}"
+    client_id: "${module.pod_identity[0].identity.client_id}"
     serviceaccountName: "${local.private_endpoint_approval_sa}"
     subscriptionId: "${data.azurerm_subscription.current.subscription_id}"
     resourceGroupName: "${azurerm_resource_group.default.name}"
     applicationGatewayName: "${module.app_lb.gateway.name}"
     allowedSubscriptions: "${local.allowed_subscriptions}"
-    cron_schedule: "*/30 * * * *"
     EOT 
   ]
 }

@@ -4,7 +4,7 @@ metadata:
   name: endpoint-approval-app
   namespace: {{ .Values.namespace }}
 spec:
-  schedule:  {{ .Values.cron_schedule }}
+  schedule:  "*/30 * * * *"
   jobTemplate:
     spec:
       template:
