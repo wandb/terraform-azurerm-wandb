@@ -187,5 +187,5 @@ variable "kubernetes_node_count" {
 variable "allowed_ip_ranges" {
   description = "List of allowed public/private IP addresses or CIDR ranges"
   type        = list(string)
-  default = [ "0.0.0.0/0" ]
+  default = ["10.10.0.0/16"]
 }
