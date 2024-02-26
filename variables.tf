@@ -180,3 +180,12 @@ variable "kubernetes_node_count" {
   default = 2
   type    = number
 }
+
+##########################################
+# Network                                #
+##########################################
+variable "allowed_ip_ranges" {
+  description = "List of allowed public/private IP addresses or CIDR ranges"
+  type        = list(string)
+  default = [ "0.0.0.0/0" ]
+}
