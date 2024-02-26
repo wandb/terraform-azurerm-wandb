@@ -194,8 +194,3 @@ variable "allowed_subscriptions" {
   description = "List of allowed customer subscriptions coma seperated values"
   default = "" 
 }
-variable "allowed_ip_ranges" {
-  description = "List of allowed public/private IP addresses or CIDR ranges"
-  type        = list(string)
-  default = [ "0.0.0.0/0" ]
-}

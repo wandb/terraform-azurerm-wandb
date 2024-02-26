@@ -60,8 +60,3 @@ variable "private_link" {
   type = bool
   description = "Specifies the Azure private link creation"
 }
-variable "allowed_ip_ranges" {
-  description = "List of allowed public IP addresses or CIDR ranges X.X.X.X/24 ,Y.Y.Y.Y/32"
-  type        = list(string)
-  default = [ "0.0.0.0/0" ]
-}
