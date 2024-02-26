@@ -70,7 +70,6 @@ resources that lack official modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_allowed_ip_ranges"></a> [allowed\_ip\_ranges](#input\_allowed\_ip\_ranges) | List of allowed public/private IP addresses or CIDR ranges | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | <a name="input_allowed_subscriptions"></a> [allowed\_subscriptions](#input\_allowed\_subscriptions) | List of allowed customer subscriptions coma seperated values | `string` | `""` | no |
 | <a name="input_blob_container"></a> [blob\_container](#input\_blob\_container) | Use an existing bucket. | `string` | `""` | no |
 | <a name="input_create_private_link"></a> [create\_private\_link](#input\_create\_private\_link) | Use for the azure private link. | `bool` | `true` | no |
