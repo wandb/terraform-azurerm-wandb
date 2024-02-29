@@ -60,7 +60,3 @@ resource "azurerm_subnet_network_security_group_association" "public_association
   subnet_id                 = azurerm_subnet.public.id
   network_security_group_id = azurerm_network_security_group.allowlist_nsg.id
 }
-resource "azurerm_subnet_network_security_group_association" "private_association" {
-  subnet_id                 = azurerm_subnet.private.id
-  network_security_group_id = azurerm_network_security_group.allowlist_nsg.id
-}
