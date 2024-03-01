@@ -34,3 +34,32 @@ resource "azurerm_subnet" "redis" {
   address_prefixes     = [var.network_redis_subnet_cidr]
   virtual_network_name = azurerm_virtual_network.default.name
 }
+
+resource "azurerm_network_security_group" "allowlist_nsg" {
+  count               = length(var.allowed_ip_ranges) > 0 ? 1 : 0
+  name                = "${var.namespace}-allowlist-nsg"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  tags                = var.tags
+
+  dynamic "security_rule" {
+    for_each = var.allowed_ip_ranges
+    content {
+      name                       = "${security_rule.key}"
+      priority                   = "${security_rule.value.priority}"
+      direction                  = "Inbound"
+      access                     = "${security_rule.value.access}"
+      protocol                   = "*"
+      source_port_range          = "*"
+      destination_port_range     = "*"
+      source_address_prefix      = "${security_rule.value.source_address_prefix}"
+      destination_address_prefix = "*"
+    }
+  }
+}
+
+resource "azurerm_subnet_network_security_group_association" "public_association" {
+  count = length(var.allowed_ip_ranges) > 0 ? 1 : 0
+  subnet_id                 = azurerm_subnet.public.id
+  network_security_group_id = azurerm_network_security_group.allowlist_nsg[count.index].id
+}
