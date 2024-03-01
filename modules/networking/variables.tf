@@ -56,7 +56,10 @@ variable "tags" {
 }
 
 variable "allowed_ip_ranges" {
-  description = "List of allowed public IP addresses or CIDR ranges X.X.X.X/24 ,Y.Y.Y.Y/32"
-  type        = list(string)
-  default     = ["10.10.0.0/16"]
+  description = "Map of allowed public IP addresses or CIDR ranges. Each entry in the map defines an allowed IP range along with access control settings."
+  type = map(object({
+    access                  = string
+    source_address_prefix   = string
+    priority                = number 
+  }))
 }

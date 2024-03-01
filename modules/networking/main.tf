@@ -36,27 +36,30 @@ resource "azurerm_subnet" "redis" {
 }
 
 resource "azurerm_network_security_group" "allowlist_nsg" {
+  count               = length(var.allowed_ip_ranges) > 0 ? 1 : 0
   name                = "${var.namespace}-allowlist-nsg"
   location            = var.location
   resource_group_name = var.resource_group_name
-  tags = var.tags
+  tags                = var.tags
 
   dynamic "security_rule" {
     for_each = var.allowed_ip_ranges
     content {
-      name                       = "AllowFromIP_${security_rule.key}"
-      priority                   = 100 + "${security_rule.key}"
+      name                       = "${security_rule.key}"
+      priority                   = "${security_rule.value.priority}"
       direction                  = "Inbound"
-      access                     = "Allow"
-      protocol                   = "Tcp"
+      access                     = "${security_rule.value.access}"
+      protocol                   = "*"
       source_port_range          = "*"
       destination_port_range     = "*"
-      source_address_prefix      = "${security_rule.value}"
+      source_address_prefix      = "${security_rule.value.source_address_prefix}"
       destination_address_prefix = "*"
     }
   }
 }
+
 resource "azurerm_subnet_network_security_group_association" "public_association" {
+  count = length(var.allowed_ip_ranges) > 0 ? 1 : 0
   subnet_id                 = azurerm_subnet.public.id
-  network_security_group_id = azurerm_network_security_group.allowlist_nsg.id
+  network_security_group_id = azurerm_network_security_group.allowlist_nsg[count.index].id
 }
