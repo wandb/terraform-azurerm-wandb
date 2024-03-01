@@ -5,10 +5,10 @@ output "issuer" {
 
 output "cert_manager_namespace" {
   description = "The kubernetes namespace of the cert-manager release"
-  value       = helm_release.cert_manager.namespace
+  value       = var.byoc ? null : helm_release.cert_manager[0].namespace
 }
 
 output "cert_manager_release_name" {
   description = "Name of the Cert Manager release"
-  value       = helm_release.cert_manager.name
+  value       = var.byoc ? null : helm_release.cert_manager[0].name
 }

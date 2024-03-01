@@ -2,6 +2,7 @@ locals {
   fqdn       = var.subdomain == null ? var.domain_name : "${var.subdomain}.${var.domain_name}"
   url_prefix = var.ssl ? "https" : "http"
   url        = "${local.url_prefix}://${local.fqdn}"
+  byoc       = var.cert_name != null ? true : false
 }
 
 resource "azurerm_resource_group" "default" {
@@ -91,6 +92,10 @@ module "app_lb" {
   location       = azurerm_resource_group.default.location
   network        = module.networking.network
   public_subnet  = module.networking.public_subnet
+  byoc           = local.byoc
+  cert_name      = local.byoc ? var.cert_name : null
+  cert_file      = local.byoc ? filebase64(var.cert_file) : null
+  cert_password  = local.byoc ? var.cert_password : null
 
   tags = var.tags
 }
@@ -147,9 +152,40 @@ module "cert_manager" {
   ingress_class              = "azure/application-gateway"
   cert_manager_email         = "sysadmin@wandb.com"
   cert_manager_chart_version = "v1.9.1"
+  byoc                       = local.byoc
   tags                       = var.tags
 
   depends_on = [module.app_aks]
+}
+
+locals {
+  base_ingress = {
+    issuer = { create = false }
+  }
+
+  ingress_config_letsencrypt = {
+    annotations = {
+      "kubernetes.io/ingress.class"         = "azure/application-gateway"
+      "cert-manager.io/cluster-issuer"      = "cert-issuer"
+      "cert-manager.io/acme-challenge-type" = "http01"
+    }
+    tls = [
+      { hosts = [trimprefix(trimprefix(local.url, "https://"), "http://")], secretName = "wandb-ssl-cert" }
+    ]
+  }
+
+  ingress_config_byoc = {
+    annotations = {
+      "kubernetes.io/ingress.class"                       = "azure/application-gateway"
+      "appgw.ingress.kubernetes.io/appgw-ssl-certificate" = var.cert_name
+    },
+    tls = []
+  }
+
+  ingress = merge(
+    local.base_ingress,
+    local.byoc ? local.ingress_config_byoc : local.ingress_config_letsencrypt
+  )
 }
 
 module "wandb" {
@@ -211,21 +247,7 @@ module "wandb" {
         }
       }
 
-      ingress = {
-        // TODO: For now we will use the existing issuer. We can move this into
-        // the operator after testing. Trying to reduce the diff.
-        issuer = { create = false }
-
-        annotations = {
-          "kubernetes.io/ingress.class"         = "azure/application-gateway"
-          "cert-manager.io/cluster-issuer"      = "cert-issuer"
-          "cert-manager.io/acme-challenge-type" = "http01"
-        }
-
-        tls = [
-          { hosts = [trimprefix(trimprefix(local.url, "https://"), "http://")], secretName = "wandb-ssl-cert" }
-        ]
-      }
+      ingress = local.ingress
 
       weave = {
         persistence = {

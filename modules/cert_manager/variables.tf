@@ -31,3 +31,8 @@ variable "tags" {
   description = "Tags to be passed to created instances"
   default     = {}
 }
+
+variable "byoc" {
+  type        = bool
+  description = "Bring your own cert"
+}

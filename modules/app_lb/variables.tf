@@ -32,3 +32,27 @@ variable "tags" {
   type        = map(string)
   description = "Map of tags for resource"
 }
+
+variable "byoc" {
+  type        = bool
+  description = "Bring your own cert"
+}
+
+variable "cert_name" {
+  type        = string
+  description = "The name of the certificate to use for the ingress"
+  default     = "wandb-cert"
+}
+
+variable "cert_file" {
+  type        = string
+  description = "The path to the certificate file"
+  default     = "./cert.pfx"
+}
+
+variable "cert_password" {
+  type        = string
+  description = "The password for the certificate"
+  default     = ""
+  sensitive   = true
+}
