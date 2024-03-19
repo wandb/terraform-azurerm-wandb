@@ -42,7 +42,6 @@ resources that lack official modules.
 | Name | Version |
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 3.17 |
-| <a name="provider_helm"></a> [helm](#provider\_helm) | ~> 2.6 |
 
 ## Modules
 
@@ -51,6 +50,7 @@ resources that lack official modules.
 | <a name="module_app_aks"></a> [app\_aks](#module\_app\_aks) | ./modules/app_aks | n/a |
 | <a name="module_app_lb"></a> [app\_lb](#module\_app\_lb) | ./modules/app_lb | n/a |
 | <a name="module_cert_manager"></a> [cert\_manager](#module\_cert\_manager) | ./modules/cert_manager | n/a |
+| <a name="module_cron_job"></a> [cron\_job](#module\_cron\_job) | ./modules/cron_job | n/a |
 | <a name="module_database"></a> [database](#module\_database) | ./modules/database | n/a |
 | <a name="module_identity"></a> [identity](#module\_identity) | ./modules/identity | n/a |
 | <a name="module_networking"></a> [networking](#module\_networking) | ./modules/networking | n/a |
