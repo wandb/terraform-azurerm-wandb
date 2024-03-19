@@ -24,8 +24,8 @@ module "networking" {
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
-
-  tags = var.tags
+  private_link        = var.create_private_link
+  tags                = var.tags
 }
 
 module "database" {
@@ -91,6 +91,8 @@ module "app_lb" {
   location       = azurerm_resource_group.default.location
   network        = module.networking.network
   public_subnet  = module.networking.public_subnet
+  private_subnet = module.networking.private_subnet.id
+  private_link   = var.create_private_link
 
   tags = var.tags
 }
@@ -128,7 +130,9 @@ locals {
 }
 
 locals {
-  service_account_name = "wandb-app"
+  service_account_name         = "wandb-app"
+  private_endpoint_approval_sa = "private-endpoint-sa"
+  allowed_subscriptions        = var.allowed_subscriptions == "" ? data.azurerm_subscription.current.subscription_id : var.allowed_subscriptions
 }
 
 resource "azurerm_federated_identity_credential" "app" {
@@ -138,6 +142,46 @@ resource "azurerm_federated_identity_credential" "app" {
   audience            = ["api://AzureADTokenExchange"]
   issuer              = module.app_aks.oidc_issuer_url
   subject             = "system:serviceaccount:default:${local.service_account_name}"
+}
+
+# # aks workload identity resources for private endpoint approval application
+module "pod_identity" {
+  count          = var.create_private_link ? 1 : 0
+  source         = "./modules/identity"
+  depends_on     = [module.app_aks]
+  namespace      = "${var.namespace}-private-endpoint-pod"
+  resource_group = azurerm_resource_group.default
+  location       = azurerm_resource_group.default.location
+}
+
+resource "azurerm_federated_identity_credential" "pod" {
+  count               = var.create_private_link ? 1 : 0
+  parent_id           = module.pod_identity[0].identity.id
+  name                = "${var.namespace}-app-credentials"
+  resource_group_name = azurerm_resource_group.default.name
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = module.app_aks.oidc_issuer_url
+  subject             = "system:serviceaccount:default:${local.private_endpoint_approval_sa}"
+}
+
+resource "azurerm_role_assignment" "gateway_role" {
+  count                = var.create_private_link ? 1 : 0
+  scope                = module.app_lb.gateway.id
+  role_definition_name = "Contributor"
+  principal_id         = module.pod_identity[0].identity.principal_id
+}
+
+module "cron_job" {
+  count                  = var.create_private_link ? 1 : 0 # private endpoint approval application deployed as a cronjob in default namespace
+  source                 = "./modules/cron_job"
+  namespace              = "default"
+  client_id              = module.pod_identity[0].identity.client_id
+  serviceaccountName     = local.private_endpoint_approval_sa
+  subscriptionId         = data.azurerm_subscription.current.subscription_id
+  resourceGroupName      = azurerm_resource_group.default.name
+  applicationGatewayName = module.app_lb.gateway.name
+  allowedSubscriptions   = local.allowed_subscriptions
+  depends_on             = [module.pod_identity]
 }
 
 module "cert_manager" {

@@ -62,10 +62,11 @@ resource "azurerm_application_gateway" "default" {
   }
 
   frontend_ip_configuration {
-    name                          = "${local.frontend_ip_configuration_name}-private"
-    subnet_id                     = var.public_subnet.id
-    private_ip_address_allocation = "Static"
-    private_ip_address            = "10.10.0.10"
+    name                            = "${local.frontend_ip_configuration_name}-private"
+    subnet_id                       = var.public_subnet.id
+    private_ip_address_allocation   = "Static"
+    private_ip_address              = "10.10.0.10"
+    private_link_configuration_name = var.private_link ? "${var.namespace}-private-link" : null
   }
 
   backend_address_pool {
@@ -96,6 +97,42 @@ resource "azurerm_application_gateway" "default" {
     priority                   = 1
   }
 
+  dynamic "private_link_configuration" {
+    for_each = var.private_link == true ? [1] : []
+    content {
+      name = "${var.namespace}-private-link"
+
+      ip_configuration {
+        name                          = "primary"
+        subnet_id                     = var.private_subnet
+        private_ip_address_allocation = "Dynamic"
+        primary                       = true
+      }
+    }
+  }
+
+  dynamic "http_listener" {
+    for_each = var.private_link == true ? [1] : []
+    content {
+      name                           = "${local.listener_name}-private"
+      frontend_ip_configuration_name = "${local.frontend_ip_configuration_name}-private"
+      frontend_port_name             = local.frontend_port_name
+      protocol                       = "Http"
+    }
+  }
+
+  dynamic "request_routing_rule" {
+    for_each = var.private_link == true ? [1] : []
+    content {
+      name                       = "${local.request_routing_rule_name}-${request_routing_rule.key}"
+      rule_type                  = "Basic"
+      http_listener_name         = "${local.listener_name}-private"
+      backend_address_pool_name  = local.backend_address_pool_name
+      backend_http_settings_name = local.http_setting_name
+      priority                   = "2"
+    }
+  }
+
   lifecycle {
     # K8S will be changing all of these settings so we ignore them.
     # We really only needed this resource to assign a known public IP.
@@ -108,6 +145,7 @@ resource "azurerm_application_gateway" "default" {
       http_listener,
       backend_http_settings,
       backend_address_pool,
+      private_link_configuration,
       tags
     ]
   }

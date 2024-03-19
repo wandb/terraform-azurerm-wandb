@@ -32,3 +32,13 @@ variable "tags" {
   type        = map(string)
   description = "Map of tags for resource"
 }
+
+variable "private_subnet" {
+  type        = string
+  description = "Specifies the supported Azure subnet where the resource exists."
+}
+
+variable "private_link" {
+  type = bool
+  description = "Specifies the Azure private link creation"
+}

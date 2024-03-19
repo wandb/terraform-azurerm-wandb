@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: endpoint-approval-app
+  namespace: {{ .Values.namespace }}
+spec:
+  schedule:  "*/30 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            azure.workload.identity/use: "true"
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: {{ .Values.serviceaccountName }}
+          containers:
+          - name: endpoint-approval
+            image: ubuntu:20.04
+            imagePullPolicy: Always
+            command: ["/bin/bash", "-c"]
+            args:
+            - |
+              apt-get update && apt-get install -y python3 python3-pip
+              pip3 install requests azure.identity
+              python3 /app-config/run.py
+            env:
+              - name: SUBSCRIPTION_ID
+                value: {{ .Values.subscriptionId }}
+              - name: RESOURCE_GROUP_NAME
+                value: {{ .Values.resourceGroupName }}
+              - name: APPLICATION_GATEWAY_NAME
+                value: {{ .Values.applicationGatewayName }}
+              - name: ALLOWED_SUBSCRIPTIONS
+                value: {{ .Values.allowedSubscriptions }}
+            volumeMounts:
+            - name: script-volume
+              mountPath: /app-config/run.py
+              subPath: run.py
+          volumes:
+            - name: script-volume
+              configMap:
+                name: script-config
+                defaultMode: 0755

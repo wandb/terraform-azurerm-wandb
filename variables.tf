@@ -180,3 +180,17 @@ variable "kubernetes_node_count" {
   default = 2
   type    = number
 }
+###########################################
+# Application gateway private link        #
+###########################################
+variable "create_private_link" {
+  type        = bool
+  default     = true
+  description = "Use for the azure private link."
+}
+
+variable "allowed_subscriptions" {
+  type        = string
+  description = "List of allowed customer subscriptions coma seperated values"
+  default = "" 
+}
