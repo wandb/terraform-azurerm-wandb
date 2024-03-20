@@ -110,7 +110,7 @@ resource "azurerm_application_gateway" "default" {
     # K8S will be changing all of these settings so we ignore them.
     # We really only needed this resource to assign a known public IP.
     ignore_changes = [
-      # ssl_certificate,
+      ssl_certificate,
       request_routing_rule,
       probe,
       url_path_map,
