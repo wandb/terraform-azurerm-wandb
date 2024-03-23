@@ -80,7 +80,25 @@ variable "other_wandb_env" {
   default     = {}
 }
 
+variable "cert_name" {
+  type        = string
+  description = "Name of the certificate. Must be used with App Gateway "
+  default     = null
+}
 
+variable "cert_file" {
+  type        = string
+  description = "Path to the certificate file. Must be used with App Gateway"
+  default     = null
+}
+
+variable "cert_password" {
+  type        = string
+  description = "Password for the certificate. Must be used with App Gateway"
+  default     = null
+  sensitive   = true
+
+}
 ##########################################
 # DNS                                    #
 ##########################################
