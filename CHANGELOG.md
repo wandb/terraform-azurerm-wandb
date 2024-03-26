@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.1.6](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.5...v2.1.6) (2024-03-22)
+
+
+### Bug Fixes
+
+* **dev:** Add passthrough for env vars ([#55](https://github.com/wandb/terraform-azurerm-wandb/issues/55)) ([d18f6d0](https://github.com/wandb/terraform-azurerm-wandb/commit/d18f6d051ce4dd91ebec67ae3e217f3109df7b87))
+
 ### [2.1.5](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.4...v2.1.5) (2024-02-06)
 
 

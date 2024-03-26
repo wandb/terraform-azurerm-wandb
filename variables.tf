@@ -108,7 +108,7 @@ variable "ssl" {
 variable "database_version" {
   description = "Version for MySQL"
   type        = string
-  default     = "5.7"
+  default     = "8.0.21"
 }
 
 variable "database_availability_mode" {
@@ -179,6 +179,24 @@ variable "kubernetes_instance_type" {
 variable "kubernetes_node_count" {
   default = 2
   type    = number
+}
+
+variable "weave_wandb_env" {
+  type        = map(string)
+  description = "Extra environment variables for W&B"
+  default     = {}
+}
+
+variable "app_wandb_env" {
+  type        = map(string)
+  description = "Extra environment variables for W&B"
+  default     = {}
+}
+
+variable "parquet_wandb_env" {
+  type        = map(string)
+  description = "Extra environment variables for W&B"
+  default     = {}
 }
 
 ##########################################
