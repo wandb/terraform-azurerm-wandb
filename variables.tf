@@ -108,7 +108,7 @@ variable "ssl" {
 variable "database_version" {
   description = "Version for MySQL"
   type        = string
-  default     = "5.7"
+  default     = "8.0.21"
 }
 
 variable "database_availability_mode" {
@@ -197,4 +197,37 @@ variable "parquet_wandb_env" {
   type        = map(string)
   description = "Extra environment variables for W&B"
   default     = {}
+}
+
+##########################################
+# vault key                              #
+##########################################
+
+variable "key_type" {
+  default = "RSA"
+  type = string
+}
+
+variable "key_size" {
+  default = 2048
+ type = number
+}
+
+variable "curve" {
+  type = string
+  default = "P-256"
+  
+}
+
+variable "enable_encryption" {
+  type = bool
+  default = false
+}
+
+variable "create_cmk_key" {
+  type    = bool
+}
+
+variable "create_seprate_cmk_key" {
+  type    = bool
 }
