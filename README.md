@@ -69,6 +69,9 @@ resources that lack official modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_app_wandb_env"></a> [app\_wandb\_env](#input\_app\_wandb\_env) | Extra environment variables for W&B | `map(string)` | `{}` | no |
 | <a name="input_blob_container"></a> [blob\_container](#input\_blob\_container) | Use an existing bucket. | `string` | `""` | no |
+| <a name="input_cert_file"></a> [cert\_file](#input\_cert\_file) | Path to the certificate file. Must be used with App Gateway | `string` | `null` | no |
+| <a name="input_cert_name"></a> [cert\_name](#input\_cert\_name) | Name of the certificate. Must be used with App Gateway | `string` | `null` | no |
+| <a name="input_cert_password"></a> [cert\_password](#input\_cert\_password) | Password for the certificate. Must be used with App Gateway | `string` | `null` | no |
 | <a name="input_create_redis"></a> [create\_redis](#input\_create\_redis) | Boolean indicating whether to provision an redis instance (true) or not (false). | `bool` | `false` | no |
 | <a name="input_database_availability_mode"></a> [database\_availability\_mode](#input\_database\_availability\_mode) | n/a | `string` | `"SameZone"` | no |
 | <a name="input_database_sku_name"></a> [database\_sku\_name](#input\_database\_sku\_name) | Specifies the SKU Name for this MySQL Server | `string` | `"GP_Standard_D4ds_v4"` | no |

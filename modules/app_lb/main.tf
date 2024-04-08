@@ -96,6 +96,16 @@ resource "azurerm_application_gateway" "default" {
     priority                   = 1
   }
 
+  dynamic "ssl_certificate" {
+    for_each = var.byoc ? [1] : []
+    content {
+      name     = var.cert_name
+      data     = var.cert_file
+      password = var.cert_password
+    }
+
+  }
+
   lifecycle {
     # K8S will be changing all of these settings so we ignore them.
     # We really only needed this resource to assign a known public IP.
