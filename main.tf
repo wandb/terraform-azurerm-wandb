@@ -233,10 +233,10 @@ module "wandb" {
       }
 
       app = {
-        extraEnv = {
+        extraEnv = merge({
           "GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
           "GORILLA_CUSTOMER_SECRET_STORE_SOURCE"              = "az-secretmanager://wandb",
-        }
+        }, var.app_wandb_env)
         pod = {
           labels = { "azure.workload.identity/use" = "true" }
         }
@@ -253,10 +253,15 @@ module "wandb" {
         persistence = {
           provider = "azurefile"
         }
+        extraEnv = var.weave_wandb_env
       }
 
       mysql = { install = false }
       redis = { install = false }
+
+      parquet = {
+        extraEnv = var.parquet_wandb_env
+      }
     }
   }
 }
