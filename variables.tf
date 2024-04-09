@@ -199,6 +199,10 @@ variable "parquet_wandb_env" {
   default     = {}
 }
 
+###################
+# private link    #
+###################
+
 variable "create_private_link" {
   type        = bool
   default     = true
