@@ -198,3 +198,9 @@ variable "parquet_wandb_env" {
   description = "Extra environment variables for W&B"
   default     = {}
 }
+
+variable "create_private_link" {
+  type        = bool
+  default     = true
+  description = "Use for the azure private link."
+}

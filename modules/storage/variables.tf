@@ -28,3 +28,9 @@ variable "deletion_protection" {
   description = "If the instance should have deletion protection enabled. The storage container can't be deleted when this value is set to `true`."
   type        = bool
 }
+variable "private_subnet_id" {
+  type = string
+}
+variable "private_link" {
+  type = bool
+}
