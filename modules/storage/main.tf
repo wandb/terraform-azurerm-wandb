@@ -3,7 +3,7 @@ resource "azurerm_storage_account" "default" {
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"
-  account_replication_type = "ZRS"
+  account_replication_type = var.location == "westus" ? "LRS" : "ZRS"
   min_tls_version          = "TLS1_2"
 
   blob_properties {
