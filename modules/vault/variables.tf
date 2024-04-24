@@ -21,3 +21,15 @@ variable "tags" {
   type        = map(string)
   description = "Map of tags for resource"
 }
+
+variable "azuread_service_principal_display_name" {
+  type = string
+}
+
+variable "azuread_service_principal_id" {
+  type = string
+}
+
+variable "azuread_application_id" {
+  type = string
+}
