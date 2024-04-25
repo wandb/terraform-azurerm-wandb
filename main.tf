@@ -113,6 +113,13 @@ module "app_aks" {
   tags = var.tags
 }
 
+module "multi_tenant_service_principal" {
+  source = "./modules/multi_tenant_service_principal"
+
+  namespace = var.namespace
+  #  resource_group_name   = azurerm_resource_group.default.name
+}
+
 locals {
   container_name  = try(module.storage[0].container.name, "")
   account_name    = try(module.storage[0].account.name, "")
