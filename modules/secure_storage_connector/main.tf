@@ -14,6 +14,16 @@ resource "azurerm_storage_account" "account" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
   is_hns_enabled           = "true"
+
+  blob_properties {
+    cors_rule {
+      allowed_headers    = ["*"]
+      allowed_methods    = ["GET", "HEAD", "PUT"]
+      allowed_origins    = ["*"]
+      exposed_headers    = ["*"]
+      max_age_in_seconds = 3600
+    }
+  }
 }
 
 resource "azurerm_storage_container" "container" {

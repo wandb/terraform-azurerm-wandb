@@ -33,6 +33,7 @@ resource "azurerm_storage_container" "default" {
   name                  = "wandb"
   storage_account_name  = azurerm_storage_account.default.name
   container_access_type = "private"
+#  TODO give RBAC to the newly created service principal
 }
 
 resource "azurerm_management_lock" "default" {
