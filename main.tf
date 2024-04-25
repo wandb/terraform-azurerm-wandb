@@ -67,10 +67,6 @@ module "vault" {
   namespace          = var.namespace
   resource_group     = azurerm_resource_group.default
 
-  azuread_service_principal_id = module.multi_tenant_service_principal.azuread_service_principal_id
-  azuread_service_principal_display_name = module.multi_tenant_service_principal.azuread_service_principal_display_name
-  azuread_application_id = module.multi_tenant_service_principal.azuread_application_id
-
   tags = var.tags
 }
 
