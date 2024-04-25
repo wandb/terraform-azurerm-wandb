@@ -52,6 +52,7 @@ resources that lack official modules.
 | <a name="module_cert_manager"></a> [cert\_manager](#module\_cert\_manager) | ./modules/cert_manager | n/a |
 | <a name="module_database"></a> [database](#module\_database) | ./modules/database | n/a |
 | <a name="module_identity"></a> [identity](#module\_identity) | ./modules/identity | n/a |
+| <a name="module_multi_tenant_service_principal"></a> [multi\_tenant\_service\_principal](#module\_multi\_tenant\_service\_principal) | ./modules/multi_tenant_service_principal | n/a |
 | <a name="module_networking"></a> [networking](#module\_networking) | ./modules/networking | n/a |
 | <a name="module_redis"></a> [redis](#module\_redis) | ./modules/redis | n/a |
 | <a name="module_storage"></a> [storage](#module\_storage) | ./modules/storage | n/a |
