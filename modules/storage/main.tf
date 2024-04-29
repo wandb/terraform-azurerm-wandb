@@ -30,7 +30,7 @@ resource "azurerm_storage_account" "default" {
 }
 
 resource "azurerm_storage_container" "default" {
-  name                  = "wandb"
+  name                  = var.container_name
   storage_account_name  = azurerm_storage_account.default.name
   container_access_type = "private"
 }
@@ -46,13 +46,13 @@ resource "azurerm_management_lock" "default" {
 resource "azurerm_role_assignment" "account" {
   scope                = azurerm_storage_account.default.id
   role_definition_name = "Storage Account Contributor"
-  principal_id         = var.principal_id
+  principal_id         = var.managed_identity_principal_id
 }
 
 resource "azurerm_role_assignment" "container" {
   scope                = azurerm_storage_account.default.id
   role_definition_name = "Storage Blob Data Owner"
-  principal_id         = var.principal_id
+  principal_id         = var.managed_identity_principal_id
 }
 
 module "queue" {

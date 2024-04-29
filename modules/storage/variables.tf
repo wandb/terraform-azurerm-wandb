@@ -29,7 +29,12 @@ variable "deletion_protection" {
   type        = bool
 }
 
-variable "principal_id" {
-  description = "Azure principal ID that can access the blob storage"
+variable "managed_identity_principal_id" {
+  description = "Managed identity principal ID that can access the blob storage"
+  type        = string
+}
+
+variable "container_name" {
+  description = "Container name"
   type        = string
 }

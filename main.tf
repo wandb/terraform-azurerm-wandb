@@ -79,6 +79,8 @@ module "storage" {
   location            = azurerm_resource_group.default.location
   create_queue        = !var.use_internal_queue
   deletion_protection = var.deletion_protection
+  managed_identity_principal_id = module.identity.identity.principal_id
+  container_name = "wandb"
 
   tags = var.tags
 }
@@ -111,13 +113,6 @@ module "app_aks" {
   resource_group        = azurerm_resource_group.default
 
   tags = var.tags
-}
-
-module "multi_tenant_service_principal" {
-  source = "./modules/multi_tenant_service_principal"
-
-  namespace = var.namespace
-  #  resource_group_name   = azurerm_resource_group.default.name
 }
 
 locals {
