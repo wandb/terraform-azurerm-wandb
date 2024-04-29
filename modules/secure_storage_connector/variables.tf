@@ -9,8 +9,8 @@ variable "gs" {
 }
 
 variable "managed_identity_principal_id" {
-    type        = string
-    description = "The principal id of the managed identity"
+  type        = string
+  description = "The principal id of the managed identity"
 }
 
 variable "deletion_protection" {
