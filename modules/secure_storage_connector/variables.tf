@@ -3,7 +3,7 @@ variable "namespace" {
   description = "Prefix to use when creating resources"
 }
 
-variable "gs" {
+variable "location" {
   type        = string
   description = "The Azure Region where resources will be created"
 }
