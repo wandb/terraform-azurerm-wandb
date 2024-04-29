@@ -33,7 +33,6 @@ resource "azurerm_storage_container" "default" {
   name                  = "wandb"
   storage_account_name  = azurerm_storage_account.default.name
   container_access_type = "private"
-#  TODO give RBAC to the newly created service principal
 }
 
 resource "azurerm_management_lock" "default" {
@@ -44,6 +43,17 @@ resource "azurerm_management_lock" "default" {
   notes      = "Deletion protection is enabled on the storage container."
 }
 
+resource "azurerm_role_assignment" "account" {
+  scope                = azurerm_storage_account.default.id
+  role_definition_name = "Storage Account Contributor"
+  principal_id         = var.principal_id
+}
+
+resource "azurerm_role_assignment" "container" {
+  scope                = azurerm_storage_account.default.id
+  role_definition_name = "Storage Blob Data Owner"
+  principal_id         = var.principal_id
+}
 
 module "queue" {
   count = var.create_queue ? 1 : 0

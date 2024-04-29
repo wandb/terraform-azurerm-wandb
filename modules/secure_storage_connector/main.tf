@@ -8,7 +8,7 @@ resource "azurerm_resource_group" "group" {
 }
 
 resource "azurerm_storage_account" "account" {
-  name                     = "${var.namespace}storageaccount"
+  name                     = var.namespace
   resource_group_name      = azurerm_resource_group.group.name
   location                 = azurerm_resource_group.group.location
   account_tier             = "Standard"
@@ -27,19 +27,25 @@ resource "azurerm_storage_account" "account" {
 }
 
 resource "azurerm_storage_container" "container" {
-  name                  = "${var.namespace}-container"
+  name                  = var.namespace
   storage_account_name  = azurerm_storage_account.account.name
   container_access_type = "private"
+}
+
+resource "azurerm_user_assigned_identity" "default" {
+  name                = var.namespace
+  location            = var.location
+  resource_group_name = azurerm_resource_group.group.name
 }
 
 resource "azurerm_role_assignment" "principal" {
   scope                = azurerm_storage_account.account.id
   role_definition_name = "Storage Blob Data Owner"
-  principal_id         = var.azure_principal_id
+  principal_id         = azurerm_user_assigned_identity.default.principal_id
 }
 
 resource "azurerm_role_assignment" "principal2" {
   scope                = azurerm_storage_account.account.id
   role_definition_name = "Storage Account Contributor"
-  principal_id         = var.azure_principal_id
+  principal_id         = azurerm_user_assigned_identity.default.principal_id
 }

@@ -18,3 +18,8 @@ variable "deletion_protection" {
   type        = bool
   default     = true
 }
+
+variable "managed_identity_principal_id" {
+  description = "The principal ID of the resource group's managed identity."
+  type        = string
+}

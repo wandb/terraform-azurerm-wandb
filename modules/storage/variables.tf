@@ -28,3 +28,8 @@ variable "deletion_protection" {
   description = "If the instance should have deletion protection enabled. The storage container can't be deleted when this value is set to `true`."
   type        = bool
 }
+
+variable "principal_id" {
+  description = "Azure principal ID that can access the blob storage"
+  type        = string
+}
