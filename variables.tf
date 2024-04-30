@@ -180,6 +180,7 @@ variable "kubernetes_node_count" {
   default = 2
   type    = number
 }
+
 ###########################################
 # Application gateway private link        #
 ###########################################
@@ -194,3 +195,23 @@ variable "allowed_subscriptions" {
   description = "List of allowed customer subscriptions coma seperated values"
   default = "" 
 }
+=======
+
+variable "weave_wandb_env" {
+  type        = map(string)
+  description = "Extra environment variables for W&B"
+  default     = {}
+}
+
+variable "app_wandb_env" {
+  type        = map(string)
+  description = "Extra environment variables for W&B"
+  default     = {}
+}
+
+variable "parquet_wandb_env" {
+  type        = map(string)
+  description = "Extra environment variables for W&B"
+  default     = {}
+}
+
