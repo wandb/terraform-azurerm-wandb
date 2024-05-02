@@ -8,5 +8,5 @@ module "storage" {
 
   deletion_protection = var.deletion_protection
 
-  principal_id = var.managed_identity_principal_id
+  container_name = "wandb"
 }

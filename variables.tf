@@ -199,9 +199,3 @@ variable "parquet_wandb_env" {
   default     = {}
 }
 
-variable "customer_tenant_id" {
-  type        = string
-  description = "Customer tenant id"
-  default     = "df6b81d4-a363-4352-b652-f7e584129264"
-}
-
