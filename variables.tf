@@ -195,7 +195,6 @@ variable "allowed_subscriptions" {
   description = "List of allowed customer subscriptions coma seperated values"
   default = "" 
 }
-=======
 
 variable "weave_wandb_env" {
   type        = map(string)
