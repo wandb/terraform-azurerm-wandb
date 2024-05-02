@@ -30,7 +30,10 @@ variable "deletion_protection" {
 }
 variable "private_subnet_id" {
   type = string
+  description = "private subnet id"
+
 }
 variable "private_link" {
   type = bool
+  description = "Private link flag for storage endpoint"
 }
