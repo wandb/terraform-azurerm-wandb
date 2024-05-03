@@ -25,7 +25,7 @@ module "networking" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   allowed_ip_ranges   = var.allowed_ip_ranges
-  tags = var.tags
+  tags                = var.tags
 }
 
 module "database" {

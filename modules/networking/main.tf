@@ -35,31 +35,53 @@ resource "azurerm_subnet" "redis" {
   virtual_network_name = azurerm_virtual_network.default.name
 }
 
-resource "azurerm_network_security_group" "allowlist_nsg" {
+resource "azurerm_network_security_group" "nsg" {
   count               = length(var.allowed_ip_ranges) > 0 ? 1 : 0
   name                = "${var.namespace}-allowlist-nsg"
   location            = var.location
   resource_group_name = var.resource_group_name
   tags                = var.tags
-
-  dynamic "security_rule" {
-    for_each = var.allowed_ip_ranges
-    content {
-      name                       = "${security_rule.key}"
-      priority                   = "${security_rule.value.priority}"
-      direction                  = "Inbound"
-      access                     = "${security_rule.value.access}"
-      protocol                   = "*"
-      source_port_range          = "*"
-      destination_port_range     = "*"
-      source_address_prefix      = "${security_rule.value.source_address_prefix}"
-      destination_address_prefix = "*"
-    }
-  }
 }
 
+
+resource "azurerm_network_security_rule" "this" {
+  count                       = length(var.allowed_ip_ranges) > 0 ? length(var.allowed_ip_ranges) : 0
+  name                        = "allowRule-${count.index}"
+  priority                    = 100 + "${count.index}"
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "Tcp"
+  source_port_range           = "*"
+  destination_port_range      = "*"
+  source_address_prefixes     = [var.allowed_ip_ranges[count.index]]
+  destination_address_prefix  = "*"
+  resource_group_name         = var.resource_group_name
+  network_security_group_name = azurerm_network_security_group.nsg.0.name
+  depends_on                  = [azurerm_network_security_group.nsg]
+}
+
+
+
+resource "azurerm_network_security_rule" "default" {
+  count                       = length(var.allowed_ip_ranges) > 0 ? 1 : 0
+  name                        = "defaultAppGatewayV2SkuRule"
+  priority                    = 120
+  direction                   = "Inbound"
+  access                      = "Allow"
+  protocol                    = "*"
+  source_port_range           = "*"
+  destination_port_range      = "65200-65535"
+  source_address_prefix       = "*"
+  destination_address_prefix  = "*"
+  resource_group_name         = var.resource_group_name
+  network_security_group_name = azurerm_network_security_group.nsg.0.name
+}
+
+
+
 resource "azurerm_subnet_network_security_group_association" "public_association" {
-  count = length(var.allowed_ip_ranges) > 0 ? 1 : 0
+  count                     = length(var.allowed_ip_ranges) > 0 ? 1 : 0
   subnet_id                 = azurerm_subnet.public.id
-  network_security_group_id = azurerm_network_security_group.allowlist_nsg[count.index].id
+  network_security_group_id = azurerm_network_security_group.nsg.0.id
+  depends_on = [ azurerm_network_security_rule.default ]
 }
