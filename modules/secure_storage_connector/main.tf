@@ -15,6 +15,8 @@ resource "azurerm_user_assigned_identity" "default" {
 }
 
 module "storage" {
+  depends_on = [azurerm_user_assigned_identity.default]
+
   source = "../storage"
 
   create_queue                  = false
@@ -24,5 +26,5 @@ module "storage" {
   managed_identity_principal_id = azurerm_user_assigned_identity.default.principal_id
   container_name                = var.namespace
 
-  deletion_protection = var.deletion_protection
+  deletion_protection = false
 }

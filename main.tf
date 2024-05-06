@@ -74,12 +74,12 @@ module "storage" {
   count  = (var.blob_container == "" && var.external_bucket == null) ? 1 : 0
   source = "./modules/storage"
 
-  namespace                     = var.namespace
-  resource_group_name           = azurerm_resource_group.default.name
-  location                      = azurerm_resource_group.default.location
-  create_queue                  = !var.use_internal_queue
-  deletion_protection           = var.deletion_protection
-  container_name                = "wandb"
+  namespace           = var.namespace
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+  create_queue        = !var.use_internal_queue
+  deletion_protection = var.deletion_protection
+  container_name      = "wandb"
 
   tags = var.tags
 }
