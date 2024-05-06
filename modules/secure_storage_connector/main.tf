@@ -2,7 +2,6 @@ provider "azurerm" {
   features {}
 }
 
-# Needed for creating federated credential
 resource "azurerm_resource_group" "group" {
   name     = "${var.namespace}-resources"
   location = var.location
