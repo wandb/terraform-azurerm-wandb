@@ -186,7 +186,7 @@ variable "kubernetes_node_count" {
 ###########################################
 variable "create_private_link" {
   type        = bool
-  default     = true
+  default     = false
   description = "Use for the azure private link."
 }
 
