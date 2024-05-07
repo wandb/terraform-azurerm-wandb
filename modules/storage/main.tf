@@ -30,7 +30,7 @@ resource "azurerm_storage_account" "default" {
 }
 
 resource "azurerm_storage_container" "default" {
-  name                  = var.container_name
+  name                  = var.blob_container_name
   storage_account_name  = azurerm_storage_account.default.name
   container_access_type = "private"
 }

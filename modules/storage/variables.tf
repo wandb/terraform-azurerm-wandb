@@ -35,7 +35,7 @@ variable "managed_identity_principal_id" {
   default     = ""
 }
 
-variable "container_name" {
-  description = "Container name"
+variable "blob_container_name" {
+  description = "Name of azure storage account container for storing blobs"
   type        = string
 }

@@ -8,5 +8,5 @@ module "storage" {
 
   deletion_protection = var.deletion_protection
 
-  container_name = "wandb"
+  blob_container_name = "wandb"
 }

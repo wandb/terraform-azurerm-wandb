@@ -9,6 +9,6 @@ variable "location" {
 }
 
 variable "oidc_issuer_url" {
-  type = string
+  type        = string
   description = "OIDC Issuer URL from server deployment's AKS Cluster"
 }

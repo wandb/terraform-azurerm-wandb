@@ -2,6 +2,9 @@ provider "azurerm" {
   features {}
 }
 
+data "azurerm_client_config" "current" {
+}
+
 resource "azurerm_resource_group" "group" {
   name     = "${var.namespace}-resources"
   location = var.location
@@ -32,7 +35,7 @@ module "storage" {
   resource_group_name           = azurerm_resource_group.group.name
   location                      = azurerm_resource_group.group.location
   managed_identity_principal_id = azurerm_user_assigned_identity.default.principal_id
-  container_name                = var.namespace
+  blob_container_name           = var.namespace
 
   deletion_protection = false
 }

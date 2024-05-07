@@ -9,3 +9,7 @@ output "storage_container_name" {
 output "managed_identity_client_id" {
   value = azurerm_user_assigned_identity.default.client_id
 }
+
+output "tenant_id" {
+  value = data.azurerm_client_config.current.tenant_id
+}
