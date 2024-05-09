@@ -5,7 +5,8 @@ variable "namespace" {
 
 variable "location" {
   type        = string
-  description = "The Azure Region where resources will be created"
+  description = "The Azure Region where resources will be created. (Not needed if resource_group_name is set)."
+  default     = ""
 }
 
 variable "oidc_issuer_url" {
