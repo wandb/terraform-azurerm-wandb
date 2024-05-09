@@ -132,6 +132,7 @@ variable "parquet_wandb_env" {
 
 variable "vpc_name" {
   nullable = false
+  description = "virtual network name"
   type    = string
   default = ""
 }
