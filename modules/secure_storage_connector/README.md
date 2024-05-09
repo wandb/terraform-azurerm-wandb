@@ -1,7 +1,7 @@
 # Weights & Biases Secure Storage Connector Module
 
 This is a Terraform module for provisioning a team-level azure storage container to be used with Weights and Biases.
-A resource group and managed identity used to auth to the container will also be created by default. To use this container with Weights and Biases
+A managed identity (with a federated credential) used to auth to the container will also be created by default. To use this container with Weights and Biases
 dedicated azure deployment, you need to specify the variable for the OIDC issuer URL from the AKS cluster that will connect to this container. 
 
 ## Azure Services Used
@@ -54,13 +54,12 @@ Here is an example `https://centralus.oic.prod-aks.azure.com/af722783-84b6-4adc-
 
 ## Inputs
 
-| Name                                                                                       | Description                                                                                                                                                                                                                                                                                               | Type     | Default | Required |
-|--------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|---------|:--------:|
-| <a name="input_namespace"></a> [namespace](#input_namespace)                               | Prefix to use when creating resources.                                                                                                                                                                                                                                                                    | `string` | n/a     |   yes    |
-| <a name="input_location"></a> [location](#input_location)                                  | The Azure Region where resources will be created. (Not needed if [resource_group_name] set.)                                                                                                                                                                                                              | `string` | ""      |    no    |
-| <a name="input_oidc_issuer_url"></a> [oidc_issuer_url](#input_oidc_issuer_url)             | OIDC issuer URL from the AKS cluster that is meant to connect to this container. Make sure to include the trailing '/'                                                                                                                                                                                    | `string` | n/a     |   yes    |
-| <a name="input_deletion_protection"></a> [deletion_protection](#input_deletion_protection) | If the instance should have deletion protection enabled. The storage container can't be deleted when this value is set to `true`                                                                                                                                                                          | `bool`   | true    |    no    |
-| <a name="input_resource_group_name"></a> [resource_group_name](#input_resource_group_name) | The name of the resource group in which to create the managed identity and storage account.If not provided, a new resource group will be created and then managed by this terraform module. If you don't set this variable the first time you apply these changes, don't set it for later applies either. | `string` | ""      |    no    |
+| Name                                                                                       | Description                                                                                                                      | Type     | Default | Required |
+|--------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------|----------|---------|:--------:|
+| <a name="input_namespace"></a> [namespace](#input_namespace)                               | Prefix to use when creating resources.                                                                                           | `string` | n/a     |   yes    |
+| <a name="input_oidc_issuer_url"></a> [oidc_issuer_url](#input_oidc_issuer_url)             | OIDC issuer URL from the AKS cluster that is meant to connect to this container. Make sure to include the trailing '/'           | `string` | n/a     |   yes    |
+| <a name="input_deletion_protection"></a> [deletion_protection](#input_deletion_protection) | If the instance should have deletion protection enabled. The storage container can't be deleted when this value is set to `true` | `bool`   | true    |    no    |
+| <a name="input_resource_group_name"></a> [resource_group_name](#input_resource_group_name) | The name of the resource group in which to create the managed identity and storage account.                                      | `string` | n/a     |   yes    |
 
 ## Outputs
 
