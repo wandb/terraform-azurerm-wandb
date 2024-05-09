@@ -30,8 +30,6 @@ module "secure_storage_connector" {
 ```
 
 - Run `terraform init`
-- Run `terraform apply -target=azurerm_user_assigned_identity.default`
-  - The managed identity needs to be provisioned before it can be passed into a module that this module references. 
 - Run `terraform apply` to build the actual storage account and container.
   - Important: Make sure to include the trailing '/' from the OIDC provider URL when specifying the `oidc_issuer_url` variable.
 Here is an example `https://centralus.oic.prod-aks.azure.com/af722783-84b6-4adc-9c49-c792786eab4a/0ff6e291-489e-4c39-a683-93a6f7ba5a84/`

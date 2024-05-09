@@ -5,7 +5,7 @@ variable "namespace" {
 
 variable "oidc_issuer_url" {
   type        = string
-  description = "OIDC Issuer URL from server deployment's AKS Cluster"
+  description = "OIDC Issuer URL from server deployment's AKS Cluster. Make sure to include the trailing '/'"
 }
 
 variable "deletion_protection" {

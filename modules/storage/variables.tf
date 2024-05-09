@@ -29,12 +29,6 @@ variable "deletion_protection" {
   type        = bool
 }
 
-variable "managed_identity_principal_id" {
-  description = "Managed identity principal ID that can access the blob storage"
-  type        = string
-  default     = ""
-}
-
 variable "blob_container_name" {
   description = "Name of azure storage account container for storing blobs"
   type        = string

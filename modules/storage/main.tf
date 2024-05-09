@@ -43,23 +43,6 @@ resource "azurerm_management_lock" "default" {
   notes      = "Deletion protection is enabled on the storage container."
 }
 
-# Setting RBAC for the managed identity is optional. If not using, it's because the container is being accessed with
-# the storage account key.
-resource "azurerm_role_assignment" "account" {
-  count = var.managed_identity_principal_id != "" ? 1 : 0
-
-  scope                = azurerm_storage_account.default.id
-  role_definition_name = "Storage Account Contributor"
-  principal_id         = var.managed_identity_principal_id
-}
-resource "azurerm_role_assignment" "container" {
-  count = var.managed_identity_principal_id != "" ? 1 : 0
-
-  scope                = azurerm_storage_account.default.id
-  role_definition_name = "Storage Blob Data Owner"
-  principal_id         = var.managed_identity_principal_id
-}
-
 module "queue" {
   count = var.create_queue ? 1 : 0
 

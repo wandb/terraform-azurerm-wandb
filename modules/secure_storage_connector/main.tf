@@ -29,12 +29,27 @@ module "storage" {
 
   source = "../storage"
 
-  create_queue                  = false
-  namespace                     = var.namespace
-  location                      = data.azurerm_resource_group.group.location
-  resource_group_name           = data.azurerm_resource_group.group.name
-  managed_identity_principal_id = azurerm_user_assigned_identity.default.principal_id
-  blob_container_name           = var.namespace
+  create_queue        = false
+  namespace           = var.namespace
+  location            = data.azurerm_resource_group.group.location
+  resource_group_name = data.azurerm_resource_group.group.name
+  blob_container_name = var.namespace
 
   deletion_protection = var.deletion_protection
+}
+
+resource "azurerm_role_assignment" "account" {
+  depends_on = [module.storage]
+
+  scope                = module.storage.account.id
+  role_definition_name = "Storage Account Contributor"
+  principal_id         = azurerm_user_assigned_identity.default.principal_id
+}
+
+resource "azurerm_role_assignment" "container" {
+  depends_on = [module.storage]
+
+  scope                = module.storage.account.id
+  role_definition_name = "Storage Blob Data Owner"
+  principal_id         = azurerm_user_assigned_identity.default.principal_id
 }
