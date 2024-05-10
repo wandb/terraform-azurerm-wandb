@@ -44,7 +44,7 @@ resource "azurerm_network_security_group" "default" {
 }
 
 
-resource "azurerm_network_security_rule" "Default" {
+resource "azurerm_network_security_rule" "allow_cidr" {
   count                       = length(var.allowed_ip_ranges) > 0 ? length(var.allowed_ip_ranges) : 0
   name                        = "allowRule-${count.index}"
   priority                    = 100 + "${count.index}"
