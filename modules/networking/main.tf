@@ -35,7 +35,7 @@ resource "azurerm_subnet" "redis" {
   virtual_network_name = azurerm_virtual_network.default.name
 }
 
-resource "azurerm_network_security_group" "nsg" {
+resource "azurerm_network_security_group" "default" {
   count               = length(var.allowed_ip_ranges) > 0 ? 1 : 0
   name                = "${var.namespace}-allowlist-nsg"
   location            = var.location
@@ -44,7 +44,7 @@ resource "azurerm_network_security_group" "nsg" {
 }
 
 
-resource "azurerm_network_security_rule" "this" {
+resource "azurerm_network_security_rule" "Default" {
   count                       = length(var.allowed_ip_ranges) > 0 ? length(var.allowed_ip_ranges) : 0
   name                        = "allowRule-${count.index}"
   priority                    = 100 + "${count.index}"
@@ -56,8 +56,8 @@ resource "azurerm_network_security_rule" "this" {
   source_address_prefixes     = [var.allowed_ip_ranges[count.index]]
   destination_address_prefix  = "*"
   resource_group_name         = var.resource_group_name
-  network_security_group_name = azurerm_network_security_group.nsg.0.name
-  depends_on                  = [azurerm_network_security_group.nsg]
+  network_security_group_name = azurerm_network_security_group.default.0.name
+  depends_on                  = [azurerm_network_security_group.default]
 }
 
 
@@ -74,14 +74,14 @@ resource "azurerm_network_security_rule" "default" {
   source_address_prefix       = "*"
   destination_address_prefix  = "*"
   resource_group_name         = var.resource_group_name
-  network_security_group_name = azurerm_network_security_group.nsg.0.name
+  network_security_group_name = azurerm_network_security_group.default.0.name
 }
 
 
 
-resource "azurerm_subnet_network_security_group_association" "public_association" {
+resource "azurerm_subnet_network_security_group_association" "public" {
   count                     = length(var.allowed_ip_ranges) > 0 ? 1 : 0
   subnet_id                 = azurerm_subnet.public.id
-  network_security_group_id = azurerm_network_security_group.nsg.0.id
+  network_security_group_id = azurerm_network_security_group.default.0.id
   depends_on = [ azurerm_network_security_rule.default ]
 }
