@@ -79,7 +79,6 @@ module "storage" {
   location            = azurerm_resource_group.default.location
   create_queue        = !var.use_internal_queue
   deletion_protection = var.deletion_protection
-  blob_container_name = "wandb"
 
   tags = var.tags
 }

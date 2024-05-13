@@ -32,4 +32,5 @@ variable "deletion_protection" {
 variable "blob_container_name" {
   description = "Name of azure storage account container for storing blobs"
   type        = string
+  default     = "wandb"
 }

@@ -7,6 +7,4 @@ module "storage" {
   location            = var.location
 
   deletion_protection = var.deletion_protection
-
-  blob_container_name = "wandb"
 }
