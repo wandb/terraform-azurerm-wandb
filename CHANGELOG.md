@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.2.0...v2.3.0) (2024-05-14)
+
+
+### Features
+
+* Team-level byob ([#63](https://github.com/wandb/terraform-azurerm-wandb/issues/63)) ([45015da](https://github.com/wandb/terraform-azurerm-wandb/commit/45015dafba7c1586e0b2742a7659217c846445a0))
+
 ## [2.2.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.8...v2.2.0) (2024-05-10)
 
 
