@@ -210,3 +210,13 @@ variable "parquet_wandb_env" {
   default     = {}
 }
 
+variable "nginx_controller" {
+  type = bool
+  default = false
+}
+
+variable "use_nginx" {
+  type = bool
+  default = false
+}
+
