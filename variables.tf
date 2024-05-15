@@ -203,3 +203,8 @@ variable "nginx_controller" {
   type = bool
   default = false
 }
+
+variable "use_nginx" {
+  type = bool
+  default = false
+}

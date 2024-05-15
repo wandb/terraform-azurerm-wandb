@@ -153,7 +153,7 @@ module "cert_manager" {
 }
 
 
-module "nginx" {
+module "nginx_controller" {
   count = var.nginx_controller ? 1 : 0
   source = "./modules/nginx"
   depends_on = [module.app_aks]
@@ -223,7 +223,7 @@ module "wandb" {
         // the operator after testing. Trying to reduce the diff.
         issuer = { create = false }
 
-        annotations = var.nginx_controller ? {
+        annotations = var.use_nginx && var.nginx_controller ? {
           "kubernetes.io/ingress.class"         = "nginx"
           "cert-manager.io/cluster-issuer"      = "cert-issuer"
           "cert-manager.io/acme-challenge-type" = "http01"
