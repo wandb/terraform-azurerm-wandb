@@ -198,3 +198,8 @@ variable "parquet_wandb_env" {
   description = "Extra environment variables for W&B"
   default     = {}
 }
+
+variable "nginx_controller" {
+  type = bool
+  default = false
+}
