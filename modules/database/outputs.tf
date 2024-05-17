@@ -1,25 +1,19 @@
-locals {
-  output_username = azurerm_mysql_flexible_server.default.administrator_login
-  output_database = azurerm_mysql_flexible_database.default.name
-  output_password = azurerm_mysql_flexible_server.default.administrator_password
-  output_fqdn     = azurerm_mysql_flexible_server.default.fqdn
-}
 
 output "database_name" {
-  value = local.output_database
+  value = azurerm_mysql_flexible_database.default.name
 }
 
 output "username" {
-  value = local.output_username
+  value = azurerm_mysql_flexible_server.default.administrator_login
 }
 
 output "password" {
-  value     = local.output_password
+  value     = azurerm_mysql_flexible_server.default.administrator_password
   sensitive = true
 }
 
 output "address" {
-  value       = local.output_fqdn
+  value       = azurerm_mysql_flexible_server.default.fqdn
   description = "The address of the MySQL database."
 }
 
