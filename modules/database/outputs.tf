@@ -24,5 +24,6 @@ output "server" {
 }
 
 output "connection_string" {
-  value = "${azurerm_mysql_flexible_server.default.administrator_login}:${azurerm_mysql_flexible_server.default.administrator_password}@${azurerm_mysql_flexible_server.default.fqdn}/${azurerm_mysql_flexible_database.default.name}"
+  #value = "${azurerm_mysql_flexible_server.default.administrator_login}:${azurerm_mysql_flexible_server.default.administrator_password}@${azurerm_mysql_flexible_server.default.fqdn}/${azurerm_mysql_flexible_database.default.name}"
+  value = "replaceme"
 }
