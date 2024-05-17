@@ -33,7 +33,7 @@ resource "azurerm_mysql_flexible_server" "default" {
   sku_name = var.sku_name
   version  = var.database_version
   create_mode = "PointInTimeRestore"
-  creation_source_server_id = "/subscriptions/c213eb8e-d0e7-4bbb-985a-2f8deac5c1c5/resourceGroups/wandb-m-kopa/providers/Microsoft.DBforMySQL/flexibleServers/wandb-m-kopa-giving-quagga"
+  source_server_id = "/subscriptions/c213eb8e-d0e7-4bbb-985a-2f8deac5c1c5/resourceGroups/wandb-m-kopa/providers/Microsoft.DBforMySQL/flexibleServers/wandb-m-kopa-giving-quagga"
 
 
   high_availability {
