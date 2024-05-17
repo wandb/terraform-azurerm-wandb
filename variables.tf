@@ -108,7 +108,7 @@ variable "ssl" {
 variable "database_version" {
   description = "Version for MySQL"
   type        = string
-  default     = "5.7"
+  default = "8.0.21"
 }
 
 variable "database_availability_mode" {

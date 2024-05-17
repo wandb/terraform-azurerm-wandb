@@ -21,21 +21,20 @@ locals {
 }
 
 resource "azurerm_mysql_flexible_server" "default" {
-  name                = local.master_instance_name
-  location            = var.location
-  resource_group_name = var.resource_group_name
-
   administrator_login    = local.master_username
   administrator_password = local.master_password
-
+  backup_retention_days        = 14
+  delegated_subnet_id = var.database_subnet_id
+  geo_redundant_backup_enabled = false
+  location            = var.location
+  name                = local.master_instance_name
+  private_dns_zone_id = var.database_private_dns_zone_id
+  resource_group_name = var.resource_group_name
   sku_name = var.sku_name
   version  = var.database_version
+  create_mode = "PointInTimeRestore"
+  creation_source_server_id = "/subscriptions/c213eb8e-d0e7-4bbb-985a-2f8deac5c1c5/resourceGroups/wandb-m-kopa/providers/Microsoft.DBforMySQL/flexibleServers/wandb-m-kopa-giving-quagga"
 
-  delegated_subnet_id = var.database_subnet_id
-  private_dns_zone_id = var.database_private_dns_zone_id
-
-  backup_retention_days        = 14
-  geo_redundant_backup_enabled = false
 
   high_availability {
     mode = var.database_availability_mode
@@ -43,6 +42,7 @@ resource "azurerm_mysql_flexible_server" "default" {
 
   storage {
     auto_grow_enabled = true
+    io_scaling_enabled = true
   }
 
   lifecycle {
