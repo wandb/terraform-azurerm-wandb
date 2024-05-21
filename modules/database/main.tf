@@ -65,11 +65,11 @@ resource "azurerm_management_lock" "default" {
   notes      = "Deletion protection is enabled on the database."
 }
 
-#resource "azurerm_mysql_flexible_database" "default" {
-#  name                = local.database_name
-#  resource_group_name = var.resource_group_name
-#  server_name         = azurerm_mysql_flexible_server.default.name
-#  charset             = "utf8mb4"
-#  collation           = "utf8mb4_general_ci"
-#}
+resource "azurerm_mysql_flexible_database" "default" {
+ name                = local.database_name
+ resource_group_name = var.resource_group_name
+ server_name         = azurerm_mysql_flexible_server.default.name
+ charset             = "utf8mb4"
+ collation           = "utf8mb4_general_ci"
+}
 
