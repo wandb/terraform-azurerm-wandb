@@ -12,6 +12,8 @@ resource "random_pet" "mysql" {
 }
 
 locals {
+  current_time = timestamp()
+
   database_name = "wandb_local"
 
   master_username = "wandb"
@@ -34,7 +36,7 @@ resource "azurerm_mysql_flexible_server" "default" {
   version  = var.database_version
   create_mode = "PointInTimeRestore"
   source_server_id = "/subscriptions/636d899d-58b4-4d7b-9e56-7a984388b4c8/resourceGroups/wandb-qa-azure/providers/Microsoft.DBforMySQL/flexibleServers/wandb-qa-azure-internal-insect"
-  point_in_time_restore_time_in_utc=""
+  point_in_time_restore_time_in_utc = local.current_time
 
   high_availability {
     mode = var.database_availability_mode
