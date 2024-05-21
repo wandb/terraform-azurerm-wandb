@@ -19,7 +19,7 @@ locals {
   master_username = "wandb"
   master_password = random_string.master_password.result
 
-  master_instance_name = "${var.namespace}-${random_pet.mysql.id}-8"
+  master_instance_name = "${var.namespace}-${random_pet.mysql.id}"
 }
 
 resource "azurerm_mysql_flexible_server" "default" {
