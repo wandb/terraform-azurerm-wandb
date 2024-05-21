@@ -73,10 +73,3 @@ resource "azurerm_management_lock" "default" {
 #  collation           = "utf8mb4_general_ci"
 #}
 
-resource "azurerm_mysql_flexible_database" "default" {
-  charset             = "utf8mb4"
-  collation           = "utf8mb4_general_ci"
-  name                = "wandb_local"
-  resource_group_name = "wandb-qa-azure"
-  server_name         = "wandb-qa-azure-crucial-gannet-8"
-}
