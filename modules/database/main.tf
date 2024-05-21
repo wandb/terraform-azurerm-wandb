@@ -66,14 +66,10 @@ resource "azurerm_management_lock" "default" {
 }
 
 resource "azurerm_mysql_flexible_database" "default" {
-#  name                = local.database_name
-#  resource_group_name = var.resource_group_name
-#  server_name         = azurerm_mysql_flexible_server.default.name
-#  charset             = "utf8mb4"
-#  collation           = "utf8mb4_general_ci"
+  name                = local.database_name
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_mysql_flexible_server.default.name
+  charset             = "utf8mb4"
+  collation           = "utf8mb4_general_ci"
 }
 
-import {
-  to = azurerm_mysql_flexible_database.default
-  from = "/subscriptions/636d899d-58b4-4d7b-9e56-7a984388b4c8/resourceGroups/wandb-qa-azure/providers/Microsoft.DBforMySQL/flexibleServers/wandb-qa-azure-crucial-gannet-8/databases/wandb_local"
-}
