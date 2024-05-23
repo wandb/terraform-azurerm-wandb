@@ -35,9 +35,9 @@ resource "azurerm_mysql_flexible_server" "default" {
   sku_name = var.sku_name
   version  = var.database_version
   # for creation only 
-  #create_mode = "PointInTimeRestore"
-  #source_server_id = "/subscriptions/636d899d-58b4-4d7b-9e56-7a984388b4c8/resourceGroups/wandb-qa-azure/providers/Microsoft.DBforMySQL/flexibleServers/george-safety-backup"
-  #point_in_time_restore_time_in_utc = local.current_time
+  create_mode = "PointInTimeRestore"
+  source_server_id = "/subscriptions/c213eb8e-d0e7-4bbb-985a-2f8deac5c1c5/resourceGroups/wandb-m-kopa/providers/Microsoft.DBforMySQL/flexibleServers/wandb-m-kopa-giving-quagga"
+  point_in_time_restore_time_in_utc = local.current_time
 
   high_availability {
     mode = var.database_availability_mode
