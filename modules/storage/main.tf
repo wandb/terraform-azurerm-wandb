@@ -44,7 +44,7 @@ resource "azurerm_storage_account" "default" {
 }
 
 resource "azurerm_storage_container" "default" {
-  name                  = "wandb"
+  name                  = var.blob_container_name
   storage_account_name  = azurerm_storage_account.default.name
   container_access_type = "private"
 }
@@ -56,7 +56,6 @@ resource "azurerm_management_lock" "default" {
   lock_level = "CanNotDelete"
   notes      = "Deletion protection is enabled on the storage container."
 }
-
 
 module "queue" {
   count = var.create_queue ? 1 : 0

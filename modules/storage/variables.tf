@@ -29,7 +29,6 @@ variable "deletion_protection" {
   type        = bool
 }
 
-
 variable "wb_managed_key_id" {
   type = string
 }
@@ -41,4 +40,9 @@ variable "identity_ids" {
 variable "dynamic_create_cmk" {
   type    = bool
   default = false
+}
+variable "blob_container_name" {
+  description = "Name of azure storage account container for storing blobs"
+  type        = string
+  default     = "wandb"
 }
