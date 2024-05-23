@@ -137,6 +137,22 @@ variable "create_redis" {
   default     = false
 }
 
+variable "redis_sku_name" {
+  type        = string
+  default     = "Standard"
+  description = "Specifies the SKU Name for this Redis instance"
+}
+
+variable "redis_family" {
+  type    = string
+  default = "C"
+}
+
+variable "redis_capacity" {
+  type    = number
+  default = 2
+}
+
 ##########################################
 # External Bucket                        #
 ##########################################
@@ -188,7 +204,7 @@ variable "kubernetes_node_count" {
 variable "allowed_ip_ranges" {
   description = "allowed public IP addresses or CIDR ranges."
   type        = list(string)
-  default = []
+  default     = []
 }
 
 
@@ -210,3 +226,8 @@ variable "parquet_wandb_env" {
   default     = {}
 }
 
+variable "size" {
+  description = "Deployment size for the instance"
+  type        = string
+  default     = null
+}
