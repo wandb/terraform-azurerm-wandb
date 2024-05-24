@@ -14,11 +14,10 @@ resource "azurerm_subnet" "private" {
   address_prefixes     = [var.network_private_subnet_cidr]
   virtual_network_name = azurerm_virtual_network.default.name
 
-  service_endpoints = [
-    "Microsoft.Sql",
-    "Microsoft.Storage",
-    "Microsoft.KeyVault"
-  ]
+  service_endpoints = concat(
+    ["Microsoft.Sql", "Microsoft.KeyVault"],
+    var.private_link ? ["Microsoft.Storage.Global"] : ["Microsoft.Storage"]
+  )
 }
 
 resource "azurerm_subnet" "public" {

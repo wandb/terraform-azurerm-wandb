@@ -54,3 +54,8 @@ variable "tags" {
   type        = map(string)
   description = "Map of tags for resource"
 }
+
+variable "private_link" {
+  type = bool
+  description = "Private link flag for storage endpoint"
+}

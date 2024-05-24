@@ -56,20 +56,3 @@ module "queue" {
   storage_account   = azurerm_storage_account.default
   storage_container = azurerm_storage_container.default
 }
-
-####### Private endpoint for storage ########
-
-resource "azurerm_private_endpoint" "endpoint" {
-  count = var.private_link ? 1 : 0
-  name                = "${var.namespace}-endpoint"
-  resource_group_name = var.resource_group_name
-  location            = var.location
-  subnet_id           = var.private_subnet_id
- 
-  private_service_connection {
-    private_connection_resource_id = azurerm_storage_account.default.id
-    name                           = "${var.namespace}-endpoint"
-    is_manual_connection           = false
-    subresource_names              = ["blob"]
-  }
-}
