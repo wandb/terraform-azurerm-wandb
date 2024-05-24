@@ -55,7 +55,13 @@ variable "tags" {
   description = "Map of tags for resource"
 }
 
+
 variable "private_link" {
   type = bool
   description = "Private link flag for storage endpoint"
+}
+
+variable "allowed_ip_ranges" {
+  description = "allowed public IP addresses or CIDR ranges."
+  type = list(string)
 }

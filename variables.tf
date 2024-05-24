@@ -181,6 +181,17 @@ variable "kubernetes_node_count" {
   type    = number
 }
 
+##########################################
+# Network                                #
+##########################################
+
+variable "allowed_ip_ranges" {
+  description = "allowed public IP addresses or CIDR ranges."
+  type        = list(string)
+  default = []
+}
+
+
 variable "weave_wandb_env" {
   type        = map(string)
   description = "Extra environment variables for W&B"

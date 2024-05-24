@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.3.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.2.0...v2.3.0) (2024-05-14)
+
+
+### Features
+
+* Team-level byob ([#63](https://github.com/wandb/terraform-azurerm-wandb/issues/63)) ([45015da](https://github.com/wandb/terraform-azurerm-wandb/commit/45015dafba7c1586e0b2742a7659217c846445a0))
+
+## [2.2.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.8...v2.2.0) (2024-05-10)
+
+
+### Features
+
+* Allowlist Ips in Azure  ([#51](https://github.com/wandb/terraform-azurerm-wandb/issues/51)) ([18259c0](https://github.com/wandb/terraform-azurerm-wandb/commit/18259c060d73fcf1dbb32248f2e7045617379d43))
+
 ### [2.1.8](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.1.7...v2.1.8) (2024-04-30)
 
 

@@ -67,6 +67,7 @@ resources that lack official modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_allowed_ip_ranges"></a> [allowed\_ip\_ranges](#input\_allowed\_ip\_ranges) | allowed public IP addresses or CIDR ranges. | `list(string)` | `[]` | no |
 | <a name="input_app_wandb_env"></a> [app\_wandb\_env](#input\_app\_wandb\_env) | Extra environment variables for W&B | `map(string)` | `{}` | no |
 | <a name="input_blob_container"></a> [blob\_container](#input\_blob\_container) | Use an existing bucket. | `string` | `""` | no |
 | <a name="input_create_private_link"></a> [create\_private\_link](#input\_create\_private\_link) | Use for the azure private link. | `bool` | `true` | no |
@@ -108,6 +109,7 @@ resources that lack official modules.
 | <a name="output_cluster_client_key"></a> [cluster\_client\_key](#output\_cluster\_client\_key) | n/a |
 | <a name="output_cluster_host"></a> [cluster\_host](#output\_cluster\_host) | n/a |
 | <a name="output_fqdn"></a> [fqdn](#output\_fqdn) | The FQDN to the W&B application |
+| <a name="output_oidc_issuer_url"></a> [oidc\_issuer\_url](#output\_oidc\_issuer\_url) | n/a |
 | <a name="output_storage_account"></a> [storage\_account](#output\_storage\_account) | n/a |
 | <a name="output_storage_container"></a> [storage\_container](#output\_storage\_container) | n/a |
 | <a name="output_url"></a> [url](#output\_url) | The URL to the W&B application |
