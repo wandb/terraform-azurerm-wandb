@@ -8,13 +8,7 @@ resource "azurerm_resource_group" "default" {
   name     = var.namespace
   location = var.location
 
-  tags = merge(
-    {
-      "customer-ns" = var.namespace,
-      "env"         = "managed-install"
-    },
-    var.tags,
-  )
+  tags = var.tags
 }
 
 module "identity" {
@@ -30,14 +24,8 @@ module "networking" {
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
-
-  tags = merge(
-    {
-      "customer-ns" = var.namespace,
-      "env"         = "managed-install"
-    },
-    var.tags,
-  )
+  allowed_ip_ranges   = var.allowed_ip_ranges
+  tags                = var.tags
 }
 
 module "database" {
@@ -51,6 +39,7 @@ module "database" {
   database_private_dns_zone_id = module.networking.database_private_dns_zone.id
   database_subnet_id           = module.networking.database_subnet.id
 
+  sku_name            = var.database_sku_name
   deletion_protection = var.deletion_protection
 
   tags = {
@@ -71,73 +60,57 @@ module "redis" {
 }
 
 module "vault" {
-  source         = "./modules/vault"
-  namespace      = var.namespace
-  resource_group = azurerm_resource_group.default
-  location       = azurerm_resource_group.default.location
+  source = "./modules/vault"
 
   identity_object_id = module.identity.identity.principal_id
+  location           = azurerm_resource_group.default.location
+  namespace          = var.namespace
+  resource_group     = azurerm_resource_group.default
+
+  tags = var.tags
 }
 
 module "storage" {
-  count               = (var.blob_container == "" && var.external_bucket == null) ? 1 : 0
-  source              = "./modules/storage"
+  count  = (var.blob_container == "" && var.external_bucket == null) ? 1 : 0
+  source = "./modules/storage"
+
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   create_queue        = !var.use_internal_queue
-
   deletion_protection = var.deletion_protection
 
-  tags = merge(
-    {
-      "customer-ns" = var.namespace,
-      "env"         = "managed-install"
-    },
-    var.tags,
-  )
+  tags = var.tags
 }
 
 module "app_lb" {
-  source         = "./modules/app_lb"
+  source = "./modules/app_lb"
+
   namespace      = var.namespace
   resource_group = azurerm_resource_group.default
   location       = azurerm_resource_group.default.location
   network        = module.networking.network
   public_subnet  = module.networking.public_subnet
 
-  tags = merge(
-    {
-      "customer-ns" = var.namespace,
-      "env"         = "managed-install"
-    },
-    var.tags,
-  )
+  tags = var.tags
 }
 
 module "app_aks" {
-  source         = "./modules/app_aks"
-  depends_on     = [module.app_lb]
-  namespace      = var.namespace
-  resource_group = azurerm_resource_group.default
-  location       = azurerm_resource_group.default.location
+  source     = "./modules/app_aks"
+  depends_on = [module.app_lb]
 
-  node_pool_vm_size  = var.kubernetes_instance_type
-  node_pool_vm_count = var.kubernetes_node_count
+  cluster_subnet_id     = module.networking.private_subnet.id
+  etcd_key_vault_key_id = module.vault.etcd_key_id
+  gateway               = module.app_lb.gateway
+  identity              = module.identity.identity
+  location              = azurerm_resource_group.default.location
+  namespace             = var.namespace
+  node_pool_vm_count    = var.kubernetes_node_count
+  node_pool_vm_size     = var.kubernetes_instance_type
+  public_subnet         = module.networking.public_subnet
+  resource_group        = azurerm_resource_group.default
 
-  identity = module.identity.identity
-
-  gateway           = module.app_lb.gateway
-  public_subnet     = module.networking.public_subnet
-  cluster_subnet_id = module.networking.private_subnet.id
-
-  tags = merge(
-    {
-      "customer-ns" = var.namespace,
-      "env"         = "managed-install"
-    },
-    var.tags,
-  )
+  tags = var.tags
 }
 
 locals {
@@ -189,7 +162,7 @@ module "wandb" {
     module.database,
     module.storage,
   ]
-  operator_chart_version = "1.1.0"
+  operator_chart_version = "1.1.2"
   controller_image_tag   = "1.10.1"
 
   spec = {
@@ -224,10 +197,10 @@ module "wandb" {
       }
 
       app = {
-        extraEnv = {
+        extraEnv = merge({
           "GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
           "GORILLA_CUSTOMER_SECRET_STORE_SOURCE"              = "az-secretmanager://wandb",
-        }
+        }, var.app_wandb_env)
         pod = {
           labels = { "azure.workload.identity/use" = "true" }
         }
@@ -258,10 +231,15 @@ module "wandb" {
         persistence = {
           provider = "azurefile"
         }
+        extraEnv = var.weave_wandb_env
       }
 
       mysql = { install = false }
       redis = { install = false }
+
+      parquet = {
+        extraEnv = var.parquet_wandb_env
+      }
     }
   }
 }

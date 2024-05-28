@@ -122,6 +122,12 @@ variable "database_availability_mode" {
   }
 }
 
+variable "database_sku_name" {
+  type        = string
+  default     = "GP_Standard_D4ds_v4"
+  description = "Specifies the SKU Name for this MySQL Server"
+}
+
 ##########################################
 # Redis                                  #
 ##########################################
@@ -174,3 +180,33 @@ variable "kubernetes_node_count" {
   default = 2
   type    = number
 }
+
+##########################################
+# Network                                #
+##########################################
+
+variable "allowed_ip_ranges" {
+  description = "allowed public IP addresses or CIDR ranges."
+  type        = list(string)
+  default = []
+}
+
+
+variable "weave_wandb_env" {
+  type        = map(string)
+  description = "Extra environment variables for W&B"
+  default     = {}
+}
+
+variable "app_wandb_env" {
+  type        = map(string)
+  description = "Extra environment variables for W&B"
+  default     = {}
+}
+
+variable "parquet_wandb_env" {
+  type        = map(string)
+  description = "Extra environment variables for W&B"
+  default     = {}
+}
+

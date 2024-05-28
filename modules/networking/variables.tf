@@ -54,3 +54,8 @@ variable "tags" {
   type        = map(string)
   description = "Map of tags for resource"
 }
+
+variable "allowed_ip_ranges" {
+  description = "allowed public IP addresses or CIDR ranges."
+  type = list(string)
+}
