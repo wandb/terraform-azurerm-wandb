@@ -143,6 +143,7 @@ resource "azurerm_federated_identity_credential" "app" {
 
 
 resource "azurerm_federated_identity_credential" "otel_app" {
+  count               = var.azuremonitor ? 1 : 0
   parent_id           = module.identity.identity.id
   name                = "${var.namespace}-otel-app-credentials"
   resource_group_name = azurerm_resource_group.default.name
@@ -241,19 +242,19 @@ module "wandb" {
         ]
       }
 
-
+      ## To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 
       otel = {
-        daemonset = {
-          pod = { labels = { "azure.workload.identity/use" = "true" } }
-          presets = {
+        daemonset =  {
+          pod = var.azuremonitor ? { labels = { "azure.workload.identity/use" = "true" } } : {}
+          presets = var.azuremonitor ? {
             receiver = {
               azuremonitor = {
                 subscription_id = data.azurerm_subscription.current.subscription_id
                 resource_groups = var.namespace
               }
             }
-          }
-          config = {
+          } : {}
+          config = var.azuremonitor ? {
             service = {
               pipelines = {
                 metrics = {
@@ -261,8 +262,10 @@ module "wandb" {
                 }
               }
             }
-          }
-          serviceAccount = { annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id } }
+          } : {}
+          serviceAccount = var.azuremonitor ? { 
+            annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+            } : {}
         } 
       }
       

@@ -210,3 +210,9 @@ variable "parquet_wandb_env" {
   default     = {}
 }
 
+## To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 
+
+variable "azuremonitor" {
+  type = bool
+  default = true
+}
