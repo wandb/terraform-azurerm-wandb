@@ -242,8 +242,8 @@ module "wandb" {
         ]
       }
 
-      otel = var.azuremonitor ? {
-        daemonset = {
+      otel = {
+        daemonset = var.azuremonitor ? {
           pod            = { labels = { "azure.workload.identity/use" = "true" } }
           serviceAccount = { annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id } }
           config = {
@@ -266,8 +266,7 @@ module "wandb" {
               }
             }
           }
-        }
-        } : { daemonset = {
+          } : {
           pod            = {}
           serviceAccount = {}
           config = {
