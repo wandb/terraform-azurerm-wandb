@@ -242,19 +242,22 @@ module "wandb" {
         ]
       }
 
-      ## To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 
-      otel = {
-        daemonset =  {
-          pod = var.azuremonitor ? { labels = { "azure.workload.identity/use" = "true" } } : {}
-          presets = var.azuremonitor ? {
-            receiver = {
+      otel = var.azuremonitor ? {
+        daemonset = {
+          pod            = { labels = { "azure.workload.identity/use" = "true" } }
+          serviceAccount = { annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id } }
+          config = {
+            receivers = {
               azuremonitor = {
-                subscription_id = data.azurerm_subscription.current.subscription_id
-                resource_groups = var.namespace
+                subscription_id      = data.azurerm_subscription.current.subscription_id
+                resource_groups      = var.namespace
+                auth                 = "workload_identity"
+                tenant_id            = "$${env:AZURE_TENANT_ID}"
+                client_id            = "$${env:AZURE_CLIENT_ID}"
+                federated_token_file = "$${env:AZURE_FEDERATED_TOKEN_FILE}"
+                services             = ["Microsoft.DBforMySQL/flexibleServers", "Microsoft.Cache/Redis"]
               }
             }
-          } : {}
-          config = var.azuremonitor ? {
             service = {
               pipelines = {
                 metrics = {
@@ -262,13 +265,18 @@ module "wandb" {
                 }
               }
             }
-          } : {}
-          serviceAccount = var.azuremonitor ? { 
-            annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
-            } : {}
-        } 
+          }
+        }
+        } : { daemonset = {
+          pod            = {}
+          serviceAccount = {}
+          config = {
+            receivers = {}
+            service   = {}
+          }
+        }
       }
-      
+
       weave = {
         persistence = {
           provider = "azurefile"
