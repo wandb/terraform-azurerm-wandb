@@ -234,6 +234,7 @@ module "wandb" {
         extraEnv = var.weave_wandb_env
       }
 
+      nginx = { install = false }
       mysql = { install = false }
       redis = { install = false }
 
