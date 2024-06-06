@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.3.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.3.0...v2.3.1) (2024-06-06)
+
+
+### Bug Fixes
+
+* Set the Azure sku_tier to standard for AKS clusters ([#69](https://github.com/wandb/terraform-azurerm-wandb/issues/69)) ([36963a5](https://github.com/wandb/terraform-azurerm-wandb/commit/36963a587709cd514600acd1f294629bfc3f7e1c))
+
 ## [2.3.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.2.0...v2.3.0) (2024-05-14)
 
 
