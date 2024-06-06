@@ -52,5 +52,5 @@ variable "node_pool_vm_count" {
 
 variable "sku_tier" {
   type = string
-  default = "Standard"
+  default = "Free"
 }
