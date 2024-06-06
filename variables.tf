@@ -221,3 +221,9 @@ variable "azuremonitor" {
   type = bool
   default = true
 }
+
+variable "node_max_pods" {
+  type = number
+  description = "Maximum number of pods per node"
+  default = 30
+}

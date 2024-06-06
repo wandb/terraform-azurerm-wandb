@@ -110,6 +110,7 @@ module "app_aks" {
   public_subnet         = module.networking.public_subnet
   resource_group        = azurerm_resource_group.default
   sku_tier              = var.cluster_sku_tier
+  max_pods              = var.node_max_pods
   tags = var.tags
 }
 
