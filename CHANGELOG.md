@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.4.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.3.1...v2.4.0) (2024-06-06)
+
+
+### Features
+
+* Added otel azure monitor support ([#66](https://github.com/wandb/terraform-azurerm-wandb/issues/66)) ([7eaa8bf](https://github.com/wandb/terraform-azurerm-wandb/commit/7eaa8bf67a46466bf0f7fdbbcd6d03e7a3b73eb2))
+
 ### [2.3.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.3.0...v2.3.1) (2024-06-06)
 
 
