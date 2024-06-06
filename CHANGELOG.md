@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.4.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.4.1...v2.4.2) (2024-06-06)
+
+
+### Bug Fixes
+
+* Make max pods configurabe and return default to 30 for now ([#71](https://github.com/wandb/terraform-azurerm-wandb/issues/71)) ([0b1490e](https://github.com/wandb/terraform-azurerm-wandb/commit/0b1490e4d700b64775445d01a6b5b7294edea2e8))
+
 ### [2.4.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.4.0...v2.4.1) (2024-06-06)
 
 
