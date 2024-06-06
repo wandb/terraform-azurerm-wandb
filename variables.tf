@@ -212,5 +212,6 @@ variable "parquet_wandb_env" {
 
 variable "cluster_sku_tier" {
   type = string
+  description = "The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers)"
   default = "Free"
 }
