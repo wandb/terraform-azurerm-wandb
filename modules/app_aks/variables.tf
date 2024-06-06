@@ -54,3 +54,9 @@ variable "sku_tier" {
   type = string
   default = "Free"
 }
+
+variable "max_pods" {
+  type = number
+  description = "Maximum number of pods per node"
+  default = 30
+}
