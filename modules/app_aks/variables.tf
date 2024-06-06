@@ -49,3 +49,8 @@ variable "node_pool_vm_size" {
 variable "node_pool_vm_count" {
   type = number
 }
+
+variable "sku_tier" {
+  type = string
+  default = "Free"
+}

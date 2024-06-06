@@ -109,7 +109,7 @@ module "app_aks" {
   node_pool_vm_size     = var.kubernetes_instance_type
   public_subnet         = module.networking.public_subnet
   resource_group        = azurerm_resource_group.default
-
+  sku_tier              = var.cluster_sku_tier
   tags = var.tags
 }
 
