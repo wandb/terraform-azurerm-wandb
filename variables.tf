@@ -210,8 +210,13 @@ variable "parquet_wandb_env" {
   default     = {}
 }
 
-## To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 
+variable "cluster_sku_tier" {
+  type = string
+  description = "The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers)"
+  default = "Free"
+}
 
+## To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 
 variable "azuremonitor" {
   type = bool
   default = true

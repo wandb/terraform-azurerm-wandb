@@ -3,6 +3,7 @@ resource "azurerm_kubernetes_cluster" "default" {
   location            = var.location
   resource_group_name = var.resource_group.name
   dns_prefix          = var.namespace
+  sku_tier            = var.sku_tier
 
   automatic_channel_upgrade         = "stable"
   role_based_access_control_enabled = true
