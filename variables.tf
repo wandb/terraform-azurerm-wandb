@@ -210,3 +210,7 @@ variable "parquet_wandb_env" {
   default     = {}
 }
 
+variable "cluster_sku_tier" {
+  type = string
+  default = "Free"
+}
