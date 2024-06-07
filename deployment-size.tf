@@ -20,7 +20,7 @@ locals {
       cache         = "4"
     },
     xlarge = {
-      db            = "MO_Standard_E16ds_v4 ",
+      db            = "MO_Standard_E16ds_v4",
       node_count    = 3,
       node_instance = "Standard_E8s_v5"
       cache         = "4"
