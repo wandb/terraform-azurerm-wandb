@@ -210,9 +210,6 @@ module "cert_manager" {
   depends_on = [module.app_aks]
 }
 
-data "azurerm_subscription" "current" {}
-
-
 module "wandb" {
   source  = "wandb/wandb/helm"
   version = "1.2.0"
