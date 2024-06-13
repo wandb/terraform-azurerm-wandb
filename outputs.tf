@@ -29,6 +29,10 @@ output "cluster_ca_certificate" {
   sensitive = true
 }
 
+output "oidc_issuer_url" {
+  value = module.app_aks.oidc_issuer_url
+}
+
 output "storage_account" {
   value = var.external_bucket != null ? "" : coalesce(var.storage_account, local.account_name, "")
 }

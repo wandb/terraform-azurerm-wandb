@@ -1,31 +1,35 @@
-##########################################
-# Common                                 #
-##########################################
+variable "subscription_id" {
+  type    = string
+  default = "**"
+}
+
 variable "namespace" {
   type        = string
   description = "String used for prefix resources."
+  default = ""
 }
 
 variable "location" {
-  type = string
+  type    = string
+  default = "East US"
 }
 
-variable "tags" {
-  default     = {}
-  type        = map(string)
-  description = "Map of tags for resource"
+variable "oidc_issuer" {
+  type        = string
+  description = "A url to your Open ID Connect identity provider, i.e. https://cognito-idp.us-east-1.amazonaws.com/us-east-1_uiIFNdacd"
+  default     = ""
 }
 
-variable "deletion_protection" {
-  description = "If the instance should have deletion protection enabled. The database / Bucket can't be deleted when this value is set to `true`."
-  type        = bool
-  default     = true
+variable "domain_name" {
+  type        = string
+  default = ""
+  description = "Domain for accessing the Weights & Biases UI."
 }
 
-variable "use_internal_queue" {
-  type        = bool
-  description = "Uses an internal redis queue instead of using azure queue."
-  default     = false
+variable "subdomain" {
+  type        = string
+  default     = ""
+  description = "Subdomain for accessing the Weights & Biases UI. Default creates record at Route53 Route."
 }
 
 variable "wandb_version" {
@@ -43,13 +47,17 @@ variable "wandb_image" {
 variable "license" {
   type        = string
   description = "Your wandb/local license"
+  default = ""
+  }
+
+
+variable "tags" {
+  default     = {}
+  type        = map(string)
+  description = "Map of tags for resource"
 }
 
-variable "oidc_issuer" {
-  type        = string
-  description = "A url to your Open ID Connect identity provider, i.e. https://cognito-idp.us-east-1.amazonaws.com/us-east-1_uiIFNdacd"
-  default     = ""
-}
+
 
 variable "oidc_client_id" {
   type        = string
@@ -81,30 +89,12 @@ variable "other_wandb_env" {
 }
 
 
-##########################################
-# DNS                                    #
-##########################################
-variable "domain_name" {
-  type        = string
-  default     = null
-  description = "Domain for accessing the Weights & Biases UI."
-}
-
-variable "subdomain" {
-  type        = string
-  default     = null
-  description = "Subdomain for accessing the Weights & Biases UI. Default creates record at Route53 Route."
-}
-
 variable "ssl" {
   type        = bool
   default     = true
   description = "Enable SSL certificate"
 }
 
-##########################################
-# Database                               #
-##########################################
 variable "database_version" {
   description = "Version for MySQL"
   type        = string
@@ -128,20 +118,11 @@ variable "database_sku_name" {
   description = "Specifies the SKU Name for this MySQL Server"
 }
 
-##########################################
-# Redis                                  #
-##########################################
 variable "create_redis" {
   type        = bool
   description = "Boolean indicating whether to provision an redis instance (true) or not (false)."
   default     = false
 }
-
-##########################################
-# External Bucket                        #
-##########################################
-# Most users will not need these settings. They are ment for users who want a
-# bucket in a different account.
 
 variable "blob_container" {
   type        = string
@@ -167,9 +148,6 @@ variable "external_bucket" {
   default     = null
 }
 
-##########################################
-# K8s                                    #
-##########################################
 variable "kubernetes_instance_type" {
   type        = string
   description = "Use for the Kubernetes cluster."
@@ -179,33 +157,6 @@ variable "kubernetes_instance_type" {
 variable "kubernetes_node_count" {
   default = 2
   type    = number
-}
-
-
-###########################################
-# Application gateway private link        #
-###########################################
-variable "create_private_link" {
-  type        = bool
-  default     = false
-  description = "Use for the azure private link."
-}
-
-variable "allowed_subscriptions" {
-  type        = string
-  description = "List of allowed customer subscriptions coma seperated values"
-  default = "" 
-}
-
-
-##########################################
-# Network                                #
-##########################################
-
-variable "allowed_ip_ranges" {
-  description = "allowed public IP addresses or CIDR ranges."
-  type        = list(string)
-  default = []
 }
 
 variable "weave_wandb_env" {
@@ -224,22 +175,4 @@ variable "parquet_wandb_env" {
   type        = map(string)
   description = "Extra environment variables for W&B"
   default     = {}
-}
-
-variable "cluster_sku_tier" {
-  type = string
-  description = "The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers)"
-  default = "Free"
-}
-
-## To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 
-variable "azuremonitor" {
-  type = bool
-  default = true
-}
-
-variable "node_max_pods" {
-  type = number
-  description = "Maximum number of pods per node"
-  default = 30
 }

@@ -25,6 +25,7 @@ module "networking" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   private_link        = var.create_private_link
+  allowed_ip_ranges   = var.allowed_ip_ranges
   tags                = var.tags
 }
 
@@ -111,7 +112,8 @@ module "app_aks" {
   node_pool_vm_size     = var.kubernetes_instance_type
   public_subnet         = module.networking.public_subnet
   resource_group        = azurerm_resource_group.default
-
+  sku_tier              = var.cluster_sku_tier
+  max_pods              = var.node_max_pods
   tags = var.tags
 }
 
@@ -132,6 +134,7 @@ locals {
 locals {
   service_account_name         = "wandb-app"
   private_endpoint_approval_sa = "private-endpoint-sa"
+  otel_sa_name         = "wandb-otel-daemonset"
 }
 
 resource "azurerm_federated_identity_credential" "app" {
@@ -183,6 +186,16 @@ module "cron_job" {
   applicationGatewayName = module.app_lb.gateway.name
   allowedSubscriptions   = var.allowed_subscriptions
   depends_on = [module.app_lb, module.pod_identity ]
+    }
+
+resource "azurerm_federated_identity_credential" "otel_app" {
+  count               = var.azuremonitor ? 1 : 0
+  parent_id           = module.identity.identity.id
+  name                = "${var.namespace}-otel-app-credentials"
+  resource_group_name = azurerm_resource_group.default.name
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = module.app_aks.oidc_issuer_url
+  subject             = "system:serviceaccount:default:${local.otel_sa_name}"
 }
 
 module "cert_manager" {
@@ -196,6 +209,9 @@ module "cert_manager" {
 
   depends_on = [module.app_aks]
 }
+
+data "azurerm_subscription" "current" {}
+
 
 module "wandb" {
   source  = "wandb/wandb/helm"
@@ -270,6 +286,40 @@ module "wandb" {
         tls = [
           { hosts = [trimprefix(trimprefix(local.url, "https://"), "http://")], secretName = "wandb-ssl-cert" }
         ]
+      }
+
+      otel = {
+        daemonset = var.azuremonitor ? {
+          pod            = { labels = { "azure.workload.identity/use" = "true" } }
+          serviceAccount = { annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id } }
+          config = {
+            receivers = {
+              azuremonitor = {
+                subscription_id      = data.azurerm_subscription.current.subscription_id
+                resource_groups      = var.namespace
+                auth                 = "workload_identity"
+                tenant_id            = "$${env:AZURE_TENANT_ID}"
+                client_id            = "$${env:AZURE_CLIENT_ID}"
+                federated_token_file = "$${env:AZURE_FEDERATED_TOKEN_FILE}"
+                services             = ["Microsoft.DBforMySQL/flexibleServers", "Microsoft.Cache/Redis"]
+              }
+            }
+            service = {
+              pipelines = {
+                metrics = {
+                  receivers = ["hostmetrics", "k8s_cluster", "kubeletstats", "azuremonitor"]
+                }
+              }
+            }
+          }
+          } : {
+          pod            = {}
+          serviceAccount = {}
+          config = {
+            receivers = {}
+            service   = {}
+          }
+        }
       }
 
       weave = {
