@@ -142,6 +142,13 @@ resource "azurerm_federated_identity_credential" "app" {
   subject             = "system:serviceaccount:default:${local.service_account_name}"
 }
 
+resource "azurerm_role_assignment" "otel_role" {
+  count                = var.azuremonitor ? 1 : 0
+  scope                = azurerm_resource_group.default.id
+  role_definition_name = "Contributor"
+  principal_id         = module.identity.otel_identity.principal_id
+   
+}
 
 resource "azurerm_federated_identity_credential" "otel_app" {
   count               = var.azuremonitor ? 1 : 0
