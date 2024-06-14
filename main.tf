@@ -13,8 +13,8 @@ resource "azurerm_resource_group" "default" {
 
 module "identity" {
   source = "./modules/identity"
-
   namespace      = var.namespace
+  otel_identity = var.azuremonitor
   resource_group = azurerm_resource_group.default
   location       = azurerm_resource_group.default.location
 }
@@ -145,7 +145,7 @@ resource "azurerm_federated_identity_credential" "app" {
 
 resource "azurerm_federated_identity_credential" "otel_app" {
   count               = var.azuremonitor ? 1 : 0
-  parent_id           = module.identity.identity.id
+  parent_id           = module.identity.otel_identity.id
   name                = "${var.namespace}-otel-app-credentials"
   resource_group_name = azurerm_resource_group.default.name
   audience            = ["api://AzureADTokenExchange"]
@@ -246,12 +246,12 @@ module "wandb" {
       otel = {
         daemonset = var.azuremonitor ? {
           pod            = { labels = { "azure.workload.identity/use" = "true" } }
-          serviceAccount = { annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id } }
+          serviceAccount = { annotations = { "azure.workload.identity/client-id" = module.identity.otel_identity.client_id } }
           config = {
             receivers = {
               azuremonitor = {
                 subscription_id      = data.azurerm_subscription.current.subscription_id
-                resource_groups      = var.namespace
+                resource_groups      = [var.namespace]
                 auth                 = "workload_identity"
                 tenant_id            = "$${env:AZURE_TENANT_ID}"
                 client_id            = "$${env:AZURE_CLIENT_ID}"
