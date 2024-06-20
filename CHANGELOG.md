@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.6.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.5.0...v2.6.0) (2024-06-17)
+
+
+### Features
+
+* Added otel fix ([#74](https://github.com/wandb/terraform-azurerm-wandb/issues/74)) ([4aeb5c2](https://github.com/wandb/terraform-azurerm-wandb/commit/4aeb5c28ae9c1d31a8aa65b38ea5a3da08adb5c6))
+
 ## [2.5.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.4.2...v2.5.0) (2024-06-06)
 
 
