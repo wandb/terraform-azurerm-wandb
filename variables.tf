@@ -181,6 +181,11 @@ variable "kubernetes_node_count" {
   type    = number
 }
 
+variable "node_pool_zones" {
+  type        = list(string)
+  description = "Availability zones for the node pool"
+  default     = ["1", "2"]
+}
 ##########################################
 # Network                                #
 ##########################################
@@ -188,7 +193,7 @@ variable "kubernetes_node_count" {
 variable "allowed_ip_ranges" {
   description = "allowed public IP addresses or CIDR ranges."
   type        = list(string)
-  default = []
+  default     = []
 }
 
 
@@ -211,19 +216,19 @@ variable "parquet_wandb_env" {
 }
 
 variable "cluster_sku_tier" {
-  type = string
+  type        = string
   description = "The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers)"
-  default = "Free"
+  default     = "Free"
 }
 
 ## To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 
 variable "azuremonitor" {
-  type = bool
+  type    = bool
   default = true
 }
 
 variable "node_max_pods" {
-  type = number
+  type        = number
   description = "Maximum number of pods per node"
-  default = 30
+  default     = 30
 }

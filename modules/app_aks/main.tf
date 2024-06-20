@@ -26,7 +26,7 @@ resource "azurerm_kubernetes_cluster" "default" {
     type                        = "VirtualMachineScaleSets"
     vm_size                     = var.node_pool_vm_size
     vnet_subnet_id              = var.cluster_subnet_id
-    zones                       = ["1", "2"]
+    zones                       = var.node_pool_zones
   }
 
   identity {

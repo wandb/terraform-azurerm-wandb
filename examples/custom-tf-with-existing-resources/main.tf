@@ -15,7 +15,7 @@ provider "helm" {
   kubernetes {
     host                   = data.azurerm_kubernetes_cluster.cluster.kube_config.0.host
     cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.cluster.kube_config.0.cluster_ca_certificate)
-    client_key             =  base64decode(data.azurerm_kubernetes_cluster.cluster.kube_config.0.client_key)
+    client_key             = base64decode(data.azurerm_kubernetes_cluster.cluster.kube_config.0.client_key)
     client_certificate     = base64decode(data.azurerm_kubernetes_cluster.cluster.kube_config.0.client_certificate)
   }
 }
@@ -30,7 +30,7 @@ locals {
   public_subnet  = data.azurerm_subnet.public
   resource_group = data.azurerm_resource_group.group
   vault_uri      = var.vault_uri
-  identity_id = data.azurerm_user_assigned_identity.identity.client_id
+  identity_id    = data.azurerm_user_assigned_identity.identity.client_id
 }
 
 
@@ -139,7 +139,7 @@ module "wandb" {
         }
         serviceAccount = {
           name        = local.service_account_name
-          annotations = { "azure.workload.identity/client-id" = local.identity_id}
+          annotations = { "azure.workload.identity/client-id" = local.identity_id }
           labels      = { "azure.workload.identity/use" = "true" }
         }
       }
