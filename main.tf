@@ -12,9 +12,9 @@ resource "azurerm_resource_group" "default" {
 }
 
 module "identity" {
-  source = "./modules/identity"
+  source         = "./modules/identity"
   namespace      = var.namespace
-  otel_identity = var.azuremonitor
+  otel_identity  = var.azuremonitor
   resource_group = azurerm_resource_group.default
   location       = azurerm_resource_group.default.location
 }
@@ -107,11 +107,12 @@ module "app_aks" {
   namespace             = var.namespace
   node_pool_vm_count    = var.kubernetes_node_count
   node_pool_vm_size     = var.kubernetes_instance_type
+  node_pool_zones       = var.node_pool_zones
   public_subnet         = module.networking.public_subnet
   resource_group        = azurerm_resource_group.default
   sku_tier              = var.cluster_sku_tier
   max_pods              = var.node_max_pods
-  tags = var.tags
+  tags                  = var.tags
 }
 
 locals {
@@ -147,7 +148,7 @@ resource "azurerm_role_assignment" "otel_role" {
   scope                = azurerm_resource_group.default.id
   role_definition_name = "Contributor"
   principal_id         = module.identity.otel_identity.principal_id
-   
+
 }
 
 resource "azurerm_federated_identity_credential" "otel_app" {

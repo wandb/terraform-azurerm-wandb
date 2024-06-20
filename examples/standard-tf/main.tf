@@ -25,9 +25,9 @@ provider "helm" {
 module "wandb" {
   source = "../../"
 
-  namespace   = var.namespace
-  location    = var.location
-  license     = var.license
+  namespace = var.namespace
+  location  = var.location
+  license   = var.license
 
   domain_name = var.domain_name
   subdomain   = var.subdomain
@@ -36,21 +36,21 @@ module "wandb" {
   wandb_image   = var.wandb_image
 
   database_sku_name = var.database_sku_name
-  database_version = var.database_version
+  database_version  = var.database_version
 
-  create_redis       = true
-  use_internal_queue = true
-  ssl = var.ssl
-  deletion_protection = true
+  create_redis          = true
+  use_internal_queue    = true
+  ssl                   = var.ssl
+  deletion_protection   = true
   kubernetes_node_count = var.kubernetes_node_count
-  
-  storage_account = var.storage_account
-  blob_container = var.blob_container
-  storage_key = var.storage_key
-  external_bucket  = var.external_bucket
 
-  weave_wandb_env = var.weave_wandb_env
-  app_wandb_env = var.app_wandb_env
+  storage_account = var.storage_account
+  blob_container  = var.blob_container
+  storage_key     = var.storage_key
+  external_bucket = var.external_bucket
+
+  weave_wandb_env   = var.weave_wandb_env
+  app_wandb_env     = var.app_wandb_env
   parquet_wandb_env = var.parquet_wandb_env
 
   tags = var.tags
