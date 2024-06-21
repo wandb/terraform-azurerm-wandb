@@ -72,8 +72,8 @@ resources that lack official modules.
 | <a name="input_app_wandb_env"></a> [app\_wandb\_env](#input\_app\_wandb\_env) | Extra environment variables for W&B | `map(string)` | `{}` | no |
 | <a name="input_azuremonitor"></a> [azuremonitor](#input\_azuremonitor) | # To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 | `bool` | `true` | no |
 | <a name="input_blob_container"></a> [blob\_container](#input\_blob\_container) | Use an existing bucket. | `string` | `""` | no |
-| <a name="input_create_cmk_key"></a> [create\_cmk\_key](#input\_create\_cmk\_key) | n/a | `bool` | n/a | yes |
 | <a name="input_cluster_sku_tier"></a> [cluster\_sku\_tier](#input\_cluster\_sku\_tier) | The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers) | `string` | `"Free"` | no |
+| <a name="input_create_cmk_key"></a> [create\_cmk\_key](#input\_create\_cmk\_key) | n/a | `bool` | n/a | yes |
 | <a name="input_create_redis"></a> [create\_redis](#input\_create\_redis) | Boolean indicating whether to provision an redis instance (true) or not (false). | `bool` | `false` | no |
 | <a name="input_create_seprate_cmk_key"></a> [create\_seprate\_cmk\_key](#input\_create\_seprate\_cmk\_key) | n/a | `bool` | n/a | yes |
 | <a name="input_curve"></a> [curve](#input\_curve) | n/a | `string` | `"P-256"` | no |
