@@ -13,9 +13,9 @@ resource "azurerm_resource_group" "default" {
 }
 
 module "identity" {
-  source = "./modules/identity"
-
+  source         = "./modules/identity"
   namespace      = var.namespace
+  otel_identity  = var.azuremonitor
   resource_group = azurerm_resource_group.default
   location       = azurerm_resource_group.default.location
 }
@@ -190,10 +190,12 @@ module "app_aks" {
   namespace             = var.namespace
   node_pool_vm_count    = var.kubernetes_node_count
   node_pool_vm_size     = var.kubernetes_instance_type
+  node_pool_zones       = var.node_pool_zones
   public_subnet         = module.networking.public_subnet
   resource_group        = azurerm_resource_group.default
-
-  tags = var.tags
+  sku_tier              = var.cluster_sku_tier
+  max_pods              = var.node_max_pods
+  tags                  = var.tags
 }
 
 locals {
@@ -212,6 +214,7 @@ locals {
 
 locals {
   service_account_name = "wandb-app"
+  otel_sa_name         = "wandb-otel-daemonset"
 }
 
 resource "azurerm_federated_identity_credential" "app" {
@@ -221,6 +224,24 @@ resource "azurerm_federated_identity_credential" "app" {
   audience            = ["api://AzureADTokenExchange"]
   issuer              = module.app_aks.oidc_issuer_url
   subject             = "system:serviceaccount:default:${local.service_account_name}"
+}
+
+resource "azurerm_role_assignment" "otel_role" {
+  count                = var.azuremonitor ? 1 : 0
+  scope                = azurerm_resource_group.default.id
+  role_definition_name = "Contributor"
+  principal_id         = module.identity.otel_identity.principal_id
+
+}
+
+resource "azurerm_federated_identity_credential" "otel_app" {
+  count               = var.azuremonitor ? 1 : 0
+  parent_id           = module.identity.otel_identity.id
+  name                = "${var.namespace}-otel-app-credentials"
+  resource_group_name = azurerm_resource_group.default.name
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = module.app_aks.oidc_issuer_url
+  subject             = "system:serviceaccount:default:${local.otel_sa_name}"
 }
 
 module "cert_manager" {
@@ -234,6 +255,9 @@ module "cert_manager" {
 
   depends_on = [module.app_aks]
 }
+
+data "azurerm_subscription" "current" {}
+
 
 module "wandb" {
   source  = "wandb/wandb/helm"
@@ -308,6 +332,40 @@ module "wandb" {
         tls = [
           { hosts = [trimprefix(trimprefix(local.url, "https://"), "http://")], secretName = "wandb-ssl-cert" }
         ]
+      }
+
+      otel = {
+        daemonset = var.azuremonitor ? {
+          pod            = { labels = { "azure.workload.identity/use" = "true" } }
+          serviceAccount = { annotations = { "azure.workload.identity/client-id" = module.identity.otel_identity.client_id } }
+          config = {
+            receivers = {
+              azuremonitor = {
+                subscription_id      = data.azurerm_subscription.current.subscription_id
+                resource_groups      = [var.namespace]
+                auth                 = "workload_identity"
+                tenant_id            = "$${env:AZURE_TENANT_ID}"
+                client_id            = "$${env:AZURE_CLIENT_ID}"
+                federated_token_file = "$${env:AZURE_FEDERATED_TOKEN_FILE}"
+                services             = ["Microsoft.DBforMySQL/flexibleServers", "Microsoft.Cache/Redis"]
+              }
+            }
+            service = {
+              pipelines = {
+                metrics = {
+                  receivers = ["hostmetrics", "k8s_cluster", "kubeletstats", "azuremonitor"]
+                }
+              }
+            }
+          }
+          } : {
+          pod            = {}
+          serviceAccount = {}
+          config = {
+            receivers = {}
+            service   = {}
+          }
+        }
       }
 
       weave = {

@@ -83,5 +83,5 @@ resource "azurerm_subnet_network_security_group_association" "public" {
   count                     = length(var.allowed_ip_ranges) > 0 ? 1 : 0
   subnet_id                 = azurerm_subnet.public.id
   network_security_group_id = azurerm_network_security_group.default.0.id
-  depends_on = [ azurerm_network_security_rule.default ]
+  depends_on                = [azurerm_network_security_rule.default]
 }

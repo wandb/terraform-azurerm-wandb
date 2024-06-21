@@ -2,6 +2,55 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.6.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.6.0...v2.6.1) (2024-06-20)
+
+
+### Bug Fixes
+
+* Make default node pool zone configurable ([#75](https://github.com/wandb/terraform-azurerm-wandb/issues/75)) ([cfa5a89](https://github.com/wandb/terraform-azurerm-wandb/commit/cfa5a89f523b9982a3cb6fa57548558c5a8eec49))
+
+## [2.6.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.5.0...v2.6.0) (2024-06-17)
+
+
+### Features
+
+* Added otel fix ([#74](https://github.com/wandb/terraform-azurerm-wandb/issues/74)) ([4aeb5c2](https://github.com/wandb/terraform-azurerm-wandb/commit/4aeb5c28ae9c1d31a8aa65b38ea5a3da08adb5c6))
+
+## [2.5.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.4.2...v2.5.0) (2024-06-06)
+
+
+### Features
+
+* Added examples support ([#64](https://github.com/wandb/terraform-azurerm-wandb/issues/64)) ([1eb9693](https://github.com/wandb/terraform-azurerm-wandb/commit/1eb9693db4b3c062adc8e904ff436037db142a0a))
+
+### [2.4.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.4.1...v2.4.2) (2024-06-06)
+
+
+### Bug Fixes
+
+* Make max pods configurabe and return default to 30 for now ([#71](https://github.com/wandb/terraform-azurerm-wandb/issues/71)) ([0b1490e](https://github.com/wandb/terraform-azurerm-wandb/commit/0b1490e4d700b64775445d01a6b5b7294edea2e8))
+
+### [2.4.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.4.0...v2.4.1) (2024-06-06)
+
+
+### Bug Fixes
+
+* Reduce max pods ([#70](https://github.com/wandb/terraform-azurerm-wandb/issues/70)) ([718f25a](https://github.com/wandb/terraform-azurerm-wandb/commit/718f25aa3dd01c6ea5e2b84501d040fa10397e9b))
+
+## [2.4.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.3.1...v2.4.0) (2024-06-06)
+
+
+### Features
+
+* Added otel azure monitor support ([#66](https://github.com/wandb/terraform-azurerm-wandb/issues/66)) ([7eaa8bf](https://github.com/wandb/terraform-azurerm-wandb/commit/7eaa8bf67a46466bf0f7fdbbcd6d03e7a3b73eb2))
+
+### [2.3.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.3.0...v2.3.1) (2024-06-06)
+
+
+### Bug Fixes
+
+* Set the Azure sku_tier to standard for AKS clusters ([#69](https://github.com/wandb/terraform-azurerm-wandb/issues/69)) ([36963a5](https://github.com/wandb/terraform-azurerm-wandb/commit/36963a587709cd514600acd1f294629bfc3f7e1c))
+
 ## [2.3.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.2.0...v2.3.0) (2024-05-14)
 
 
