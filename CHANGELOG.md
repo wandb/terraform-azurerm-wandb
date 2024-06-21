@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.7.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.6.1...v2.7.0) (2024-06-21)
+
+
+### Features
+
+* Added t-shirt size feature ([#72](https://github.com/wandb/terraform-azurerm-wandb/issues/72)) ([fe26616](https://github.com/wandb/terraform-azurerm-wandb/commit/fe26616f378eee30fbeeff62e1d22b2f8f36a56d))
+
 ### [2.6.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.6.0...v2.6.1) (2024-06-20)
 
 
