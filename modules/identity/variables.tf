@@ -12,3 +12,7 @@ variable "location" {
   type        = string
   description = "The location where the Managed Kubernetes Cluster should be created."
 }
+
+variable "otel_identity" {
+  type = bool
+}

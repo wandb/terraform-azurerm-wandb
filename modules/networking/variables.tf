@@ -63,5 +63,5 @@ variable "private_link" {
 
 variable "allowed_ip_ranges" {
   description = "allowed public IP addresses or CIDR ranges."
-  type = list(string)
+  type        = list(string)
 }
