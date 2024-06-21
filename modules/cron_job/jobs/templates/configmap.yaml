@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: script-config
+  namespace: default
+data:
+  run.py: |
+    import requests
+    import os
+    from azure.identity import DefaultAzureCredential
+    def list_and_approve_connections(allowed_subscriptions):
+        try:
+            subscription_id = os.getenv('SUBSCRIPTION_ID')
+            resource_group_name = os.getenv('RESOURCE_GROUP_NAME')
+            application_gateway_name = os.getenv('APPLICATION_GATEWAY_NAME')
+
+            # Authenticate using Azure Identity
+            credential = DefaultAzureCredential()
+            access_token = credential.get_token("https://management.azure.com/.default").token
+
+            # List private endpoint connections
+            list_url = f"https://management.azure.com/subscriptions/{subscription_id}/resourceGroups/{resource_group_name}/providers/Microsoft.Network/applicationGateways/{application_gateway_name}/privateEndpointConnections?api-version=2023-09-01"
+            headers = {
+                "Authorization": f"Bearer {access_token}",
+                "Content-Type": "application/json"
+            }
+            response = requests.get(list_url, headers=headers)
+            response.raise_for_status()  # Raise exception if response status code is not successful
+
+            connections = response.json().get("value", [])
+            if not connections:
+                print("No pending connections to approve")
+                return
+
+            print(response.json())
+
+            # Approve pending connections
+            for connection in connections:
+                if connection["properties"]["privateLinkServiceConnectionState"]["status"] == "Pending":
+                    connection_name = connection["name"]
+                    connection_subscription_id = connection["properties"]["privateEndpoint"]["id"].split('/')[2]  # Extract subscription ID from endpoint name
+                    if connection_subscription_id in allowed_subscriptions:
+                        approve_connection(connection, subscription_id, resource_group_name, application_gateway_name, headers)
+                    else:
+                        print(f"Connection {connection['name']} not approved. Subscription ID mismatch.")
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+
+    def approve_connection(connection, subscription_id, resource_group_name, application_gateway_name, headers):
+        try:
+            connection_name = connection["name"]
+            approve_url = f"https://management.azure.com/subscriptions/{subscription_id}/resourceGroups/{resource_group_name}/providers/Microsoft.Network/applicationGateways/{application_gateway_name}/privateEndpointConnections/{connection_name}?api-version=2023-09-01"
+            response = requests.put(approve_url, headers=headers, json={
+                "properties": {
+                    "privateLinkServiceConnectionState": {
+                        "status": "Approved",
+                        "description": "Approved by script"
+                    }
+                }
+            })
+            response.raise_for_status()  # Raise exception if response status code is not successful
+            print(f"Approved connection: {connection_name}")
+        except Exception as e:
+            print(f"An error occurred while approving connection {connection_name}: {str(e)}")
+
+    def main():
+        allowed_subscriptions = os.getenv('ALLOWED_SUBSCRIPTIONS').split(',')
+        list_and_approve_connections(allowed_subscriptions)
+
+    if __name__ == "__main__":
+        main()

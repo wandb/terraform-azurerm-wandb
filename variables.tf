@@ -28,6 +28,13 @@ variable "use_internal_queue" {
   default     = false
 }
 
+variable "size" {
+  default     = null
+  description = "Deployment size"
+  nullable    = true
+  type        = string
+}
+
 variable "wandb_version" {
   description = "The version of Weights & Biases local to deploy."
   type        = string
@@ -137,6 +144,12 @@ variable "create_redis" {
   default     = false
 }
 
+variable "redis_capacity" {
+  type    = number
+  description = "Number indicating size of an redis instance"
+  default = 2
+}
+
 ##########################################
 # External Bucket                        #
 ##########################################
@@ -167,6 +180,7 @@ variable "external_bucket" {
   default     = null
 }
 
+
 ##########################################
 # K8s                                    #
 ##########################################
@@ -181,11 +195,28 @@ variable "kubernetes_node_count" {
   type    = number
 }
 
+
+###########################################
+# Application gateway private link        #
+###########################################
+variable "create_private_link" {
+  type        = bool
+  default     = false
+  description = "Use for the azure private link."
+}
+
+variable "allowed_subscriptions" {
+  type        = string
+  description = "List of allowed customer subscriptions coma seperated values"
+  default = "" 
+}
+
 variable "node_pool_zones" {
   type        = list(string)
   description = "Availability zones for the node pool"
   default     = ["1", "2"]
 }
+
 ##########################################
 # Network                                #
 ##########################################
@@ -195,7 +226,6 @@ variable "allowed_ip_ranges" {
   type        = list(string)
   default     = []
 }
-
 
 variable "weave_wandb_env" {
   type        = map(string)
