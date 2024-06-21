@@ -192,8 +192,8 @@ variable "redis_env" {
 
 variable "aks_cluster_name" {
   nullable = false
-  type    = string
-  default = "**"
+  type     = string
+  default  = "**"
 }
 
 variable "identity_name" {

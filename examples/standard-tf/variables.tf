@@ -6,7 +6,7 @@ variable "subscription_id" {
 variable "namespace" {
   type        = string
   description = "String used for prefix resources."
-  default = ""
+  default     = ""
 }
 
 variable "location" {
@@ -22,7 +22,7 @@ variable "oidc_issuer" {
 
 variable "domain_name" {
   type        = string
-  default = ""
+  default     = ""
   description = "Domain for accessing the Weights & Biases UI."
 }
 
@@ -47,8 +47,8 @@ variable "wandb_image" {
 variable "license" {
   type        = string
   description = "Your wandb/local license"
-  default = ""
-  }
+  default     = ""
+}
 
 
 variable "tags" {
