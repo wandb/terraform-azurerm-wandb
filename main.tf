@@ -336,6 +336,10 @@ module "wandb" {
 
       mysql = { install = false }
       redis = { install = false }
+      
+      parquet = {
+        extraEnv = var.parquet_wandb_env
+      }
     }
   }
 }
