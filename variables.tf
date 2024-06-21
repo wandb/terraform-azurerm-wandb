@@ -28,6 +28,13 @@ variable "use_internal_queue" {
   default     = false
 }
 
+variable "size" {
+  default     = null
+  description = "Deployment size"
+  nullable    = true
+  type        = string
+}
+
 variable "wandb_version" {
   description = "The version of Weights & Biases local to deploy."
   type        = string
@@ -137,6 +144,12 @@ variable "create_redis" {
   default     = false
 }
 
+variable "redis_capacity" {
+  type    = number
+  description = "Number indicating size of an redis instance"
+  default = 2
+}
+
 ##########################################
 # External Bucket                        #
 ##########################################
@@ -166,6 +179,7 @@ variable "external_bucket" {
   type        = any
   default     = null
 }
+
 
 ##########################################
 # K8s                                    #
