@@ -1,3 +1,4 @@
-resource_group_name = "rg-name"
-location            = "westeurope"
-prefix              = "byob-wandb"
+rg_name     = "rg-name"
+location = "westeurope"
+prefix   = "byob-wandb"
+create_cmk = false

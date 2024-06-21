@@ -2,6 +2,7 @@ locals {
   fqdn       = var.subdomain == null ? var.domain_name : "${var.subdomain}.${var.domain_name}"
   url_prefix = var.ssl ? "https" : "http"
   url        = "${local.url_prefix}://${local.fqdn}"
+
 }
 
 resource "azurerm_resource_group" "default" {
@@ -38,9 +39,13 @@ module "database" {
   database_version             = var.database_version
   database_private_dns_zone_id = module.networking.database_private_dns_zone.id
   database_subnet_id           = module.networking.database_subnet.id
+  sku_name                     = var.database_sku_name
+  deletion_protection          = false
 
-  sku_name            = var.database_sku_name
-  deletion_protection = var.deletion_protection
+  wb_managed_key_id = local.wb_managed_key_id_rds
+  identity_ids      = module.identity.identity.id
+
+  dynamic_cmk_rds = var.enable_encryption
 
   tags = {
     "customer-ns" = var.namespace,
@@ -70,6 +75,80 @@ module "vault" {
   tags = var.tags
 }
 
+resource "azurerm_key_vault_key" "Vault_key" {
+  count        = (var.create_cmk_key && !var.create_seprate_cmk_key) ? 1 : 0
+  name         = "WB-managed-key"
+  key_vault_id = module.vault.vault_id
+  key_type     = var.key_type
+  key_size     = var.key_type == "RSA" ? var.key_size : null
+  curve        = var.key_type == "EC" ? var.curve : null
+
+  key_opts = [
+    "decrypt",
+    "encrypt",
+    "sign",
+    "unwrapKey",
+    "verify",
+    "wrapKey"
+  ]
+
+  depends_on = [
+    module.vault
+  ]
+}
+
+resource "azurerm_key_vault_key" "storage_Vault_key" {
+  count        = (var.create_seprate_cmk_key && !var.create_cmk_key) ? 1 : 0
+  name         = "WB-managed-key-storage"
+  key_vault_id = module.vault.vault_id
+  key_type     = var.key_type
+  key_size     = var.key_type == "RSA" ? var.key_size : null
+  curve        = var.key_type == "EC" ? var.curve : null
+
+  key_opts = [
+    "decrypt",
+    "encrypt",
+    "sign",
+    "unwrapKey",
+    "verify",
+    "wrapKey"
+  ]
+
+  depends_on = [
+    module.vault
+  ]
+}
+
+locals {
+  wb_managed_key_id_storage = (var.create_cmk_key && !var.create_seprate_cmk_key) ? length(azurerm_key_vault_key.Vault_key) > 0 ? azurerm_key_vault_key.Vault_key[0].versionless_id : null : length(azurerm_key_vault_key.storage_Vault_key) > 0 ? azurerm_key_vault_key.storage_Vault_key[0].versionless_id : null
+  wb_managed_key_id_rds     = (var.create_cmk_key && !var.create_seprate_cmk_key) ? length(azurerm_key_vault_key.Vault_key) > 0 ? azurerm_key_vault_key.Vault_key[0].id : null : length(azurerm_key_vault_key.db_Vault_key) > 0 ? azurerm_key_vault_key.db_Vault_key[0].id : null
+
+}
+
+resource "azurerm_key_vault_key" "db_Vault_key" {
+  count        = (var.create_seprate_cmk_key && !var.create_cmk_key) ? 1 : 0
+  name         = "WB-managed-key-db"
+  key_vault_id = module.vault.vault_id
+  key_type     = var.key_type
+  key_size     = var.key_type == "RSA" ? var.key_size : null
+  curve        = var.key_type == "EC" ? var.curve : null
+
+  key_opts = [
+    "decrypt",
+    "encrypt",
+    "sign",
+    "unwrapKey",
+    "verify",
+    "wrapKey"
+  ]
+
+  depends_on = [
+    module.vault
+  ]
+}
+
+
+
 module "storage" {
   count  = (var.blob_container == "" && var.external_bucket == null) ? 1 : 0
   source = "./modules/storage"
@@ -78,6 +157,10 @@ module "storage" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   create_queue        = !var.use_internal_queue
+  wb_managed_key_id   = local.wb_managed_key_id_storage
+  identity_ids        = module.identity.identity.id
+
+  dynamic_create_cmk  = var.enable_encryption
   deletion_protection = var.deletion_protection
 
   tags = var.tags

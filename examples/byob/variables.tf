@@ -1,5 +1,4 @@
-variable "resource_group_name" {
-  description = "Resource Group name"
+variable "rg_name" {
   type        = string
 }
 
@@ -17,4 +16,7 @@ variable "deletion_protection" {
   description = "Storage Account delete protection"
   type        = bool
   default     = false
+}
+variable "create_cmk" {
+  type = bool
 }
