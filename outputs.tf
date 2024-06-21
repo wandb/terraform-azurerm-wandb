@@ -48,3 +48,19 @@ output "private_link_resource_id" {
 output "private_link_sub_resource_name" {
   value = module.app_lb.frontend_ip_configuration_names
 }
+  
+output "standardized_size" {
+  value = var.size
+}
+
+output "aks_node_count" {
+  value = try(local.deployment_size[var.size].node_count, var.kubernetes_node_count)
+}
+
+output "aks_node_instance_type" {
+  value = try(local.deployment_size[var.size].node_instance, var.kubernetes_instance_type)
+}
+
+output "database_instance_type" {
+  value = try(local.deployment_size[var.size].db, var.database_sku_name)
+}

@@ -12,9 +12,9 @@ resource "azurerm_resource_group" "default" {
 }
 
 module "identity" {
-  source = "./modules/identity"
+  source         = "./modules/identity"
   namespace      = var.namespace
-  otel_identity = var.azuremonitor
+  otel_identity  = var.azuremonitor
   resource_group = azurerm_resource_group.default
   location       = azurerm_resource_group.default.location
 }
@@ -40,7 +40,7 @@ module "database" {
   database_private_dns_zone_id = module.networking.database_private_dns_zone.id
   database_subnet_id           = module.networking.database_subnet.id
 
-  sku_name            = var.database_sku_name
+  sku_name            = try(local.deployment_size[var.size].db, var.database_sku_name)
   deletion_protection = var.deletion_protection
 
   tags = {
@@ -56,8 +56,8 @@ module "redis" {
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
-
-  depends_on = [module.networking]
+  capacity            = try(local.deployment_size[var.size].cache, var.redis_capacity)
+  depends_on          = [module.networking]
 }
 
 module "vault" {
@@ -108,13 +108,14 @@ module "app_aks" {
   identity              = module.identity.identity
   location              = azurerm_resource_group.default.location
   namespace             = var.namespace
-  node_pool_vm_count    = var.kubernetes_node_count
-  node_pool_vm_size     = var.kubernetes_instance_type
+  node_pool_vm_count    = try(local.deployment_size[var.size].node_count, var.kubernetes_node_count)
+  node_pool_vm_size     = try(local.deployment_size[var.size].node_instance, var.kubernetes_instance_type)
+  node_pool_zones       = var.node_pool_zones
   public_subnet         = module.networking.public_subnet
   resource_group        = azurerm_resource_group.default
   sku_tier              = var.cluster_sku_tier
   max_pods              = var.node_max_pods
-  tags = var.tags
+  tags                  = var.tags
 }
 
 locals {
@@ -194,7 +195,7 @@ resource "azurerm_role_assignment" "otel_role" {
   scope                = azurerm_resource_group.default.id
   role_definition_name = "Contributor"
   principal_id         = module.identity.otel_identity.principal_id
-   
+
 }
 
 resource "azurerm_federated_identity_credential" "otel_app" {

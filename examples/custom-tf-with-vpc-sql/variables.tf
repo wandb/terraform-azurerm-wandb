@@ -1,11 +1,11 @@
 variable "subscription_id" {
   nullable = false
-  type    = string
-  default = ""
+  type     = string
+  default  = ""
 }
 
 variable "namespace" {
-  nullable = false
+  nullable    = false
   type        = string
   description = "String used for prefix resources."
   default     = ""
@@ -49,11 +49,11 @@ variable "wandb_image" {
 variable "license" {
   type        = string
   description = "Your wandb/local license"
-  default = ""
-  }
+  default     = ""
+}
 
 variable "database_sku_name" {
-  type = string
+  type        = string
   default     = "GP_Standard_D4ds_v4"
   description = "Specifies the SKU Name for this MySQL Server"
 }
@@ -131,22 +131,22 @@ variable "parquet_wandb_env" {
 }
 
 variable "vpc_name" {
-  nullable = false
+  nullable    = false
   description = "virtual network name"
-  type    = string
-  default = ""
+  type        = string
+  default     = ""
 }
 
 variable "private_subnet" {
   nullable = false
-  type    = string
-  default = ""
+  type     = string
+  default  = ""
 }
 
 variable "public_subnet" {
   nullable = false
-  type    = string
-  default = ""
+  type     = string
+  default  = ""
 }
 
 variable "kubernetes_instance_type" {
@@ -163,16 +163,16 @@ variable "kubernetes_node_count" {
 variable "database_env" {
   nullable = false
   type = object({
-    host = string
-    username = string
-    password = string
+    host          = string
+    username      = string
+    password      = string
     database_name = string
   })
 
   default = {
-    host     = "**.mysql.database.azure.com"
-    username     = "**"
-    password = "**"
+    host          = "**.mysql.database.azure.com"
+    username      = "**"
+    password      = "**"
     database_name = "**"
   }
 }

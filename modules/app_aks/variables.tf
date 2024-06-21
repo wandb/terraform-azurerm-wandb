@@ -51,12 +51,18 @@ variable "node_pool_vm_count" {
 }
 
 variable "sku_tier" {
-  type = string
+  type    = string
   default = "Free"
 }
 
 variable "max_pods" {
-  type = number
+  type        = number
   description = "Maximum number of pods per node"
-  default = 30
+  default     = 30
+}
+
+variable "node_pool_zones" {
+  type        = list(string)
+  description = "Availability zones for the node pool"
+  default     = ["1", "2"]
 }
