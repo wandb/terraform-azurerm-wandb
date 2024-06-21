@@ -195,11 +195,28 @@ variable "kubernetes_node_count" {
   type    = number
 }
 
+
+###########################################
+# Application gateway private link        #
+###########################################
+variable "create_private_link" {
+  type        = bool
+  default     = false
+  description = "Use for the azure private link."
+}
+
+variable "allowed_subscriptions" {
+  type        = string
+  description = "List of allowed customer subscriptions coma seperated values"
+  default = "" 
+}
+
 variable "node_pool_zones" {
   type        = list(string)
   description = "Availability zones for the node pool"
   default     = ["1", "2"]
 }
+
 ##########################################
 # Network                                #
 ##########################################
@@ -209,7 +226,6 @@ variable "allowed_ip_ranges" {
   type        = list(string)
   default     = []
 }
-
 
 variable "weave_wandb_env" {
   type        = map(string)
@@ -244,5 +260,5 @@ variable "azuremonitor" {
 variable "node_max_pods" {
   type        = number
   description = "Maximum number of pods per node"
-  default     = 30
+  default = 30
 }

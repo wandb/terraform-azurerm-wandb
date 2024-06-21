@@ -41,6 +41,14 @@ output "storage_container" {
   value = var.external_bucket != null ? "" : coalesce(var.blob_container, local.container_name)
 }
 
+output "private_link_resource_id" {
+  value = module.app_lb.gateway_id
+}
+
+output "private_link_sub_resource_name" {
+  value = module.app_lb.frontend_ip_configuration_names
+}
+  
 output "standardized_size" {
   value = var.size
 }

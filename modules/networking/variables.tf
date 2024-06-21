@@ -55,6 +55,11 @@ variable "tags" {
   description = "Map of tags for resource"
 }
 
+variable "private_link" {
+  type = bool
+  description = "Specifies the Azure private link creation"
+}
+
 variable "allowed_ip_ranges" {
   description = "allowed public IP addresses or CIDR ranges."
   type        = list(string)

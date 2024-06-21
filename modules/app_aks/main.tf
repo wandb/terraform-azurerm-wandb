@@ -57,18 +57,21 @@ locals {
 }
 
 resource "azurerm_role_assignment" "gateway" {
+  depends_on = [ local.ingress_gateway_principal_id ]
   scope                = var.gateway.id
   role_definition_name = "Contributor"
   principal_id         = local.ingress_gateway_principal_id
 }
 
 resource "azurerm_role_assignment" "resource_group" {
+  depends_on = [ local.ingress_gateway_principal_id ]
   scope                = var.resource_group.id
   role_definition_name = "Reader"
   principal_id         = local.ingress_gateway_principal_id
 }
 
 resource "azurerm_role_assignment" "public_subnet" {
+  depends_on = [ local.ingress_gateway_principal_id ]
   scope                = var.public_subnet.id
   role_definition_name = "Contributor"
   principal_id         = local.ingress_gateway_principal_id
