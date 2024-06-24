@@ -57,7 +57,7 @@ variable "tags" {
 
 variable "private_link" {
   type = bool
-  description = "Specifies the Azure private link creation"
+  description = "Private link flag for multi region storage endpoint access"
 }
 
 variable "allowed_ip_ranges" {

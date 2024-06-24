@@ -245,6 +245,17 @@ variable "parquet_wandb_env" {
   default     = {}
 }
 
+
+###################
+# private link    #
+###################
+
+variable "create_private_link" {
+  type        = bool
+  default     = true
+  description = "Use for the azure private link."
+}
+
 variable "cluster_sku_tier" {
   type        = string
   description = "The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers)"
