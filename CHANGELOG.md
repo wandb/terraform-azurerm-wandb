@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.9.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.8.0...v2.9.0) (2024-06-24)
+
+
+### Features
+
+* Added storage account private endpoint ([#59](https://github.com/wandb/terraform-azurerm-wandb/issues/59)) ([9c28821](https://github.com/wandb/terraform-azurerm-wandb/commit/9c288219a5c42613a76948096409ad2a6f6de16c))
+
 ## [2.8.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.7.0...v2.8.0) (2024-06-21)
 
 
