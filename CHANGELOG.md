@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.10.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.9.0...v2.10.0) (2024-06-25)
+
+
+### Features
+
+* Fixed branch (issue-id-43) issue ([#76](https://github.com/wandb/terraform-azurerm-wandb/issues/76)) ([49876fc](https://github.com/wandb/terraform-azurerm-wandb/commit/49876fcf6298c64abdff7639518edd5a7cb46300))
+
 ## [2.9.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.8.0...v2.9.0) (2024-06-24)
 
 
