@@ -195,6 +195,23 @@ variable "kubernetes_node_count" {
   type    = number
 }
 
+variable "cluster_sku_tier" {
+  type        = string
+  description = "The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers)"
+  default     = "Free"
+}
+
+variable "node_pool_zones" {
+  type        = list(string)
+  description = "Availability zones for the node pool"
+  default     = ["1", "2"]
+}
+
+variable "node_max_pods" {
+  type        = number
+  description = "Maximum number of pods per node"
+  default = 30
+}
 
 ###########################################
 # Application gateway private link        #
@@ -210,13 +227,6 @@ variable "allowed_subscriptions" {
   description = "List of allowed customer subscriptions coma seperated values"
   default = "" 
 }
-
-variable "node_pool_zones" {
-  type        = list(string)
-  description = "Availability zones for the node pool"
-  default     = ["1", "2"]
-}
-
 ##########################################
 # Network                                #
 ##########################################
@@ -245,25 +255,8 @@ variable "parquet_wandb_env" {
   default     = {}
 }
 
-
-###################
-# private link    #
-###################
-
-variable "cluster_sku_tier" {
-  type        = string
-  description = "The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers)"
-  default     = "Free"
-}
-
 ## To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 
 variable "azuremonitor" {
   type    = bool
   default = false
-}
-
-variable "node_max_pods" {
-  type        = number
-  description = "Maximum number of pods per node"
-  default = 30
 }
