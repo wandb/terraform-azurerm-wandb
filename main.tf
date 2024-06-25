@@ -134,7 +134,7 @@ locals {
 locals {
   service_account_name         = "wandb-app"
   private_endpoint_approval_sa = "private-endpoint-sa"
-  otel_sa_name         = "wandb-otel-daemonset"
+  otel_sa_name                 = "wandb-otel-daemonset"
 }
 
 resource "azurerm_federated_identity_credential" "app" {
@@ -172,7 +172,7 @@ resource "azurerm_role_assignment" "gateway_role" {
   scope                = module.app_lb.gateway.id
   role_definition_name = "Contributor"
   principal_id         = module.pod_identity[0].identity.principal_id
-   
+
 }
 
 module "cron_job" {
@@ -185,10 +185,10 @@ module "cron_job" {
   resourceGroupName      = azurerm_resource_group.default.name
   applicationGatewayName = module.app_lb.gateway.name
   allowedSubscriptions   = var.allowed_subscriptions
-  depends_on = [module.app_lb, module.pod_identity ]
-  
+  depends_on             = [module.app_lb, module.pod_identity]
+
 }
-    
+
 resource "azurerm_role_assignment" "otel_role" {
   count                = var.azuremonitor ? 1 : 0
   scope                = azurerm_resource_group.default.id
@@ -336,7 +336,7 @@ module "wandb" {
 
       mysql = { install = false }
       redis = { install = false }
-      
+
       parquet = {
         extraEnv = var.parquet_wandb_env
       }
