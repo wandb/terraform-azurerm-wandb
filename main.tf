@@ -284,9 +284,10 @@ module "wandb" {
         issuer = { create = false }
 
         annotations = {
-          "kubernetes.io/ingress.class"         = "azure/application-gateway"
-          "cert-manager.io/cluster-issuer"      = "cert-issuer"
-          "cert-manager.io/acme-challenge-type" = "http01"
+          "kubernetes.io/ingress.class"                 = "azure/application-gateway"
+          "cert-manager.io/cluster-issuer"              = "cert-issuer"
+          "cert-manager.io/acme-challenge-type"         = "http01"
+          "appgw.ingress.kubernetes.io/request-timeout" = "300"
         }
 
         tls = [
