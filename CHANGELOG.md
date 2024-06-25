@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.11.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.11.0...v2.11.1) (2024-06-25)
+
+
+### Bug Fixes
+
+* Increase ingress timeout ([#78](https://github.com/wandb/terraform-azurerm-wandb/issues/78)) ([4ee0e60](https://github.com/wandb/terraform-azurerm-wandb/commit/4ee0e6041076ea8711523d02ff78aacabf2f2480))
+
 ## [2.11.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.10.0...v2.11.0) (2024-06-25)
 
 
