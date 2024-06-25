@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.11.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.10.0...v2.11.0) (2024-06-25)
+
+
+### Features
+
+* Removed duplicate variables (create_private_link) ([#77](https://github.com/wandb/terraform-azurerm-wandb/issues/77)) ([27dd8aa](https://github.com/wandb/terraform-azurerm-wandb/commit/27dd8aa43e86aae019afea86c3b76da51ac9f103))
+
 ## [2.10.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.9.0...v2.10.0) (2024-06-25)
 
 
