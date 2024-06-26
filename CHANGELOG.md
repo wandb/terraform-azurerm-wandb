@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.11.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.11.1...v2.11.2) (2024-06-26)
+
+
+### Bug Fixes
+
+* Change ingress timeout to string ([#80](https://github.com/wandb/terraform-azurerm-wandb/issues/80)) ([64b96bc](https://github.com/wandb/terraform-azurerm-wandb/commit/64b96bc64ff90c6cf310ae3d3f4646a614712617))
+
 ### [2.11.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.11.0...v2.11.1) (2024-06-25)
 
 
