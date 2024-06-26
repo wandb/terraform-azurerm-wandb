@@ -287,7 +287,7 @@ module "wandb" {
           "kubernetes.io/ingress.class"                 = "azure/application-gateway"
           "cert-manager.io/cluster-issuer"              = "cert-issuer"
           "cert-manager.io/acme-challenge-type"         = "http01"
-          "appgw.ingress.kubernetes.io/request-timeout" = 300
+          "appgw.ingress.kubernetes.io/request-timeout" = "300"
         }
 
         tls = [
