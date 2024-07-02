@@ -28,13 +28,6 @@ variable "use_internal_queue" {
   default     = false
 }
 
-variable "size" {
-  default     = null
-  description = "Deployment size"
-  nullable    = true
-  type        = string
-}
-
 variable "wandb_version" {
   description = "The version of Weights & Biases local to deploy."
   type        = string
