@@ -25,8 +25,10 @@ module "networking" {
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
+  private_link        = var.create_private_link
   allowed_ip_ranges   = var.allowed_ip_ranges
   tags                = var.tags
+
 }
 
 module "database" {
@@ -39,8 +41,8 @@ module "database" {
   database_version             = var.database_version
   database_private_dns_zone_id = module.networking.database_private_dns_zone.id
   database_subnet_id           = module.networking.database_subnet.id
-  sku_name                     = var.database_sku_name
-  deletion_protection          = false
+  sku_name                     = try(local.deployment_size[var.size].db, var.database_sku_name)
+  deletion_protection          = var.deletion_protection
 
   wb_managed_key_id = local.wb_managed_key_id_rds
   identity_ids      = module.identity.identity.id
@@ -60,8 +62,8 @@ module "redis" {
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
-
-  depends_on = [module.networking]
+  capacity            = try(local.deployment_size[var.size].cache, var.redis_capacity)
+  depends_on          = [module.networking]
 }
 
 module "vault" {
@@ -150,9 +152,8 @@ resource "azurerm_key_vault_key" "db_Vault_key" {
 
 
 module "storage" {
-  count  = (var.blob_container == "" && var.external_bucket == null) ? 1 : 0
-  source = "./modules/storage"
-
+  count               = (var.blob_container == "" && var.external_bucket == null) ? 1 : 0
+  source              = "./modules/storage"
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
@@ -162,8 +163,7 @@ module "storage" {
 
   dynamic_create_cmk  = var.enable_encryption
   deletion_protection = var.deletion_protection
-
-  tags = var.tags
+  tags                = var.tags
 }
 
 module "app_lb" {
@@ -174,6 +174,8 @@ module "app_lb" {
   location       = azurerm_resource_group.default.location
   network        = module.networking.network
   public_subnet  = module.networking.public_subnet
+  private_subnet = module.networking.private_subnet.id
+  private_link   = var.create_private_link
 
   tags = var.tags
 }
@@ -188,8 +190,8 @@ module "app_aks" {
   identity              = module.identity.identity
   location              = azurerm_resource_group.default.location
   namespace             = var.namespace
-  node_pool_vm_count    = var.kubernetes_node_count
-  node_pool_vm_size     = var.kubernetes_instance_type
+  node_pool_vm_count    = try(local.deployment_size[var.size].node_count, var.kubernetes_node_count)
+  node_pool_vm_size     = try(local.deployment_size[var.size].node_instance, var.kubernetes_instance_type)
   node_pool_zones       = var.node_pool_zones
   public_subnet         = module.networking.public_subnet
   resource_group        = azurerm_resource_group.default
@@ -213,8 +215,9 @@ locals {
 }
 
 locals {
-  service_account_name = "wandb-app"
-  otel_sa_name         = "wandb-otel-daemonset"
+  service_account_name         = "wandb-app"
+  private_endpoint_approval_sa = "private-endpoint-sa"
+  otel_sa_name                 = "wandb-otel-daemonset"
 }
 
 resource "azurerm_federated_identity_credential" "app" {
@@ -224,6 +227,49 @@ resource "azurerm_federated_identity_credential" "app" {
   audience            = ["api://AzureADTokenExchange"]
   issuer              = module.app_aks.oidc_issuer_url
   subject             = "system:serviceaccount:default:${local.service_account_name}"
+}
+
+# aks workload identity resources for private endpoint approval application
+module "pod_identity" {
+  count          = length(var.allowed_subscriptions) > 0 ? 1 : 0
+  source         = "./modules/identity"
+  depends_on     = [module.app_aks]
+  namespace      = "${var.namespace}-private-endpoint-pod"
+  resource_group = azurerm_resource_group.default
+  location       = azurerm_resource_group.default.location
+}
+
+resource "azurerm_federated_identity_credential" "pod" {
+  count               = length(var.allowed_subscriptions) > 0 ? 1 : 0
+  parent_id           = module.pod_identity[0].identity.id
+  name                = "${var.namespace}-app-credentials"
+  resource_group_name = azurerm_resource_group.default.name
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = module.app_aks.oidc_issuer_url
+  subject             = "system:serviceaccount:default:${local.private_endpoint_approval_sa}"
+
+}
+
+resource "azurerm_role_assignment" "gateway_role" {
+  count                = length(var.allowed_subscriptions) > 0 ? 1 : 0
+  scope                = module.app_lb.gateway.id
+  role_definition_name = "Contributor"
+  principal_id         = module.pod_identity[0].identity.principal_id
+
+}
+
+module "cron_job" {
+  count                  = length(var.allowed_subscriptions) > 0 ? 1 : 0 # private endpoint approval application deployed as a cronjob in default namespace
+  source                 = "./modules/cron_job"
+  namespace              = "default"
+  client_id              = module.pod_identity[0].identity.client_id
+  serviceaccountName     = local.private_endpoint_approval_sa
+  subscriptionId         = data.azurerm_subscription.current.subscription_id
+  resourceGroupName      = azurerm_resource_group.default.name
+  applicationGatewayName = module.app_lb.gateway.name
+  allowedSubscriptions   = var.allowed_subscriptions
+  depends_on             = [module.app_lb, module.pod_identity]
+
 }
 
 resource "azurerm_role_assignment" "otel_role" {
@@ -255,9 +301,6 @@ module "cert_manager" {
 
   depends_on = [module.app_aks]
 }
-
-data "azurerm_subscription" "current" {}
-
 
 module "wandb" {
   source  = "wandb/wandb/helm"
@@ -304,10 +347,10 @@ module "wandb" {
       }
 
       app = {
-        extraEnv = merge({
+        extraEnv = {
           "GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
           "GORILLA_CUSTOMER_SECRET_STORE_SOURCE"              = "az-secretmanager://wandb",
-        }, var.app_wandb_env)
+        }
         pod = {
           labels = { "azure.workload.identity/use" = "true" }
         }
@@ -324,9 +367,10 @@ module "wandb" {
         issuer = { create = false }
 
         annotations = {
-          "kubernetes.io/ingress.class"         = "azure/application-gateway"
-          "cert-manager.io/cluster-issuer"      = "cert-issuer"
-          "cert-manager.io/acme-challenge-type" = "http01"
+          "kubernetes.io/ingress.class"                 = "azure/application-gateway"
+          "cert-manager.io/cluster-issuer"              = "cert-issuer"
+          "cert-manager.io/acme-challenge-type"         = "http01"
+          "appgw.ingress.kubernetes.io/request-timeout" = "300"
         }
 
         tls = [
@@ -372,7 +416,6 @@ module "wandb" {
         persistence = {
           provider = "azurefile"
         }
-        extraEnv = var.weave_wandb_env
       }
 
       mysql = { install = false }

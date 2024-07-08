@@ -28,6 +28,13 @@ variable "use_internal_queue" {
   default     = false
 }
 
+variable "size" {
+  default     = null
+  description = "Deployment size"
+  nullable    = true
+  type        = string
+}
+
 variable "wandb_version" {
   description = "The version of Weights & Biases local to deploy."
   type        = string
@@ -137,6 +144,12 @@ variable "create_redis" {
   default     = false
 }
 
+variable "redis_capacity" {
+  type    = number
+  description = "Number indicating size of an redis instance"
+  default = 2
+}
+
 ##########################################
 # External Bucket                        #
 ##########################################
@@ -167,6 +180,7 @@ variable "external_bucket" {
   default     = null
 }
 
+
 ##########################################
 # K8s                                    #
 ##########################################
@@ -181,10 +195,37 @@ variable "kubernetes_node_count" {
   type    = number
 }
 
+variable "cluster_sku_tier" {
+  type        = string
+  description = "The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers)"
+  default     = "Free"
+}
+
 variable "node_pool_zones" {
   type        = list(string)
   description = "Availability zones for the node pool"
   default     = ["1", "2"]
+}
+
+variable "node_max_pods" {
+  type        = number
+  description = "Maximum number of pods per node"
+  default = 30
+}
+
+###########################################
+# Application gateway private link        #
+###########################################
+variable "create_private_link" {
+  type        = bool
+  default     = false
+  description = "Use for the azure private link."
+}
+
+variable "allowed_subscriptions" {
+  type        = string
+  description = "List of allowed customer subscriptions coma seperated values"
+  default = "" 
 }
 ##########################################
 # Network                                #
@@ -195,7 +236,6 @@ variable "allowed_ip_ranges" {
   type        = list(string)
   default     = []
 }
-
 
 variable "weave_wandb_env" {
   type        = map(string)
@@ -257,7 +297,7 @@ variable "cluster_sku_tier" {
 ## To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 
 variable "azuremonitor" {
   type    = bool
-  default = true
+  default = false
 }
 
 variable "node_max_pods" {

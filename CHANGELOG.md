@@ -2,6 +2,55 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.11.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.11.1...v2.11.2) (2024-06-26)
+
+
+### Bug Fixes
+
+* Change ingress timeout to string ([#80](https://github.com/wandb/terraform-azurerm-wandb/issues/80)) ([64b96bc](https://github.com/wandb/terraform-azurerm-wandb/commit/64b96bc64ff90c6cf310ae3d3f4646a614712617))
+
+### [2.11.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.11.0...v2.11.1) (2024-06-25)
+
+
+### Bug Fixes
+
+* Increase ingress timeout ([#78](https://github.com/wandb/terraform-azurerm-wandb/issues/78)) ([4ee0e60](https://github.com/wandb/terraform-azurerm-wandb/commit/4ee0e6041076ea8711523d02ff78aacabf2f2480))
+
+## [2.11.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.10.0...v2.11.0) (2024-06-25)
+
+
+### Features
+
+* Removed duplicate variables (create_private_link) ([#77](https://github.com/wandb/terraform-azurerm-wandb/issues/77)) ([27dd8aa](https://github.com/wandb/terraform-azurerm-wandb/commit/27dd8aa43e86aae019afea86c3b76da51ac9f103))
+
+## [2.10.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.9.0...v2.10.0) (2024-06-25)
+
+
+### Features
+
+* Fixed branch (issue-id-43) issue ([#76](https://github.com/wandb/terraform-azurerm-wandb/issues/76)) ([49876fc](https://github.com/wandb/terraform-azurerm-wandb/commit/49876fcf6298c64abdff7639518edd5a7cb46300))
+
+## [2.9.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.8.0...v2.9.0) (2024-06-24)
+
+
+### Features
+
+* Added storage account private endpoint ([#59](https://github.com/wandb/terraform-azurerm-wandb/issues/59)) ([9c28821](https://github.com/wandb/terraform-azurerm-wandb/commit/9c288219a5c42613a76948096409ad2a6f6de16c))
+
+## [2.8.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.7.0...v2.8.0) (2024-06-21)
+
+
+### Features
+
+* Added support for Azure Private Link ([#48](https://github.com/wandb/terraform-azurerm-wandb/issues/48)) ([642eda1](https://github.com/wandb/terraform-azurerm-wandb/commit/642eda172295c5fb1751f241eea48ec910d62d3d))
+
+## [2.7.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.6.1...v2.7.0) (2024-06-21)
+
+
+### Features
+
+* Added t-shirt size feature ([#72](https://github.com/wandb/terraform-azurerm-wandb/issues/72)) ([fe26616](https://github.com/wandb/terraform-azurerm-wandb/commit/fe26616f378eee30fbeeff62e1d22b2f8f36a56d))
+
 ### [2.6.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.6.0...v2.6.1) (2024-06-20)
 
 
