@@ -42,8 +42,8 @@ module "wandb" {
   use_internal_queue    = true
   ssl                   = var.ssl
   deletion_protection   = true
-  kubernetes_node_count = var.kubernetes_node_count
-
+  min_node_count = var.min_node_count
+  max_node_count = var.max_node_count
   storage_account = var.storage_account
   blob_container  = var.blob_container
   storage_key     = var.storage_key

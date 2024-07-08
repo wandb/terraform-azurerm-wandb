@@ -18,10 +18,11 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 
   default_node_pool {
-    enable_auto_scaling         = false
+    enable_auto_scaling         = true
+    min_count                   = var.min_node_count
+    max_count                   = var.max_node_count
     max_pods                    = var.max_pods
     name                        = "default"
-    node_count                  = var.node_pool_vm_count
     temporary_name_for_rotation = "rotating"
     type                        = "VirtualMachineScaleSets"
     vm_size                     = var.node_pool_vm_size
@@ -57,21 +58,21 @@ locals {
 }
 
 resource "azurerm_role_assignment" "gateway" {
-  depends_on = [ local.ingress_gateway_principal_id ]
+  depends_on           = [local.ingress_gateway_principal_id]
   scope                = var.gateway.id
   role_definition_name = "Contributor"
   principal_id         = local.ingress_gateway_principal_id
 }
 
 resource "azurerm_role_assignment" "resource_group" {
-  depends_on = [ local.ingress_gateway_principal_id ]
+  depends_on           = [local.ingress_gateway_principal_id]
   scope                = var.resource_group.id
   role_definition_name = "Reader"
   principal_id         = local.ingress_gateway_principal_id
 }
 
 resource "azurerm_role_assignment" "public_subnet" {
-  depends_on = [ local.ingress_gateway_principal_id ]
+  depends_on           = [local.ingress_gateway_principal_id]
   scope                = var.public_subnet.id
   role_definition_name = "Contributor"
   principal_id         = local.ingress_gateway_principal_id

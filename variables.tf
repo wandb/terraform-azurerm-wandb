@@ -145,9 +145,9 @@ variable "create_redis" {
 }
 
 variable "redis_capacity" {
-  type    = number
+  type        = number
   description = "Number indicating size of an redis instance"
-  default = 2
+  default     = 2
 }
 
 ##########################################
@@ -190,10 +190,16 @@ variable "kubernetes_instance_type" {
   default     = "Standard_D4a_v4"
 }
 
-variable "kubernetes_node_count" {
+variable "min_node_count" {
   default = 2
   type    = number
 }
+
+variable "max_node_count" {
+  default = 6
+  type    = number
+}
+
 
 variable "cluster_sku_tier" {
   type        = string
@@ -210,7 +216,7 @@ variable "node_pool_zones" {
 variable "node_max_pods" {
   type        = number
   description = "Maximum number of pods per node"
-  default = 30
+  default     = 30
 }
 
 ###########################################
@@ -225,7 +231,7 @@ variable "create_private_link" {
 variable "allowed_subscriptions" {
   type        = string
   description = "List of allowed customer subscriptions coma seperated values"
-  default = "" 
+  default     = ""
 }
 ##########################################
 # Network                                #
