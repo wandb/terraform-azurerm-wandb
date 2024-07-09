@@ -237,7 +237,7 @@ module "wandb" {
       global = {
         host    = local.url
         license = var.license
-
+        cloudProvider = "azure"
         bucket = var.external_bucket == null ? {
           provider  = "az"
           name      = local.storage_account
