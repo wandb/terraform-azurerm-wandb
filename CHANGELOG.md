@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.11.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.11.2...v2.11.3) (2024-07-11)
+
+
+### Bug Fixes
+
+* Pass cloudprovider value to the helm charts ([#83](https://github.com/wandb/terraform-azurerm-wandb/issues/83)) ([0606602](https://github.com/wandb/terraform-azurerm-wandb/commit/06066020ac57d2d93e406e4b103feffb260426e0))
+
 ### [2.11.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.11.1...v2.11.2) (2024-06-26)
 
 
