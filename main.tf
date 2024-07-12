@@ -107,7 +107,8 @@ module "app_aks" {
   identity              = module.identity.identity
   location              = azurerm_resource_group.default.location
   namespace             = var.namespace
-  node_pool_vm_count    = try(local.deployment_size[var.size].node_count, var.kubernetes_node_count)
+  max_node_count        = try(local.deployment_size[var.size].max_node_count, var.max_node_count)
+  min_node_count        = try(local.deployment_size[var.size].min_node_count, var.min_node_count)
   node_pool_vm_size     = try(local.deployment_size[var.size].node_instance, var.kubernetes_instance_type)
   node_pool_zones       = var.node_pool_zones
   public_subnet         = module.networking.public_subnet

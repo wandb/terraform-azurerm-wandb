@@ -46,7 +46,11 @@ variable "node_pool_vm_size" {
   type = string
 }
 
-variable "node_pool_vm_count" {
+variable "max_node_count" {
+  type = number
+}
+
+variable "min_node_count" {
   type = number
 }
 

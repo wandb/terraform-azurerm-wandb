@@ -154,8 +154,13 @@ variable "kubernetes_instance_type" {
   default     = "Standard_D4a_v4"
 }
 
-variable "kubernetes_node_count" {
+variable "min_node_count" {
   default = 2
+  type    = number
+}
+
+variable "max_node_count" {
+  default = 6
   type    = number
 }
 

@@ -54,7 +54,7 @@ output "standardized_size" {
 }
 
 output "aks_node_count" {
-  value = try(local.deployment_size[var.size].node_count, var.kubernetes_node_count)
+  value = try(local.deployment_size[var.size].min_node_count, var.min_node_count)
 }
 
 output "aks_node_instance_type" {
