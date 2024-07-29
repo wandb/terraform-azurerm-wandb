@@ -114,9 +114,6 @@ locals {
   wb_managed_key_id_storage  = contains(keys(local.filtered_vault_key_map), "storage") ? azurerm_key_vault_key.encryption_keys["storage"].id : null
 }
 
-
-
-
 module "storage" {
   count               = (var.blob_container == "" && var.external_bucket == null) ? 1 : 0
   source              = "./modules/storage"

@@ -17,6 +17,11 @@ variable "deletion_protection" {
   type        = bool
   default     = false
 }
-variable "create_cmk" {
+variable "enable_encryption" {
   type = bool
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Map of tags for resource"
 }

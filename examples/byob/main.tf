@@ -3,13 +3,15 @@ provider "azurerm" {
 }
 
 module "byob" {
-  source              = "../../modules/byob"
-  resource_group_name = { name = "${var.rg_name}", id = "byob" }
-  location            = var.location
-  prefix              = var.prefix
-  deletion_protection = var.deletion_protection
-  create_cmk          = var.create_cmk
-  rg_name             = var.rg_name
+  source                   = "../../modules/byob"
+  resource_group_name      = { name = "${var.rg_name}", id = "byob" }
+  location                 = var.location
+  prefix                   = var.prefix
+  deletion_protection      = var.deletion_protection
+  create_cmk               = var.enable_encryption
+  rg_name                  = var.rg_name
+  purge_protection_enabled = true
+  tags                     = var.tags
 }
 
 output "blob_container" {
