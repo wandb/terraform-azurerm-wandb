@@ -37,10 +37,6 @@ variable "identity_ids" {
   type = string
 }
 
-variable "dynamic_create_cmk" {
-  type    = bool
-  default = false
-}
 variable "blob_container_name" {
   description = "Name of azure storage account container for storing blobs"
   type        = string

@@ -274,34 +274,35 @@ variable "curve" {
   default = "P-256"
   
 }
-
-variable "enable_encryption" {
-  type = bool
+variable "enable_storage_key" {
+  type    = bool
   default = false
 }
 
-variable "create_cmk_key" {
+variable "enable_database_key" {
   type    = bool
+  default = false
 }
 
-variable "create_seprate_cmk_key" {
+variable "enable_encryption" {
   type    = bool
+  default = false
 }
 
-variable "cluster_sku_tier" {
-  type        = string
-  description = "The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers)"
-  default     = "Free"
+variable "customer_storage_key" {
+  type    = string
+  default = null
 }
+
+variable "purge_protection_enabled" {
+  type        = bool
+  description = "Enable or disable purge protection for the Key Vault."
+  default = true
+}
+
 
 ## To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 
 variable "azuremonitor" {
   type    = bool
   default = false
-}
-
-variable "node_max_pods" {
-  type        = number
-  description = "Maximum number of pods per node"
-  default     = 30
 }

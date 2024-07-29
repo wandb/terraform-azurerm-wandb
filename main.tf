@@ -44,11 +44,8 @@ module "database" {
   sku_name                     = try(local.deployment_size[var.size].db, var.database_sku_name)
   deletion_protection          = var.deletion_protection
 
-  wb_managed_key_id = local.wb_managed_key_id_rds
+  wb_managed_key_id = local.wb_managed_key_id_database
   identity_ids      = module.identity.identity.id
-
-  dynamic_cmk_rds = var.enable_encryption
-
   tags = {
     "customer-ns" = var.namespace,
     "env"         = "managed-install"
@@ -69,39 +66,30 @@ module "redis" {
 module "vault" {
   source = "./modules/vault"
 
-  identity_object_id = module.identity.identity.principal_id
-  location           = azurerm_resource_group.default.location
-  namespace          = var.namespace
-  resource_group     = azurerm_resource_group.default
+  identity_object_id       = module.identity.identity.principal_id
+  location                 = azurerm_resource_group.default.location
+  namespace                = var.namespace
+  resource_group           = azurerm_resource_group.default
+  purge_protection_enabled = var.purge_protection_enabled
 
   tags = var.tags
 }
 
-resource "azurerm_key_vault_key" "Vault_key" {
-  count        = (var.create_cmk_key && !var.create_seprate_cmk_key) ? 1 : 0
-  name         = "WB-managed-key"
-  key_vault_id = module.vault.vault_id
-  key_type     = var.key_type
-  key_size     = var.key_type == "RSA" ? var.key_size : null
-  curve        = var.key_type == "EC" ? var.curve : null
+locals {
+  enable_wandb_storage = var.blob_container == "" && var.external_bucket == null
 
-  key_opts = [
-    "decrypt",
-    "encrypt",
-    "sign",
-    "unwrapKey",
-    "verify",
-    "wrapKey"
-  ]
+  vault_key_map = {
+    database = var.enable_database_key ? "wb-managed-key-database" : null
+    storage  = var.enable_storage_key && local.enable_wandb_storage ? "wb-managed-key-storage" : null
+  }
 
-  depends_on = [
-    module.vault
-  ]
+  filtered_vault_key_map = { for k, v in local.vault_key_map : k => v if v != null }
 }
 
-resource "azurerm_key_vault_key" "storage_Vault_key" {
-  count        = (var.create_seprate_cmk_key && !var.create_cmk_key) ? 1 : 0
-  name         = "WB-managed-key-storage"
+# Azure Key Vault Key resource
+resource "azurerm_key_vault_key" "encryption_keys" {
+  for_each     = var.enable_encryption ? local.filtered_vault_key_map : {}
+  name         = each.value
   key_vault_id = module.vault.vault_id
   key_type     = var.key_type
   key_size     = var.key_type == "RSA" ? var.key_size : null
@@ -122,32 +110,10 @@ resource "azurerm_key_vault_key" "storage_Vault_key" {
 }
 
 locals {
-  wb_managed_key_id_storage = (var.create_cmk_key && !var.create_seprate_cmk_key) ? length(azurerm_key_vault_key.Vault_key) > 0 ? azurerm_key_vault_key.Vault_key[0].versionless_id : null : length(azurerm_key_vault_key.storage_Vault_key) > 0 ? azurerm_key_vault_key.storage_Vault_key[0].versionless_id : null
-  wb_managed_key_id_rds     = (var.create_cmk_key && !var.create_seprate_cmk_key) ? length(azurerm_key_vault_key.Vault_key) > 0 ? azurerm_key_vault_key.Vault_key[0].id : null : length(azurerm_key_vault_key.db_Vault_key) > 0 ? azurerm_key_vault_key.db_Vault_key[0].id : null
-
+  wb_managed_key_id_database = contains(keys(local.filtered_vault_key_map), "database") ? azurerm_key_vault_key.encryption_keys["database"].id : null
+  wb_managed_key_id_storage  = contains(keys(local.filtered_vault_key_map), "storage") ? azurerm_key_vault_key.encryption_keys["storage"].id : null
 }
 
-resource "azurerm_key_vault_key" "db_Vault_key" {
-  count        = (var.create_seprate_cmk_key && !var.create_cmk_key) ? 1 : 0
-  name         = "WB-managed-key-db"
-  key_vault_id = module.vault.vault_id
-  key_type     = var.key_type
-  key_size     = var.key_type == "RSA" ? var.key_size : null
-  curve        = var.key_type == "EC" ? var.curve : null
-
-  key_opts = [
-    "decrypt",
-    "encrypt",
-    "sign",
-    "unwrapKey",
-    "verify",
-    "wrapKey"
-  ]
-
-  depends_on = [
-    module.vault
-  ]
-}
 
 
 
@@ -160,8 +126,6 @@ module "storage" {
   create_queue        = !var.use_internal_queue
   wb_managed_key_id   = local.wb_managed_key_id_storage
   identity_ids        = module.identity.identity.id
-
-  dynamic_create_cmk  = var.enable_encryption
   deletion_protection = var.deletion_protection
   tags                = var.tags
 }
@@ -318,8 +282,8 @@ module "wandb" {
   spec = {
     values = {
       global = {
-        host    = local.url
-        license = var.license
+        host          = local.url
+        license       = var.license
         cloudProvider = "azure"
         bucket = var.external_bucket == null ? {
           provider  = "az"

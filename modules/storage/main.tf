@@ -27,14 +27,14 @@ resource "azurerm_storage_account" "default" {
   }
 
   dynamic "identity" {
-    for_each = var.dynamic_create_cmk == true ? [1] : []
+    for_each = var.wb_managed_key_id != null ? [1] : []
     content {
       type         = "UserAssigned"
       identity_ids = [var.identity_ids]
     }
   }
   dynamic "customer_managed_key" {
-    for_each = var.dynamic_create_cmk == true ? [1] : []
+    for_each = var.wb_managed_key_id != null ? [1] : []
     content {
       user_assigned_identity_id = var.identity_ids
       key_vault_key_id          = var.wb_managed_key_id

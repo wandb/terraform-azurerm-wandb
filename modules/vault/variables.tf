@@ -21,3 +21,7 @@ variable "tags" {
   type        = map(string)
   description = "Map of tags for resource"
 }
+variable "purge_protection_enabled" {
+  type        = bool
+  description = "Enable or disable purge protection for the Key Vault."
+}
