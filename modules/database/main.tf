@@ -53,17 +53,17 @@ resource "azurerm_mysql_flexible_server" "default" {
   }
 
   dynamic "identity" {
-    for_each = var.wb_managed_key_id != null ? [1] : []
+    for_each = var.database_key_id != null ? [1] : []
     content {
       type         = "UserAssigned"
       identity_ids = [var.identity_ids]
     }
   }
   dynamic "customer_managed_key" {
-    for_each = var.wb_managed_key_id != null ? [1] : []
+    for_each = var.database_key_id != null ? [1] : []
     content {
-      key_vault_key_id                  = var.wb_managed_key_id
       primary_user_assigned_identity_id = var.identity_ids
+      key_vault_key_id                  = var.database_key_id
     }
   }
   tags = var.tags

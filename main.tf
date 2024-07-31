@@ -3,6 +3,7 @@ locals {
   url_prefix = var.ssl ? "https" : "http"
   url        = "${local.url_prefix}://${local.fqdn}"
 
+  enable_internal_storage = var.blob_container == "" && var.external_bucket == null
 }
 
 resource "azurerm_resource_group" "default" {
@@ -28,12 +29,12 @@ module "networking" {
   private_link        = var.create_private_link
   allowed_ip_ranges   = var.allowed_ip_ranges
   tags                = var.tags
-
 }
 
 module "database" {
-  source              = "./modules/database"
-  namespace           = var.namespace
+  source    = "./modules/database"
+  namespace = var.namespace
+
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
@@ -44,8 +45,8 @@ module "database" {
   sku_name                     = try(local.deployment_size[var.size].db, var.database_sku_name)
   deletion_protection          = var.deletion_protection
 
-  wb_managed_key_id = local.wb_managed_key_id_database
-  identity_ids      = module.identity.identity.id
+  database_key_id = try(module.vault.vault_internal_keys[module.vault.vault_key_map.database].id, null)
+  identity_ids    = module.identity.identity.id
   tags = {
     "customer-ns" = var.namespace,
     "env"         = "managed-install"
@@ -66,65 +67,33 @@ module "redis" {
 module "vault" {
   source = "./modules/vault"
 
-  identity_object_id       = module.identity.identity.principal_id
-  location                 = azurerm_resource_group.default.location
-  namespace                = var.namespace
-  resource_group           = azurerm_resource_group.default
-  purge_protection_enabled = var.purge_protection_enabled
+  identity_object_id      = module.identity.identity.principal_id
+  location                = azurerm_resource_group.default.location
+  namespace               = var.namespace
+  resource_group          = azurerm_resource_group.default
+  enable_purge_protection = var.enable_purge_protection
+
+  enable_database_key = var.enable_database_key
+  enable_storage_key  = var.enable_storage_key && local.enable_internal_storage
 
   tags = var.tags
 }
 
-locals {
-  enable_wandb_storage = var.blob_container == "" && var.external_bucket == null
-
-  vault_key_map = {
-    database = var.enable_database_key ? "wb-managed-key-database" : null
-    storage  = var.enable_storage_key && local.enable_wandb_storage ? "wb-managed-key-storage" : null
-  }
-
-  filtered_vault_key_map = { for k, v in local.vault_key_map : k => v if v != null }
-}
-
-# Azure Key Vault Key resource
-resource "azurerm_key_vault_key" "encryption_keys" {
-  for_each     = var.enable_encryption ? local.filtered_vault_key_map : {}
-  name         = each.value
-  key_vault_id = module.vault.vault_id
-  key_type     = var.key_type
-  key_size     = var.key_type == "RSA" ? var.key_size : null
-  curve        = var.key_type == "EC" ? var.curve : null
-
-  key_opts = [
-    "decrypt",
-    "encrypt",
-    "sign",
-    "unwrapKey",
-    "verify",
-    "wrapKey"
-  ]
-
-  depends_on = [
-    module.vault
-  ]
-}
-
-locals {
-  wb_managed_key_id_database = contains(keys(local.filtered_vault_key_map), "database") ? azurerm_key_vault_key.encryption_keys["database"].id : null
-  wb_managed_key_id_storage  = contains(keys(local.filtered_vault_key_map), "storage") ? azurerm_key_vault_key.encryption_keys["storage"].id : null
-}
-
 module "storage" {
-  count               = (var.blob_container == "" && var.external_bucket == null) ? 1 : 0
-  source              = "./modules/storage"
+  source = "./modules/storage"
+
+  count               = local.enable_internal_storage ? 1 : 0
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   create_queue        = !var.use_internal_queue
-  wb_managed_key_id   = local.wb_managed_key_id_storage
   identity_ids        = module.identity.identity.id
   deletion_protection = var.deletion_protection
-  tags                = var.tags
+
+  storage_key_id               = var.customer_storage_vault_key_id == null ? try(module.vault.vault_internal_keys[module.vault.vault_key_map.storage].id, null) : var.customer_storage_vault_key_id
+  disable_storage_vault_key_id = var.disable_storage_vault_key_id
+
+  tags = var.tags
 }
 
 module "app_lb" {
@@ -220,8 +189,9 @@ resource "azurerm_role_assignment" "gateway_role" {
 }
 
 module "cron_job" {
-  count                  = length(var.allowed_subscriptions) > 0 ? 1 : 0 # private endpoint approval application deployed as a cronjob in default namespace
-  source                 = "./modules/cron_job"
+  count  = length(var.allowed_subscriptions) > 0 ? 1 : 0 # private endpoint approval application deployed as a cronjob in default namespace
+  source = "./modules/cron_job"
+
   namespace              = "default"
   client_id              = module.pod_identity[0].identity.client_id
   serviceaccountName     = local.private_endpoint_approval_sa
@@ -230,7 +200,6 @@ module "cron_job" {
   applicationGatewayName = module.app_lb.gateway.name
   allowedSubscriptions   = var.allowed_subscriptions
   depends_on             = [module.app_lb, module.pod_identity]
-
 }
 
 resource "azurerm_role_assignment" "otel_role" {
@@ -238,7 +207,6 @@ resource "azurerm_role_assignment" "otel_role" {
   scope                = azurerm_resource_group.default.id
   role_definition_name = "Contributor"
   principal_id         = module.identity.otel_identity.principal_id
-
 }
 
 resource "azurerm_federated_identity_credential" "otel_app" {

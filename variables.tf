@@ -115,7 +115,7 @@ variable "ssl" {
 variable "database_version" {
   description = "Version for MySQL"
   type        = string
-  default     = "8.0.21"
+  default     = "5.7"
 }
 
 variable "database_availability_mode" {
@@ -145,9 +145,9 @@ variable "create_redis" {
 }
 
 variable "redis_capacity" {
-  type    = number
+  type        = number
   description = "Number indicating size of an redis instance"
-  default = 2
+  default     = 2
 }
 
 ##########################################
@@ -210,7 +210,7 @@ variable "node_pool_zones" {
 variable "node_max_pods" {
   type        = number
   description = "Maximum number of pods per node"
-  default = 30
+  default     = 30
 }
 
 ###########################################
@@ -225,14 +225,14 @@ variable "create_private_link" {
 variable "allowed_subscriptions" {
   type        = string
   description = "List of allowed customer subscriptions coma seperated values"
-  default = "" 
+  default     = ""
 }
 ##########################################
 # Network                                #
 ##########################################
 
 variable "allowed_ip_ranges" {
-  description = "allowed public IP addresses or CIDR ranges."
+  description = "Allowed public IP addresses or CIDR ranges."
   type        = list(string)
   default     = []
 }
@@ -259,47 +259,40 @@ variable "parquet_wandb_env" {
 # vault key                              #
 ##########################################
 
-variable "key_type" {
-  default = "RSA"
-  type = string
-}
-
-variable "key_size" {
-  default = 2048
- type = number
-}
-
-variable "curve" {
-  type = string
-  default = "P-256"
-  
-}
 variable "enable_storage_key" {
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
+  description = "Flag to enable managed key encryption for the storage account."
+}
+
+variable "disable_storage_vault_key_id" {
+  type        = bool
+  default     = false
+  description = "Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation."
+}
+
+variable "customer_storage_vault_key_id" {
+  type        = string
+  default     = null
+  description = "The Azure Key Vault key ID for customer-provided storage encryption keys. Must match the pattern 'https://<vault-name>.vault.azure.net/keys/<key-name>/<key-version>', or be null."
+
+  validation {
+    condition     = var.customer_storage_vault_key_id == null || can(regex("^https://[a-zA-Z0-9-]+.vault.azure.net/keys/[a-zA-Z0-9-]+/[a-f0-9]+$", var.customer_storage_vault_key_id))
+    error_message = "The customer_storage_vault_key_id must be null or a valid Azure Key Vault key ID in the format 'https://<vault-name>.vault.azure.net/keys/<key-name>/<key-version>'."
+  }
 }
 
 variable "enable_database_key" {
-  type    = bool
-  default = false
-}
-
-variable "enable_encryption" {
-  type    = bool
-  default = false
-}
-
-variable "customer_storage_key" {
-  type    = string
-  default = null
-}
-
-variable "purge_protection_enabled" {
   type        = bool
-  description = "Enable or disable purge protection for the Key Vault."
-  default = true
+  default     = false
+  description = "Flag to enable managed key encryption for the database. Once enabled, cannot be disabled."
 }
 
+variable "enable_purge_protection" {
+  type        = bool
+  default     = false
+  description = "Flag to enable purge protection for the Azure Key Vault. Once enabled, cannot be disabled."
+}
 
 ## To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 
 variable "azuremonitor" {

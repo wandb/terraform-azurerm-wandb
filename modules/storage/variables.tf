@@ -29,8 +29,14 @@ variable "deletion_protection" {
   type        = bool
 }
 
-variable "wb_managed_key_id" {
+variable "storage_key_id" {
   type = string
+}
+
+variable "disable_storage_vault_key_id" {
+  type        = bool
+  default     = false
+  description = "Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation."
 }
 
 variable "identity_ids" {

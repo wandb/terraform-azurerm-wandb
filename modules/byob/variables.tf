@@ -1,10 +1,5 @@
 variable "resource_group_name" {
-
-  type = object({
-    name = string,
-    id = string
-  })
-  
+  type = string
 }
 
 variable "location" {
@@ -23,20 +18,36 @@ variable "deletion_protection" {
   default     = true
 }
 
-variable "rg_name" {
-    type        = string
-}
-
 variable "create_cmk" {
-  type = bool
+  type        = bool
+  default     = false
+  description = "Flag to create a Customer Managed Key for the Key Vault to encrypt the storage account."
 }
 
 variable "tags" {
   type        = map(string)
   description = "Map of tags for resource"
+  default     = {}
 }
 
-variable "purge_protection_enabled" {
+variable "enable_purge_protection" {
   type        = bool
-  description = "Enable or disable purge protection for the Key Vault."
+  default     = false
+  description = "Flag to enable purge protection for the Azure Key Vault. Once enabled, cannot be disabled."
+}
+
+variable "disable_storage_vault_key_id" {
+  type        = bool
+  default     = false
+  description = "Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation."
+}
+
+variable "tenant_id" {
+  type        = string
+  description = "The tenant ID for the Key Vault Access Policy. Get from W&B SA"
+}
+
+variable "client_id" {
+  type        = string
+  description = "The client ID (object id) for the Key Vault Access Policy. Get from W&B SA"
 }

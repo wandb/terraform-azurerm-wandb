@@ -14,6 +14,6 @@ variable "location" {
 }
 
 variable "otel_identity" {
-  type = bool
+  type    = bool
   default = false
 }

@@ -21,7 +21,21 @@ variable "tags" {
   type        = map(string)
   description = "Map of tags for resource"
 }
-variable "purge_protection_enabled" {
+
+variable "enable_storage_key" {
   type        = bool
-  description = "Enable or disable purge protection for the Key Vault."
+  default     = false
+  description = "Flag to enable managed key encryption for the storage account."
+}
+
+variable "enable_database_key" {
+  type        = bool
+  default     = false
+  description = "Flag to enable managed key encryption for the database. Once enabled, cannot be disabled or you will loose access to the database."
+}
+
+variable "enable_purge_protection" {
+  type        = bool
+  default     = false
+  description = "Flag to enable purge protection for the Azure Key Vault. Once enabled, cannot be disabled."
 }

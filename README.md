@@ -41,7 +41,7 @@ resources that lack official modules.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 3.17 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.113.0 |
 
 ## Modules
 
@@ -70,7 +70,7 @@ resources that lack official modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_allowed_ip_ranges"></a> [allowed\_ip\_ranges](#input\_allowed\_ip\_ranges) | allowed public IP addresses or CIDR ranges. | `list(string)` | `[]` | no |
+| <a name="input_allowed_ip_ranges"></a> [allowed\_ip\_ranges](#input\_allowed\_ip\_ranges) | Allowed public IP addresses or CIDR ranges. | `list(string)` | `[]` | no |
 | <a name="input_allowed_subscriptions"></a> [allowed\_subscriptions](#input\_allowed\_subscriptions) | List of allowed customer subscriptions coma seperated values | `string` | `""` | no |
 | <a name="input_app_wandb_env"></a> [app\_wandb\_env](#input\_app\_wandb\_env) | Extra environment variables for W&B | `map(string)` | `{}` | no |
 | <a name="input_azuremonitor"></a> [azuremonitor](#input\_azuremonitor) | # To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 | `bool` | `false` | no |
@@ -78,19 +78,17 @@ resources that lack official modules.
 | <a name="input_cluster_sku_tier"></a> [cluster\_sku\_tier](#input\_cluster\_sku\_tier) | The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers) | `string` | `"Free"` | no |
 | <a name="input_create_private_link"></a> [create\_private\_link](#input\_create\_private\_link) | Use for the azure private link. | `bool` | `false` | no |
 | <a name="input_create_redis"></a> [create\_redis](#input\_create\_redis) | Boolean indicating whether to provision an redis instance (true) or not (false). | `bool` | `false` | no |
-| <a name="input_curve"></a> [curve](#input\_curve) | n/a | `string` | `"P-256"` | no |
-| <a name="input_customer_storage_key"></a> [customer\_storage\_key](#input\_customer\_storage\_key) | n/a | `string` | `null` | no |
+| <a name="input_customer_storage_vault_key_id"></a> [customer\_storage\_vault\_key\_id](#input\_customer\_storage\_vault\_key\_id) | The Azure Key Vault key ID for customer-provided storage encryption keys. Must match the pattern 'https://<vault-name>.vault.azure.net/keys/<key-name>/<key-version>', or be null. | `string` | `null` | no |
 | <a name="input_database_availability_mode"></a> [database\_availability\_mode](#input\_database\_availability\_mode) | n/a | `string` | `"SameZone"` | no |
 | <a name="input_database_sku_name"></a> [database\_sku\_name](#input\_database\_sku\_name) | Specifies the SKU Name for this MySQL Server | `string` | `"GP_Standard_D4ds_v4"` | no |
-| <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version for MySQL | `string` | `"8.0.21"` | no |
+| <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version for MySQL | `string` | `"5.7"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | If the instance should have deletion protection enabled. The database / Bucket can't be deleted when this value is set to `true`. | `bool` | `true` | no |
+| <a name="input_disable_storage_vault_key_id"></a> [disable\_storage\_vault\_key\_id](#input\_disable\_storage\_vault\_key\_id) | Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation. | `bool` | `false` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain for accessing the Weights & Biases UI. | `string` | `null` | no |
-| <a name="input_enable_database_key"></a> [enable\_database\_key](#input\_enable\_database\_key) | n/a | `bool` | `false` | no |
-| <a name="input_enable_encryption"></a> [enable\_encryption](#input\_enable\_encryption) | n/a | `bool` | `false` | no |
-| <a name="input_enable_storage_key"></a> [enable\_storage\_key](#input\_enable\_storage\_key) | n/a | `bool` | `false` | no |
+| <a name="input_enable_database_key"></a> [enable\_database\_key](#input\_enable\_database\_key) | Flag to enable managed key encryption for the database. Once enabled, cannot be disabled. | `bool` | `false` | no |
+| <a name="input_enable_purge_protection"></a> [enable\_purge\_protection](#input\_enable\_purge\_protection) | Flag to enable purge protection for the Azure Key Vault. Once enabled, cannot be disabled. | `bool` | `false` | no |
+| <a name="input_enable_storage_key"></a> [enable\_storage\_key](#input\_enable\_storage\_key) | Flag to enable managed key encryption for the storage account. | `bool` | `false` | no |
 | <a name="input_external_bucket"></a> [external\_bucket](#input\_external\_bucket) | config an external bucket | `any` | `null` | no |
-| <a name="input_key_size"></a> [key\_size](#input\_key\_size) | n/a | `number` | `2048` | no |
-| <a name="input_key_type"></a> [key\_type](#input\_key\_type) | n/a | `string` | `"RSA"` | no |
 | <a name="input_kubernetes_instance_type"></a> [kubernetes\_instance\_type](#input\_kubernetes\_instance\_type) | Use for the Kubernetes cluster. | `string` | `"Standard_D4a_v4"` | no |
 | <a name="input_kubernetes_node_count"></a> [kubernetes\_node\_count](#input\_kubernetes\_node\_count) | n/a | `number` | `2` | no |
 | <a name="input_license"></a> [license](#input\_license) | Your wandb/local license | `string` | n/a | yes |
@@ -104,7 +102,6 @@ resources that lack official modules.
 | <a name="input_oidc_secret"></a> [oidc\_secret](#input\_oidc\_secret) | The Client secret of application in your identity provider | `string` | `""` | no |
 | <a name="input_other_wandb_env"></a> [other\_wandb\_env](#input\_other\_wandb\_env) | Extra environment variables for W&B | `map(any)` | `{}` | no |
 | <a name="input_parquet_wandb_env"></a> [parquet\_wandb\_env](#input\_parquet\_wandb\_env) | Extra environment variables for W&B | `map(string)` | `{}` | no |
-| <a name="input_purge_protection_enabled"></a> [purge\_protection\_enabled](#input\_purge\_protection\_enabled) | Enable or disable purge protection for the Key Vault. | `bool` | `true` | no |
 | <a name="input_redis_capacity"></a> [redis\_capacity](#input\_redis\_capacity) | Number indicating size of an redis instance | `number` | `2` | no |
 | <a name="input_size"></a> [size](#input\_size) | Deployment size | `string` | `null` | no |
 | <a name="input_ssl"></a> [ssl](#input\_ssl) | Enable SSL certificate | `bool` | `true` | no |
@@ -124,6 +121,7 @@ resources that lack official modules.
 | <a name="output_address"></a> [address](#output\_address) | n/a |
 | <a name="output_aks_node_count"></a> [aks\_node\_count](#output\_aks\_node\_count) | n/a |
 | <a name="output_aks_node_instance_type"></a> [aks\_node\_instance\_type](#output\_aks\_node\_instance\_type) | n/a |
+| <a name="output_client_id"></a> [client\_id](#output\_client\_id) | n/a |
 | <a name="output_cluster_ca_certificate"></a> [cluster\_ca\_certificate](#output\_cluster\_ca\_certificate) | n/a |
 | <a name="output_cluster_client_certificate"></a> [cluster\_client\_certificate](#output\_cluster\_client\_certificate) | n/a |
 | <a name="output_cluster_client_key"></a> [cluster\_client\_key](#output\_cluster\_client\_key) | n/a |
@@ -136,5 +134,6 @@ resources that lack official modules.
 | <a name="output_standardized_size"></a> [standardized\_size](#output\_standardized\_size) | n/a |
 | <a name="output_storage_account"></a> [storage\_account](#output\_storage\_account) | n/a |
 | <a name="output_storage_container"></a> [storage\_container](#output\_storage\_container) | n/a |
+| <a name="output_tenant_id"></a> [tenant\_id](#output\_tenant\_id) | n/a |
 | <a name="output_url"></a> [url](#output\_url) | The URL to the W&B application |
 <!-- END_TF_DOCS -->

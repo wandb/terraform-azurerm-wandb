@@ -9,3 +9,11 @@ output "vault" {
 output "vault_id" {
   value = azurerm_key_vault.default.id
 }
+
+output "vault_internal_keys" {
+  value = azurerm_key_vault_key.intenral_encryption_keys
+}
+
+output "vault_key_map" {
+  value = local.vault_key_map
+}
