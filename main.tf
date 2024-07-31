@@ -229,8 +229,8 @@ module "wandb" {
     module.database,
     module.storage,
   ]
-  operator_chart_version = "1.1.2"
-  controller_image_tag   = "1.10.1"
+  controller_image_tag   = "1.12.0"
+  operator_chart_version = "1.2.0"
 
   spec = {
     values = {
