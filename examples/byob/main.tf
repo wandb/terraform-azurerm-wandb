@@ -4,7 +4,7 @@ provider "azurerm" {
 
 module "byob" {
   source                       = "../../modules/byob"
-  resource_group_name          = { name = "${var.resource_group_name}", id = "byob" }
+  resource_group_name          = var.resource_group_name
   location                     = var.location
   prefix                       = var.prefix
   deletion_protection          = var.deletion_protection
