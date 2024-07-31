@@ -6,8 +6,8 @@ locals {
   vault_truncated_name = substr(local.vault_name, 0, min(length(local.vault_name), 24))
   max_key_length       = 127
   vault_key_map = {
-    database = var.enable_database_key ? substr("database-key-${var.namespace}", 0, local.max_key_length) : null
-    storage  = var.enable_storage_key ? substr("storage-key-${var.namespace}", 0, local.max_key_length) : null
+    database = var.enable_database_vault_key ? substr("database-key-${var.namespace}", 0, local.max_key_length) : null
+    storage  = var.enable_storage_vault_key ? substr("storage-key-${var.namespace}", 0, local.max_key_length) : null
   }
 }
 

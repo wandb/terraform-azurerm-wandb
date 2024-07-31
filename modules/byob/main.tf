@@ -14,11 +14,11 @@ module "vault" {
   resource_group = { name = "${var.resource_group_name}", id = "byob" }
   location       = var.location
 
-  identity_object_id      = module.identity[0].identity.principal_id
-  depends_on              = [module.identity]
-  tags                    = var.tags
-  enable_purge_protection = var.enable_purge_protection
-  enable_storage_key      = var.create_cmk
+  identity_object_id       = module.identity[0].identity.principal_id
+  depends_on               = [module.identity]
+  tags                     = var.tags
+  enable_purge_protection  = var.enable_purge_protection
+  enable_storage_vault_key = var.create_cmk
 }
 
 resource "azurerm_key_vault_access_policy" "wandb" {

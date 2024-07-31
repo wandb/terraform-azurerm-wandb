@@ -73,8 +73,8 @@ module "vault" {
   resource_group          = azurerm_resource_group.default
   enable_purge_protection = var.enable_purge_protection
 
-  enable_database_key = var.enable_database_key
-  enable_storage_key  = var.enable_storage_key && local.enable_internal_storage
+  enable_database_vault_key = var.enable_database_vault_key
+  enable_storage_vault_key  = var.enable_storage_vault_key && local.enable_internal_storage
 
   tags = var.tags
 }
