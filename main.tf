@@ -230,7 +230,7 @@ module "wandb" {
     module.storage,
   ]
   controller_image_tag   = "1.12.0"
-  operator_chart_version = "1.2.1"
+  operator_chart_version = "1.2.2"
 
   spec = {
     values = {
