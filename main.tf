@@ -2,6 +2,8 @@ locals {
   fqdn       = var.subdomain == null ? var.domain_name : "${var.subdomain}.${var.domain_name}"
   url_prefix = var.ssl ? "https" : "http"
   url        = "${local.url_prefix}://${local.fqdn}"
+
+  enable_internal_storage = var.blob_container == "" && var.external_bucket == null
 }
 
 resource "azurerm_resource_group" "default" {
@@ -27,12 +29,12 @@ module "networking" {
   private_link        = var.create_private_link
   allowed_ip_ranges   = var.allowed_ip_ranges
   tags                = var.tags
-
 }
 
 module "database" {
-  source              = "./modules/database"
-  namespace           = var.namespace
+  source    = "./modules/database"
+  namespace = var.namespace
+
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
@@ -40,10 +42,11 @@ module "database" {
   database_version             = var.database_version
   database_private_dns_zone_id = module.networking.database_private_dns_zone.id
   database_subnet_id           = module.networking.database_subnet.id
+  sku_name                     = try(local.deployment_size[var.size].db, var.database_sku_name)
+  deletion_protection          = var.deletion_protection
 
-  sku_name            = try(local.deployment_size[var.size].db, var.database_sku_name)
-  deletion_protection = var.deletion_protection
-
+  database_key_id = try(module.vault.vault_internal_keys[module.vault.vault_key_map.database].id, null)
+  identity_ids    = module.identity.identity.id
   tags = {
     "customer-ns" = var.namespace,
     "env"         = "managed-install"
@@ -64,23 +67,33 @@ module "redis" {
 module "vault" {
   source = "./modules/vault"
 
-  identity_object_id = module.identity.identity.principal_id
-  location           = azurerm_resource_group.default.location
-  namespace          = var.namespace
-  resource_group     = azurerm_resource_group.default
+  identity_object_id      = module.identity.identity.principal_id
+  location                = azurerm_resource_group.default.location
+  namespace               = var.namespace
+  resource_group          = azurerm_resource_group.default
+  enable_purge_protection = var.enable_purge_protection
+
+  enable_database_vault_key = var.enable_database_vault_key
+  enable_storage_vault_key  = var.enable_storage_vault_key && local.enable_internal_storage
 
   tags = var.tags
 }
 
 module "storage" {
-  count               = (var.blob_container == "" && var.external_bucket == null) ? 1 : 0
-  source              = "./modules/storage"
+  source = "./modules/storage"
+
+  count               = local.enable_internal_storage ? 1 : 0
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   create_queue        = !var.use_internal_queue
+  identity_ids        = module.identity.identity.id
   deletion_protection = var.deletion_protection
-  tags                = var.tags
+
+  storage_key_id               = var.customer_storage_vault_key_id == null ? try(module.vault.vault_internal_keys[module.vault.vault_key_map.storage].id, null) : var.customer_storage_vault_key_id
+  disable_storage_vault_key_id = var.disable_storage_vault_key_id
+
+  tags = var.tags
 }
 
 module "app_lb" {
@@ -176,8 +189,9 @@ resource "azurerm_role_assignment" "gateway_role" {
 }
 
 module "cron_job" {
-  count                  = length(var.allowed_subscriptions) > 0 ? 1 : 0 # private endpoint approval application deployed as a cronjob in default namespace
-  source                 = "./modules/cron_job"
+  count  = length(var.allowed_subscriptions) > 0 ? 1 : 0 # private endpoint approval application deployed as a cronjob in default namespace
+  source = "./modules/cron_job"
+
   namespace              = "default"
   client_id              = module.pod_identity[0].identity.client_id
   serviceaccountName     = local.private_endpoint_approval_sa
@@ -186,7 +200,6 @@ module "cron_job" {
   applicationGatewayName = module.app_lb.gateway.name
   allowedSubscriptions   = var.allowed_subscriptions
   depends_on             = [module.app_lb, module.pod_identity]
-
 }
 
 resource "azurerm_role_assignment" "otel_role" {
@@ -194,7 +207,6 @@ resource "azurerm_role_assignment" "otel_role" {
   scope                = azurerm_resource_group.default.id
   role_definition_name = "Contributor"
   principal_id         = module.identity.otel_identity.principal_id
-
 }
 
 resource "azurerm_federated_identity_credential" "otel_app" {
@@ -235,8 +247,8 @@ module "wandb" {
   spec = {
     values = {
       global = {
-        host    = local.url
-        license = var.license
+        host          = local.url
+        license       = var.license
         cloudProvider = "azure"
         bucket = var.external_bucket == null ? {
           provider  = "az"

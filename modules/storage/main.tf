@@ -26,6 +26,20 @@ resource "azurerm_storage_account" "default" {
     }
   }
 
+  dynamic "identity" {
+    for_each = var.storage_key_id != null ? [1] : []
+    content {
+      type         = "UserAssigned"
+      identity_ids = [var.identity_ids]
+    }
+  }
+  dynamic "customer_managed_key" {
+    for_each = var.storage_key_id != null && var.disable_storage_vault_key_id == false ? [1] : []
+    content {
+      user_assigned_identity_id = var.identity_ids
+      key_vault_key_id          = var.storage_key_id
+    }
+  }
   tags = var.tags
 }
 

@@ -23,13 +23,53 @@ storage_key = <sensitive>
 
 To retrieve the storage key, you can use the Azure CLI installed previously like the example below.
 
-```basb
-az storage account keys list --account-name rgnamestorage --query '[].{key: value}' --output tsv
+```bash
+az storage account keys list --account-name <storage_account_name> --resource-group <resource_group_name> --query '[0].value' -o tsv
 1111111111111122222222222333333333334444444555555555
-5555555554444444333333333332222222222211111111111111
 ```
 
-You only need to provide one key.
+This command will return the storage key, which you can then use for your deployment needs. Ensure you handle the storage key securely as it contains sensitive information.
 
-* Note that all information about Storage Account and keys are mere examples, they are not valid.
+# Customer Managed Key Encryption
 
+The following section provides details on enabling Customer Managed Key (CMK) encryption for the Azure Blob Storage container which is disabled by default.
+
+To configure Customer Managed Key encryption, ensure you are using the latest version of out terraform which has the following added to the `variables.tf` file:
+
+- create_cmk
+- disable_storage_vault_key_id
+- enable_purge_protection
+- tenant_id
+- client_id
+
+You need to obtain the `tenant_id` and `client_id` from a Solutions Architect at W&B for an already instantiated instance of a Weights & Biases managed deployment.
+
+Set the follwoing new variabels to enable the CMK:
+
+```ini terraform.tfvars
+create_cmk = true
+
+enable_purge_protection       = true
+disable_storage_vault_key_id  = false
+
+tenant_id = "<tenant_id>"
+client_id = "<client_id>"
+```
+
+After updating your `terraform.tfvars` configuration, run the Terraform commands to apply the changes:
+
+```bash
+terraform init -upgrade
+terraform apply -var-file=terraform.tfvars
+```
+
+Upon successful execution, you will receive the following output which needs to the shared with the SA at Weights & Biases.
+
+```bash
+blob_container = "<storage_account_name>/wandb"
+command_to_get_storage_key = "az storage account keys list --account-name <storage_account_name> --resource-group <resource_group_name> --query '[0].value' -o tsv"
+storage_key = <sensitive>
+storage_vault_key_id = "https://<key_vault_name>.vault.azure.net/keys/<key_name>/<key_version>"
+```
+
+Retrieve the storage key as shown above and also share that with the SA at Weights & Biases.
