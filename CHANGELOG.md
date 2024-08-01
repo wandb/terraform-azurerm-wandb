@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.13.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.12.2...v2.13.0) (2024-08-01)
+
+
+### Features
+
+* Added for encrypting the database and blob storage with WB-managed key ([#49](https://github.com/wandb/terraform-azurerm-wandb/issues/49)) ([519c340](https://github.com/wandb/terraform-azurerm-wandb/commit/519c340fbf855743fe77b3ae075e6bfdb84740c2))
+
 ### [2.12.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.12.1...v2.12.2) (2024-08-01)
 
 
