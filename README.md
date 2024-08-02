@@ -41,7 +41,7 @@ resources that lack official modules.
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 3.17 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | 3.113.0 |
 
 ## Modules
 
@@ -130,8 +130,6 @@ resources that lack official modules.
 | <a name="output_private_link_resource_id"></a> [private\_link\_resource\_id](#output\_private\_link\_resource\_id) | n/a |
 | <a name="output_private_link_sub_resource_name"></a> [private\_link\_sub\_resource\_name](#output\_private\_link\_sub\_resource\_name) | n/a |
 | <a name="output_standardized_size"></a> [standardized\_size](#output\_standardized\_size) | n/a |
-| <a name="output_storage_account"></a> [storage\_account](#output\_storage\_account) | n/a |
-| <a name="output_storage_container"></a> [storage\_container](#output\_storage\_container) | n/a |
 | <a name="output_tenant_id"></a> [tenant\_id](#output\_tenant\_id) | n/a |
 | <a name="output_url"></a> [url](#output\_url) | The URL to the W&B application |
 <!-- END_TF_DOCS -->
