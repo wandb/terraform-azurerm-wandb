@@ -138,7 +138,7 @@ resources that lack official modules.
 
 ### Upgrading from 2.x -> 3.x
 
-`3.x` of this terraform requires helm version `0.17.x`+ to function properly if you don't set 
+`3.x` of this terraform requires helm version `0.17.1`+ to function properly if you don't set 
 - `var.storage_account`
 - `var.blob_container `
 - `var.storage_key`
