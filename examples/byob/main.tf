@@ -9,7 +9,6 @@ module "byob" {
   prefix                       = var.prefix
   deletion_protection          = var.deletion_protection
   create_cmk                   = var.create_cmk
-  enable_purge_protection      = var.enable_purge_protection
   client_id                    = var.client_id
   tenant_id                    = var.tenant_id
   tags                         = var.tags

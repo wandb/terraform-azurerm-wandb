@@ -2,8 +2,6 @@ locals {
   fqdn       = var.subdomain == null ? var.domain_name : "${var.subdomain}.${var.domain_name}"
   url_prefix = var.ssl ? "https" : "http"
   url        = "${local.url_prefix}://${local.fqdn}"
-
-  enable_internal_storage = var.blob_container == "" && var.external_bucket == null
 }
 
 resource "azurerm_resource_group" "default" {
@@ -74,7 +72,7 @@ module "vault" {
   enable_purge_protection = var.enable_purge_protection
 
   enable_database_vault_key = var.enable_database_vault_key
-  enable_storage_vault_key  = var.enable_storage_vault_key && local.enable_internal_storage
+  enable_storage_vault_key  = var.enable_storage_vault_key
 
   tags = var.tags
 }
@@ -82,7 +80,7 @@ module "vault" {
 module "storage" {
   source = "./modules/storage"
 
-  count               = local.enable_internal_storage ? 1 : 0
+  count               = 1
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
@@ -90,7 +88,7 @@ module "storage" {
   identity_ids        = module.identity.identity.id
   deletion_protection = var.deletion_protection
 
-  storage_key_id               = var.customer_storage_vault_key_id == null ? try(module.vault.vault_internal_keys[module.vault.vault_key_map.storage].id, null) : var.customer_storage_vault_key_id
+  storage_key_id               = try(module.vault.vault_internal_keys[module.vault.vault_key_map.storage].id, null)
   disable_storage_vault_key_id = var.disable_storage_vault_key_id
 
   tags = var.tags
@@ -135,7 +133,7 @@ locals {
   account_name    = try(module.storage[0].account.name, "")
   access_key      = try(module.storage[0].account.primary_access_key, "")
   queue_name      = try(module.storage[0].queue.name, "")
-  blob_container  = var.external_bucket == null ? coalesce(var.blob_container, local.container_name) : ""
+  blob_container  = var.external_bucket == null ? var.blob_container : ""
   storage_account = var.external_bucket == null ? coalesce(var.storage_account, local.account_name) : ""
   storage_key     = var.external_bucket == null ? coalesce(var.storage_key, local.access_key) : ""
   bucket          = "az://${local.storage_account}/${local.blob_container}"
@@ -231,6 +229,21 @@ module "cert_manager" {
   depends_on = [module.app_aks]
 }
 
+locals {
+  use_customer_bucket = (
+    var.storage_account != "" &&
+    var.blob_container != "" &&
+    var.storage_key != ""
+  )
+  default_bucket_config = {
+    provider  = "az"
+    name      = var.storage_account
+    path      = var.blob_container
+    accessKey = var.storage_key
+  }
+  bucket_config = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : {})
+}
+
 module "wandb" {
   source  = "wandb/wandb/helm"
   version = "1.2.0"
@@ -250,12 +263,17 @@ module "wandb" {
         host          = local.url
         license       = var.license
         cloudProvider = "azure"
-        bucket = var.external_bucket == null ? {
+        bucket        = local.bucket_config
+        defaultBucket = {
           provider  = "az"
-          name      = local.storage_account
-          path      = local.blob_container
-          accessKey = local.storage_key
-        } : var.external_bucket
+          name      = module.storage[0].account.name
+          path      = module.storage[0].container.name
+          accessKey = module.storage[0].account.primary_access_key
+        }
+        azureIdentityForBucket = {
+          clientID = module.identity.identity.client_id
+          tenantID = module.identity.identity.tenant_id
+        }
 
         mysql = {
           host     = module.database.address

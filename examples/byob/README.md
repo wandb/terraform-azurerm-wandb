@@ -38,7 +38,6 @@ To configure Customer Managed Key encryption, ensure you are using the latest ve
 
 - create_cmk
 - disable_storage_vault_key_id
-- enable_purge_protection
 - tenant_id
 - client_id
 
@@ -49,7 +48,6 @@ Set the follwoing new variabels to enable the CMK:
 ```ini terraform.tfvars
 create_cmk = true
 
-enable_purge_protection       = true
 disable_storage_vault_key_id  = false
 
 tenant_id = "<tenant_id>"
