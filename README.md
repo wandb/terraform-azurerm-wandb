@@ -133,3 +133,12 @@ resources that lack official modules.
 | <a name="output_tenant_id"></a> [tenant\_id](#output\_tenant\_id) | n/a |
 | <a name="output_url"></a> [url](#output\_url) | The URL to the W&B application |
 <!-- END_TF_DOCS -->
+
+## Migrations
+
+### Upgrading from 2.x -> 3.x
+
+`3.x` of this terraform requires helm version `0.17.x`+ to function properly if you don't set 
+- `var.storage_account`
+- `var.blob_container `
+- `var.storage_key`
