@@ -30,12 +30,6 @@ variable "tags" {
   default     = {}
 }
 
-variable "enable_purge_protection" {
-  type        = bool
-  default     = false
-  description = "Flag to enable purge protection for the Azure Key Vault. Once enabled, cannot be disabled."
-}
-
 variable "disable_storage_vault_key_id" {
   type        = bool
   default     = false
