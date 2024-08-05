@@ -271,27 +271,10 @@ variable "disable_storage_vault_key_id" {
   description = "Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation."
 }
 
-variable "customer_storage_vault_key_id" {
-  type        = string
-  default     = null
-  description = "The Azure Key Vault key ID for customer-provided storage encryption keys. Must match the pattern 'https://<vault-name>.vault.azure.net/keys/<key-name>/<key-version>', or be null."
-
-  validation {
-    condition     = var.customer_storage_vault_key_id == null || can(regex("^https://[a-zA-Z0-9-]+.vault.azure.net/keys/[a-zA-Z0-9-]+/[a-f0-9]+$", var.customer_storage_vault_key_id))
-    error_message = "The customer_storage_vault_key_id must be null or a valid Azure Key Vault key ID in the format 'https://<vault-name>.vault.azure.net/keys/<key-name>/<key-version>'."
-  }
-}
-
 variable "enable_database_vault_key" {
   type        = bool
   default     = false
   description = "Flag to enable managed key encryption for the database. Once enabled, cannot be disabled."
-}
-
-variable "enable_purge_protection" {
-  type        = bool
-  default     = false
-  description = "Flag to enable purge protection for the Azure Key Vault. Once enabled, cannot be disabled."
 }
 
 ## To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 

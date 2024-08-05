@@ -31,20 +31,14 @@ variable "disable_storage_vault_key_id" {
   description = "Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation."
 }
 
-variable "enable_purge_protection" {
-  type        = bool
-  default     = false
-  description = "Flag to enable purge protection for the Azure Key Vault. Once enabled, cannot be disabled."
-}
-
 variable "tenant_id" {
   type        = string
-  description = "The tenant ID for the Key Vault Access Policy. Get from W&B SA"
+  description = "The tenant ID for the Key Vault Access Policy. Get from `https://<WANDB_BASE_URL>/console/settings/advanced/spec/active`"
 }
 
 variable "client_id" {
   type        = string
-  description = "The client ID (object id) for the Key Vault Access Policy. Get from W&B SA"
+  description = "The client ID (object id) for the Key Vault Access Policy. Get from `https://<WANDB_BASE_URL>/console/settings/advanced/spec/active`"
 }
 
 variable "tags" {

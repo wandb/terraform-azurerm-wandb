@@ -33,14 +33,6 @@ output "oidc_issuer_url" {
   value = module.app_aks.oidc_issuer_url
 }
 
-output "storage_account" {
-  value = var.external_bucket != null ? "" : coalesce(var.storage_account, local.account_name, "")
-}
-
-output "storage_container" {
-  value = var.external_bucket != null ? "" : coalesce(var.blob_container, local.container_name)
-}
-
 output "private_link_resource_id" {
   value = module.app_lb.gateway_id
 }

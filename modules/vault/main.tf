@@ -16,7 +16,7 @@ resource "azurerm_key_vault" "default" {
   location                 = var.location
   resource_group_name      = var.resource_group.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
-  purge_protection_enabled = var.enable_purge_protection
+  purge_protection_enabled = true
   # https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-customer-managed-key#requirements-for-configuring-data-encryption-for-azure-database-for-mysql-flexible-server
   soft_delete_retention_days  = 90 # This must be 90 for azure msyql flex server encryption. 
   enabled_for_disk_encryption = true

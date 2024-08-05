@@ -38,18 +38,16 @@ To configure Customer Managed Key encryption, ensure you are using the latest ve
 
 - create_cmk
 - disable_storage_vault_key_id
-- enable_purge_protection
 - tenant_id
 - client_id
 
-You need to obtain the `tenant_id` and `client_id` from a Solutions Architect at W&B for an already instantiated instance of a Weights & Biases managed deployment.
+You need to obtain the `tenant_id` and `client_id` from the `https://${WANDB_BASE_URL}/console/settings/advanced/spec/active` at W&B for an already instantiated instance of a Weights & Biases managed deployment.
 
 Set the follwoing new variabels to enable the CMK:
 
 ```ini terraform.tfvars
 create_cmk = true
 
-enable_purge_protection       = true
 disable_storage_vault_key_id  = false
 
 tenant_id = "<tenant_id>"
@@ -63,7 +61,7 @@ terraform init -upgrade
 terraform apply -var-file=terraform.tfvars
 ```
 
-Upon successful execution, you will receive the following output which needs to the shared with the SA at Weights & Biases.
+Upon successful execution, you will receive the following output which needs to be set in the system connection settings `https://${WANDB_BASE_URL}/console/settings/system`
 
 ```bash
 blob_container = "<storage_account_name>/wandb"
@@ -72,4 +70,4 @@ storage_key = <sensitive>
 storage_vault_key_id = "https://<key_vault_name>.vault.azure.net/keys/<key_name>/<key_version>"
 ```
 
-Retrieve the storage key as shown above and also share that with the SA at Weights & Biases.
+Retrieve the storage key as shown above.
