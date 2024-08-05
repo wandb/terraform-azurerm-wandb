@@ -52,3 +52,9 @@ variable "database_sku_name" {
   default     = "GP_Standard_D4ds_v4"
   description = "Specifies the SKU Name for this MySQL Server"
 }
+
+variable "bucket_path" {
+  description = "path of where to store data for the instance-level bucket"
+  type        = string
+  default     = ""
+}
