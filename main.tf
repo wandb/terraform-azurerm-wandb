@@ -225,7 +225,7 @@ locals {
     path      = var.blob_container
     accessKey = var.storage_key
   }
-  bucket_config = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : {})
+  bucket_config = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
 }
 
 module "wandb" {
@@ -247,7 +247,12 @@ module "wandb" {
         host          = local.url
         license       = var.license
         cloudProvider = "azure"
-        bucket        = local.bucket_config
+        bucket        = local.bucket_config == null ?  {
+          provider  = "az"
+          name      = module.storage[0].account.name
+          path      = module.storage[0].container.name
+          accessKey = module.storage[0].account.primary_access_key
+        } : local.bucket_config
         defaultBucket = {
           provider  = "az"
           name      = module.storage[0].account.name
