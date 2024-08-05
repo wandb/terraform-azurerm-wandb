@@ -1,5 +1,9 @@
+locals {
+  postfix             = "storage"
+  truncated_namespace = substr(replace(var.namespace, "-", ""), 0, 24 - length(local.postfix))
+}
 resource "azurerm_storage_account" "default" {
-  name                     = replace("${var.namespace}-storage", "-", "")
+  name                     = "${local.truncated_namespace}${local.postfix}"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"
