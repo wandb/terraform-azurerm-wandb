@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.13.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.13.0...v2.13.1) (2024-08-05)
+
+
+### Bug Fixes
+
+* Azure storage and Vault simplified ([#89](https://github.com/wandb/terraform-azurerm-wandb/issues/89)) ([4832d24](https://github.com/wandb/terraform-azurerm-wandb/commit/4832d247cdf8e75fe1ae75e7f4da8b528cde93e4))
+
 ## [2.13.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.12.2...v2.13.0) (2024-08-01)
 
 
