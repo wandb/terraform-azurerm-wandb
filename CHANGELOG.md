@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.13.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.13.1...v2.13.2) (2024-08-05)
+
+
+### Bug Fixes
+
+* Max Length of Storage Account name ([#90](https://github.com/wandb/terraform-azurerm-wandb/issues/90)) ([38d012f](https://github.com/wandb/terraform-azurerm-wandb/commit/38d012f27a16c9a77d52e90e9bad99ae432bec83))
+
 ### [2.13.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.13.0...v2.13.1) (2024-08-05)
 
 
