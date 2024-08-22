@@ -92,15 +92,15 @@ resource "azurerm_subnet_network_security_group_association" "public" {
 resource "azurerm_private_endpoint" "clickhouse" {
   count               = var.clickhouse_endpoint_service_id != "" ? 1 : 0
 
-  name                = "clickhouse-pe"
+  name                = "${var.namespace}-clickhouse-pe"
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = azurerm_subnet.private.id
 
   private_service_connection {
-    name                              = "clickhouse-pl"
+    name                              = "${var.namespace}-clickhouse-pl"
     private_connection_resource_alias = var.clickhouse_endpoint_service_id
     is_manual_connection              = true
-    request_message                   = "please approve"
+    request_message                   = "Please approve."
   }
 }
