@@ -70,3 +70,9 @@ variable "clickhouse_endpoint_service_id" {
   type        = string
   default     = ""
 }
+
+variable "clickhouse_service_location" {
+  description = "The region where Clickhouse is installed"
+  type        = string
+  default     = "eastus2"
+}

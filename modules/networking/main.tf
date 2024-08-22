@@ -102,6 +102,31 @@ resource "azurerm_private_endpoint" "clickhouse" {
     name                              = "${var.namespace}-clickhouse-pl"
     private_connection_resource_alias = var.clickhouse_endpoint_service_id
     is_manual_connection              = true
-    request_message                   = "Please approve."
+    request_message                   = "ClickHouse Private Link"
   }
+}
+
+resource "azurerm_private_dns_zone" "clickhouse_cloud_private_link_zone" {
+  name                = "${var.clickhouse_service_location}.privatelink.azure.clickhouse.cloud"
+  resource_group_name = var.resource_group_name
+}
+
+data "azurerm_network_interface" "clickhouse_nic" {
+  resource_group_name = var.resource_group_name
+  name                = azurerm_private_endpoint.clickhouse.network_interface[0].name
+}
+
+resource "azurerm_private_dns_a_record" "clickhouse_wildcard" {
+  name                = "*"
+  zone_name           = azurerm_private_dns_zone.clickhouse_cloud_private_link_zone.name
+  resource_group_name = var.resource_group_name
+  ttl                 = 300
+  records             = [data.azurerm_network_interface.clickhouse_nic.private_ip_address]
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "clickhouse_network" {
+  name                  = "network-link"
+  resource_group_name   = var.resource_group_name
+  private_dns_zone_name = azurerm_private_dns_zone.clickhouse_cloud_private_link_zone.name
+  virtual_network_id    = azurerm_virtual_network.default.id
 }
