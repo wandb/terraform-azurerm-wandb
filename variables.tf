@@ -286,12 +286,11 @@ variable "azuremonitor" {
 ###########################################
 # Weave Trace / Clickhouse                #
 ###########################################
-# TODO(jhr): remove this until needed
-# variable "enable_clickhouse" {
-#   type        = bool
-#   description = "Provision clickhouse resources"
-#   default     = false
-# }
+variable "enable_clickhouse" {
+  type        = bool
+  description = "Provision clickhouse resources"
+  default     = false
+}
 
 variable "clickhouse_endpoint_service_id" {
   type        = string
