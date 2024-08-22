@@ -96,6 +96,7 @@ resource "azurerm_private_endpoint" "clickhouse" {
   location            = var.location
   resource_group_name = var.resource_group_name
   subnet_id           = azurerm_subnet.private.id
+  custom_network_interface_name = "${var.namespace}-clickhouse-nic"
 
   private_service_connection {
     name                              = "${var.namespace}-clickhouse-pl"
