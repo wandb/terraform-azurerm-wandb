@@ -101,5 +101,6 @@ resource "azurerm_private_endpoint" "clickhouse" {
     name                              = "clickhouse-pl"
     private_connection_resource_alias = var.clickhouse_endpoint_service_id
     is_manual_connection              = true
+    request_message                   = "please approve"
   }
 }
