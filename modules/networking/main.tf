@@ -113,7 +113,7 @@ resource "azurerm_private_dns_zone" "clickhouse_cloud_private_link_zone" {
 
 data "azurerm_network_interface" "clickhouse_nic" {
   resource_group_name = var.resource_group_name
-  name                = azurerm_private_endpoint.clickhouse.network_interface[0].name
+  name                = azurerm_private_endpoint.clickhouse[0].network_interface[0].name
 }
 
 resource "azurerm_private_dns_a_record" "clickhouse_wildcard" {
