@@ -64,3 +64,9 @@ variable "allowed_ip_ranges" {
   description = "allowed public IP addresses or CIDR ranges."
   type        = list(string)
 }
+
+variable "clickhouse_endpoint_service_id" {
+  description = "The ID of the Clickhouse service endpoint"
+  type        = string
+  default     = ""
+}
