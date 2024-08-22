@@ -13,6 +13,7 @@ resource "azurerm_subnet" "private" {
   resource_group_name  = var.resource_group_name
   address_prefixes     = [var.network_private_subnet_cidr]
   virtual_network_name = azurerm_virtual_network.default.name
+  # TODO(jhr): might need policies enabled for clickhouse private link
   private_link_service_network_policies_enabled = var.private_link ? false : true
 
   service_endpoints = concat(
@@ -84,4 +85,21 @@ resource "azurerm_subnet_network_security_group_association" "public" {
   subnet_id                 = azurerm_subnet.public.id
   network_security_group_id = azurerm_network_security_group.default.0.id
   depends_on                = [azurerm_network_security_rule.default]
+}
+
+
+
+resource "azurerm_private_endpoint" "clickhouse" {
+  count               = var.clickhouse_endpoint_service_id != "" ? 1 : 0
+
+  name                = "clickhouse-pe"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = azurerm_subnet.private.id
+
+  private_service_connection {
+    name                              = "clickhouse-pl"
+    private_connection_resource_alias = var.clickhouse_endpoint_service_id
+    is_manual_connection              = true
+  }
 }

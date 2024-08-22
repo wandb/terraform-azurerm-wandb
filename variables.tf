@@ -282,3 +282,19 @@ variable "azuremonitor" {
   type    = bool
   default = false
 }
+
+###########################################
+# Weave Trace / Clickhouse                #
+###########################################
+# TODO(jhr): remove this until needed
+# variable "enable_clickhouse" {
+#   type        = bool
+#   description = "Provision clickhouse resources"
+#   default     = false
+# }
+
+variable "clickhouse_endpoint_service_id" {
+  type        = string
+  description = "The service ID of the VPC endpoint service for Clickhouse"
+  default     = ""
+}
