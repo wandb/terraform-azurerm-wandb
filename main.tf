@@ -27,7 +27,9 @@ module "networking" {
   private_link        = var.create_private_link
   allowed_ip_ranges   = var.allowed_ip_ranges
   tags                = var.tags
+
   clickhouse_endpoint_service_id = var.clickhouse_endpoint_service_id
+  clickhouse_service_location    = var.clickhouse_service_location
 }
 
 module "database" {

@@ -297,3 +297,9 @@ variable "clickhouse_endpoint_service_id" {
   description = "The service ID of the VPC endpoint service for Clickhouse"
   default     = ""
 }
+
+variable "clickhouse_service_location" {
+  description = "The region where ClickHouse service is located"
+  type        = string
+  default     = ""
+}

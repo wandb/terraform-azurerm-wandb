@@ -66,13 +66,13 @@ variable "allowed_ip_ranges" {
 }
 
 variable "clickhouse_endpoint_service_id" {
-  description = "The ID of the Clickhouse service endpoint"
+  description = "The ID of the ClickHouse service endpoint"
   type        = string
   default     = ""
 }
 
 variable "clickhouse_service_location" {
-  description = "The region where Clickhouse is installed"
+  description = "The region where ClickHouse service is located"
   type        = string
-  default     = "eastus2"
+  default     = ""
 }
