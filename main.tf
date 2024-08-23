@@ -222,6 +222,7 @@ module "clickhouse" {
   private_subnet_id = module.networking.private_subnet.id
 
   clickhouse_private_endpoint_service_name = var.clickhouse_private_endpoint_service_name
+  clickhouse_private_endpoint_dns_name = var.clickhouse_private_endpoint_dns_name
 }
 
 locals {

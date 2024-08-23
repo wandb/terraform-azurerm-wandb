@@ -288,6 +288,12 @@ variable "azuremonitor" {
 ###########################################
 variable "clickhouse_private_endpoint_service_name" {
   type        = string
-  description = "The service name of the ClickHouse private endpoint (ends in .azure.privatelinkservice)."
+  description = "ClickHouse private endpoint 'Service name' (ends in .azure.privatelinkservice)."
+  default     = ""
+}
+
+variable "clickhouse_private_endpoint_dns_name" {
+  type        = string
+  description = "ClickHouse private endpoint 'DNS name' (ends in .privatelink.azure.clickhouse.cloud)."
   default     = ""
 }
