@@ -284,17 +284,17 @@ variable "azuremonitor" {
 }
 
 ###########################################
-# Weave Trace / Clickhouse                #
+# Clickhouse (for weave-trace)            #
 ###########################################
 variable "enable_clickhouse" {
   type        = bool
-  description = "Provision clickhouse resources"
+  description = "Provision ClickHouse resources"
   default     = false
 }
 
 variable "clickhouse_endpoint_service_id" {
   type        = string
-  description = "The service ID of the VPC endpoint service for Clickhouse"
+  description = "The service ID of the VPC endpoint service for ClickHouse"
   default     = ""
 }
 
