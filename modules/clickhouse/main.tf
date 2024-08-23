@@ -1,4 +1,6 @@
 locals {
+
+
   # split hostname and domain from clickhouse dns name (assume validated FQDN)
   dns_name_parts = split(".", var.clickhouse_private_endpoint_dns_name)
   dns_name_hostname = local.dns_name_parts[0]
