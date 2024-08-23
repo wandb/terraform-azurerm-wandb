@@ -27,9 +27,6 @@ module "networking" {
   private_link        = var.create_private_link
   allowed_ip_ranges   = var.allowed_ip_ranges
   tags                = var.tags
-
-  clickhouse_endpoint_service_id = var.clickhouse_endpoint_service_id
-  clickhouse_service_location    = var.clickhouse_service_location
 }
 
 module "database" {
@@ -214,6 +211,17 @@ module "cert_manager" {
   tags                       = var.tags
 
   depends_on = [module.app_aks]
+}
+
+module "clickhouse" {
+  count             = var.clickhouse_private_endpoint_service_name != "" ? 1 : 0
+  source            = "./modules/clickhouse"
+  namespace         = var.namespace
+  resource_group    = azurerm_resource_group.default
+  location          = azurerm_resource_group.default.location
+  private_subnet_id = module.networking.private_subnet.id
+
+  clickhouse_private_endpoint_service_name = var.clickhouse_private_endpoint_service_name
 }
 
 locals {

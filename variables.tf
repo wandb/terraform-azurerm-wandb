@@ -284,22 +284,10 @@ variable "azuremonitor" {
 }
 
 ###########################################
-# Clickhouse (for weave-trace)            #
+# ClickHouse Endpoint (for weave-trace)   #
 ###########################################
-variable "enable_clickhouse" {
-  type        = bool
-  description = "Provision ClickHouse resources"
-  default     = false
-}
-
-variable "clickhouse_endpoint_service_id" {
+variable "clickhouse_private_endpoint_service_name" {
   type        = string
-  description = "The service ID of the VPC endpoint service for ClickHouse"
-  default     = ""
-}
-
-variable "clickhouse_service_location" {
-  description = "The region where ClickHouse service is located"
-  type        = string
+  description = "The service name of the ClickHouse private endpoint (ends in .azure.privatelinkservice)."
   default     = ""
 }
