@@ -214,12 +214,12 @@ module "cert_manager" {
 }
 
 module "clickhouse" {
-  count             = var.clickhouse_private_endpoint_service_name != "" ? 1 : 0
-  source            = "./modules/clickhouse"
-  namespace         = var.namespace
-  resource_group    = azurerm_resource_group.default
-  location          = azurerm_resource_group.default.location
-  private_subnet_id = module.networking.private_subnet.id
+  count               = var.clickhouse_private_endpoint_service_name != "" ? 1 : 0
+  source              = "./modules/clickhouse"
+  namespace           = var.namespace
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+  private_subnet_id   = module.networking.private_subnet.id
 
   clickhouse_private_endpoint_service_name = var.clickhouse_private_endpoint_service_name
   clickhouse_private_endpoint_dns_name = var.clickhouse_private_endpoint_dns_name
