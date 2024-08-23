@@ -8,6 +8,11 @@ variable "resource_group_name" {
   description = "The name of the resource group in which to create the network."
 }
 
+variable "location" {
+  type        = string
+  description = "Specifies the supported Azure location where the resource exists."
+}
+
 variable "private_subnet_id" {
   type        = string
   description = "Specifies the supported Azure subnet id where the resource exists."
