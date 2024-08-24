@@ -4,7 +4,7 @@ locals {
   # split hostname and domain from clickhouse dns name (assume validated FQDN)
   dns_name_parts = split(".", var.clickhouse_private_endpoint_dns_name)
   dns_name_hostname = local.dns_name_parts[0]
-  dns_name_domain = slice(local.dns_name_parts, 1, length(local.dns_name_parts))
+  dns_name_domain = join(".", slice(local.dns_name_parts, 1, length(local.dns_name_parts)))
 }
 
 resource "azurerm_private_endpoint" "clickhouse" {
