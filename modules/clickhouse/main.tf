@@ -24,13 +24,14 @@ data "azurerm_resource_group" "clickhouse_pe" {
 # workaround for https://github.com/hashicorp/terraform-provider-azurerm/issues/17011
 resource "azapi_resource" "clickhouse_private_endpoint_guid" {
   type      = "Microsoft.Network/privateEndpoints@2022-01-01"
-  name      = azurerm_private_endpoint.clickhouse.name
+  name      = "clickhouse_resource"
   parent_id = data.azurerm_resource_group.clickhouse_pe.id
 
-  identity {
+  identity = {
     type         = "SystemAssigned, UserAssigned"
     identity_ids = [var.identity_ids]
   }
+  body = {}
 
   response_export_values = ["properties.resourceGuid"]
 }
