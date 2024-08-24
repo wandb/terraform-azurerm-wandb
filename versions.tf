@@ -13,9 +13,9 @@ terraform {
       source  = "hashicorp/helm"
       version = "~> 2.6"
     }
-    azapi = {
-      source = "Azure/azapi"
-      version = "~> 1.15.0"
-    }
+    #azapi = {
+    #  source = "Azure/azapi"
+    #  version = "~> 1.15.0"
+    #}
   }
 }

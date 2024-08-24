@@ -2,14 +2,14 @@ locals {
   dns_name_suffix = "privatelink.azure.clickhouse.cloud"
 }
 
-#terraform {
-#  required_providers {
-#    azapi = {
-#      source = "Azure/azapi"
-#      version = "~> 1.15.0"
-#    }
-#  }
-#}
+terraform {
+  required_providers {
+    azapi = {
+      source = "Azure/azapi"
+      version = "~> 1.15.0"
+    }
+  }
+}
 
 resource "azurerm_private_endpoint" "clickhouse" {
   name                = "${var.namespace}-clickhouse-pe"
@@ -30,7 +30,7 @@ data "azurerm_resource_group" "clickhouse_pe" {
   name = var.resource_group_name
 }
 
-// workaround for https://github.com/hashicorp/terraform-provider-azurerm/issues/17011
+# workaround for https://github.com/hashicorp/terraform-provider-azurerm/issues/17011
 resource "azapi_resource" "clickhouse_private_endpoint_guid" {
   type      = "Microsoft.Network/privateEndpoints@2022-01-01"
   name      = azurerm_private_endpoint.clickhouse.name
