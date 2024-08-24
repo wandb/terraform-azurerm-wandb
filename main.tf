@@ -214,14 +214,15 @@ module "cert_manager" {
 }
 
 module "clickhouse" {
-  count               = var.clickhouse_private_endpoint_service_name != "" ? 1 : 0
-  source              = "./modules/clickhouse"
+  count      = var.clickhouse_private_endpoint_service_name != "" ? 1 : 0
+  source     = "./modules/clickhouse"
+  depends_on = [module.networking, module.identity]
+
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   network_id          = module.networking.network.id
   private_subnet_id   = module.networking.private_subnet.id
-  identity_ids        = module.identity.identity.id
 
   clickhouse_private_endpoint_service_name = var.clickhouse_private_endpoint_service_name
   clickhouse_region                        = var.clickhouse_region
