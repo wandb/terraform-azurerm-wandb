@@ -14,7 +14,7 @@ variable "location" {
 }
 
 variable "network_id" {
-  value       = string
+  type        = string
   description = "The virtual network id used for all resources"
 }
 
