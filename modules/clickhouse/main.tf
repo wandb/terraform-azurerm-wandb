@@ -44,5 +44,5 @@ resource "azurerm_private_dns_zone_virtual_network_link" "clickhouse_network" {
   name                  = "network-link"
   resource_group_name   = var.resource_group_name
   private_dns_zone_name = azurerm_private_dns_zone.clickhouse_cloud_private_link_zone.name
-  virtual_network_id    = azurerm_virtual_network.default.id
+  virtual_network_id    = network_id
 }

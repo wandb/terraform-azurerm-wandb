@@ -219,6 +219,7 @@ module "clickhouse" {
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
+  network_id          = module.networking.network.id
   private_subnet_id   = module.networking.private_subnet.id
 
   clickhouse_private_endpoint_service_name = var.clickhouse_private_endpoint_service_name

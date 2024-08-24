@@ -13,6 +13,11 @@ variable "location" {
   description = "Specifies the supported Azure location where the resource exists."
 }
 
+output "network_id" {
+  value       = string
+  description = "The virtual network id used for all resources"
+}
+
 variable "private_subnet_id" {
   type        = string
   description = "Specifies the supported Azure subnet id where the resource exists."
