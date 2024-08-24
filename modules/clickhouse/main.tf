@@ -36,10 +36,10 @@ resource "azapi_resource" "clickhouse_private_endpoint_guid" {
   name      = azurerm_private_endpoint.clickhouse.name
   parent_id = data.azurerm_resource_group.clickhouse_pe.id
 
-  identity {
-    type         = "SystemAssigned"
-    # identity_ids = [var.identity_ids]
-  }
+  #identity {
+  #  type         = "SystemAssigned"
+  #  # identity_ids = [var.identity_ids]
+  #}
   response_export_values = ["properties.resourceGuid"]
 }
 
