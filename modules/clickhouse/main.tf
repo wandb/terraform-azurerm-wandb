@@ -26,12 +26,10 @@ resource "azapi_resource" "clickhouse_private_endpoint_guid" {
   type      = "Microsoft.Network/privateEndpoints@2022-01-01"
   name      = "clickhouse_resource"
   parent_id = data.azurerm_resource_group.clickhouse_pe.id
+  location  = var.location
 
-  identity {
-    type         = "SystemAssigned, UserAssigned"
-    identity_ids = [var.identity_ids]
-  }
-  body = {}
+  body = jsonencode({
+  })
 
   response_export_values = ["properties.resourceGuid"]
 }
