@@ -38,7 +38,7 @@ resource "azapi_resource" "clickhouse_private_endpoint_guid" {
 
   identity {
     type         = "SystemAssigned"
-    identity_ids = [var.identity_ids]
+    # identity_ids = [var.identity_ids]
   }
   response_export_values = ["properties.resourceGuid"]
 }
