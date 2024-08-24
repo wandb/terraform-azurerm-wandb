@@ -26,7 +26,7 @@ data "azurerm_resource_group" "clickhouse_pe" {
 #}
 
 # workaround for https://github.com/hashicorp/terraform-provider-azurerm/issues/17011
-resource "azapi_resource" "clickhouse_private_endpoint_guid" {
+data "azapi_resource" "clickhouse_private_endpoint_guid" {
   #provider  = azapi.alias1
   #type      = "Microsoft.Network/privateEndpoints@2022-01-01"
   type      = "Microsoft.Network/privateEndpoints@2023-11-01"
