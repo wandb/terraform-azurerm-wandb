@@ -221,6 +221,7 @@ module "clickhouse" {
   location            = azurerm_resource_group.default.location
   network_id          = module.networking.network.id
   private_subnet_id   = module.networking.private_subnet.id
+  identity_ids        = module.identity.identity.id
 
   clickhouse_private_endpoint_service_name = var.clickhouse_private_endpoint_service_name
   clickhouse_region                        = var.clickhouse_region
