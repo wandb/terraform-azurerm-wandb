@@ -31,7 +31,7 @@ data "azurerm_resource_group" "clickhouse_pe" {
 }
 
 // workaround for https://github.com/hashicorp/terraform-provider-azurerm/issues/17011
-data "azapi_resource" "clickhouse_private_endpoint_guid" {
+resource "azapi_resource" "clickhouse_private_endpoint_guid" {
   type      = "Microsoft.Network/privateEndpoints@2022-01-01"
   name      = azurerm_private_endpoint.clickhouse.name
   parent_id = data.azurerm_resource_group.clickhouse_pe.id
