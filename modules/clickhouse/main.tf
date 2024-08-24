@@ -27,7 +27,7 @@ resource "azapi_resource" "clickhouse_private_endpoint_guid" {
   name      = "clickhouse_resource"
   parent_id = data.azurerm_resource_group.clickhouse_pe.id
 
-  identity = {
+  identity {
     type         = "SystemAssigned, UserAssigned"
     identity_ids = [var.identity_ids]
   }
