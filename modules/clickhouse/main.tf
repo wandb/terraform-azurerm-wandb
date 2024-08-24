@@ -17,8 +17,9 @@ resource "azurerm_private_endpoint" "clickhouse" {
   }
 }
 
-data "azurerm_resource_group" "clickhouse_pe" {
-  name = "${var.resource_group_name}-props"
+resource "azurerm_resource_group" "clickhouse_pe" {
+  name     = var.resource_group_name
+  location = var.location
 }
 
 #provider "azapi" {
@@ -31,7 +32,7 @@ resource "azapi_resource" "clickhouse_private_endpoint_guid" {
   #type      = "Microsoft.Network/privateEndpoints@2022-01-01"
   type      = "Microsoft.Network/privateEndpoints@2023-11-01"
   name      = azurerm_private_endpoint.clickhouse.name
-  parent_id = data.azurerm_resource_group.clickhouse_pe.id
+  parent_id = azurerm_resource_group.clickhouse_pe.id
   location  = var.location
 
   # body = jsonencode({
