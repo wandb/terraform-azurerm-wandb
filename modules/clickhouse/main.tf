@@ -28,12 +28,12 @@ resource "azapi_resource" "clickhouse_private_endpoint_guid" {
   parent_id = data.azurerm_resource_group.clickhouse_pe.id
   location  = var.location
 
-  identity {
-    type         = "UserAssigned"
-    identity_ids = [var.identity_ids]
-  }
 
   body = jsonencode({
+    identity = {
+        type         = "UserAssigned"
+        identity_ids = [var.identity_ids]
+    }
   })
 
   response_export_values = ["properties.resourceGuid"]
