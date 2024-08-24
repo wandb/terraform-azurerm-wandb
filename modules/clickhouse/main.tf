@@ -2,14 +2,14 @@ locals {
   dns_name_suffix = "privatelink.azure.clickhouse.cloud"
 }
 
-terraform {
-  required_providers {
-    azapi = {
-      source = "Azure/azapi"
-      version = "~> 1.15.0"
-    }
-  }
-}
+#terraform {
+#  required_providers {
+#    azapi = {
+#      source = "Azure/azapi"
+#      version = "~> 1.15.0"
+#    }
+#  }
+#}
 
 resource "azurerm_private_endpoint" "clickhouse" {
   name                = "${var.namespace}-clickhouse-pe"
