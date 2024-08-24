@@ -24,23 +24,23 @@ variable "private_subnet_id" {
 }
 
 variable "clickhouse_private_endpoint_service_name" {
-  description = "ClickHouse private endpoint 'Service name' (ends in .azure.privatelinkservice)."
   type        = string
+  description = "ClickHouse private endpoint 'Service name' (ends in .azure.privatelinkservice)."
   default     = ""
 
   validation {
-    condition = can(regex("^[^.]+\\.[^.]+\\.azure\\.privatelinkservice$", var.clickhouse_private_endpoint_service_name))
-    error_message = "ClickHouse Service name must be in the format '<HOSTNAME>.<REGION>.azure.privatelinkservice'."
+    condition = can(regex("\\.azure\\.privatelinkservice$", var.clickhouse_private_endpoint_service_name))
+    error_message = "ClickHouse Service name must end in '.azure.privatelinkservice'."
   }
 }
 
-variable "clickhouse_private_endpoint_dns_name" {
-  description = "ClickHouse private endpoint 'DNS name' (ends in .privatelink.azure.clickhouse.cloud)."
+variable "clickhouse_region" {
   type        = string
+  description = "ClickHouse region (eastus2, westus3, etc)."
   default     = ""
 
   validation {
-    condition = can(regex("^[^.]+\\.[^.]+\\.privatelink\\.azure\\.clickhouse\\.cloud$", var.clickhouse_private_endpoint_dns_name))
-    error_message = "ClickHouse DNS name must be in the format '<HOSTNAME>.<REGION>.privatelink.azure.clickhouse.cloud'."
+    condition = length(var.clickhouse_region) > 0
+    error_message = "Clickhouse Region should always be set if the private endpoint service name is specified."
   }
 }

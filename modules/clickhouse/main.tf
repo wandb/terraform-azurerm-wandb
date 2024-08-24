@@ -1,10 +1,5 @@
 locals {
-
-
-  # split hostname and domain from clickhouse dns name (assume validated FQDN)
-  dns_name_parts = split(".", var.clickhouse_private_endpoint_dns_name)
-  dns_name_hostname = local.dns_name_parts[0]
-  dns_name_domain = join(".", slice(local.dns_name_parts, 1, length(local.dns_name_parts)))
+  dns_name_suffix = "privatelink.azure.clickhouse.cloud"
 }
 
 resource "azurerm_private_endpoint" "clickhouse" {
@@ -23,7 +18,7 @@ resource "azurerm_private_endpoint" "clickhouse" {
 }
 
 resource "azurerm_private_dns_zone" "clickhouse_cloud_private_link_zone" {
-  name                = local.dns_name_domain
+  name                = "${var.clickhouse_region}.${local.dns_name_suffix}"
   resource_group_name = var.resource_group_name
 }
 
@@ -32,8 +27,8 @@ data "azurerm_network_interface" "clickhouse_nic" {
   name                = azurerm_private_endpoint.clickhouse.network_interface[0].name
 }
 
-resource "azurerm_private_dns_a_record" "clickhouse_host" {
-  name                = local.dns_name_hostname
+resource "azurerm_private_dns_a_record" "clickhouse_wildcard" {
+  name                = "*"
   zone_name           = azurerm_private_dns_zone.clickhouse_cloud_private_link_zone.name
   resource_group_name = var.resource_group_name
   ttl                 = 300

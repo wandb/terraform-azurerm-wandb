@@ -292,8 +292,8 @@ variable "clickhouse_private_endpoint_service_name" {
   default     = ""
 }
 
-variable "clickhouse_private_endpoint_dns_name" {
+variable "clickhouse_region" {
   type        = string
-  description = "ClickHouse private endpoint 'DNS name' (ends in .privatelink.azure.clickhouse.cloud)."
+  description = "ClickHouse region (eastus2, westus3, etc)."
   default     = ""
 }
