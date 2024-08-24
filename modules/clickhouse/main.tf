@@ -2,6 +2,9 @@ locals {
   dns_name_suffix = "privatelink.azure.clickhouse.cloud"
 }
 
+provider "azapi" {
+}
+
 resource "azurerm_private_endpoint" "clickhouse" {
   name                = "${var.namespace}-clickhouse-pe"
   location            = var.location
