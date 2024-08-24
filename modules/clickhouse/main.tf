@@ -28,15 +28,11 @@ data "azurerm_resource_group" "clickhouse_pe" {
 # workaround for https://github.com/hashicorp/terraform-provider-azurerm/issues/17011
 resource "azapi_resource" "clickhouse_private_endpoint_guid" {
   #provider  = azapi.alias1
-  type      = "Microsoft.Network/privateEndpoints@2022-01-01"
+  #type      = "Microsoft.Network/privateEndpoints@2022-01-01"
+  type      = "Microsoft.Network/privateEndpoints@2023-11-01"
   name      = azurerm_private_endpoint.clickhouse.name
   parent_id = data.azurerm_resource_group.clickhouse_pe.id
   location  = var.location
-
-  identity {
-    type         = "UserAssigned"
-    identity_ids = [var.identity_ids]
-  }
 
   # body = jsonencode({
   # })
