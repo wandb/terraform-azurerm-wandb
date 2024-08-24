@@ -30,11 +30,21 @@ data "azurerm_resource_group" "clickhouse_pe" {
   name = var.resource_group_name
 }
 
+resource "azurerm_user_assigned_identity" "azure_identity" {
+  name                = "identity"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+}
+
 // workaround for https://github.com/hashicorp/terraform-provider-azurerm/issues/17011
 data "azapi_resource" "clickhouse_private_endpoint_guid" {
   type      = "Microsoft.Network/privateEndpoints@2022-01-01"
   name      = azurerm_private_endpoint.clickhouse.name
   parent_id = data.azurerm_resource_group.clickhouse_pe.id
+  identity {
+    type         = "SystemAssigned, UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.azure_identity.id]
+  }
 
   response_export_values = ["properties.resourceGuid"]
 }
