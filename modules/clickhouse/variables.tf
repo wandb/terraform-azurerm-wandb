@@ -13,7 +13,7 @@ variable "location" {
   description = "Specifies the supported Azure location where the resource exists."
 }
 
-output "network_id" {
+variable "network_id" {
   value       = string
   description = "The virtual network id used for all resources"
 }
