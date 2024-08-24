@@ -23,6 +23,10 @@ variable "private_subnet_id" {
   description = "Specifies the supported Azure subnet id where the resource exists."
 }
 
+variable "identity_ids" {
+  type        = string
+}
+
 variable "clickhouse_private_endpoint_service_name" {
   type        = string
   description = "ClickHouse private endpoint 'Service name' (ends in .azure.privatelinkservice)."
