@@ -293,3 +293,18 @@ variable "azuremonitor" {
   type    = bool
   default = false
 }
+
+###########################################
+# ClickHouse endpoint                     #
+###########################################
+variable "clickhouse_private_endpoint_service_name" {
+  type        = string
+  description = "ClickHouse private endpoint 'Service name' (ends in .azure.privatelinkservice)."
+  default     = ""
+}
+
+variable "clickhouse_region" {
+  type        = string
+  description = "ClickHouse region (eastus2, westus3, etc)."
+  default     = ""
+}
