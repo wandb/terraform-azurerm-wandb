@@ -284,7 +284,7 @@ variable "azuremonitor" {
 }
 
 ###########################################
-# ClickHouse Endpoint (for weave-trace)   #
+# ClickHouse endpoint                     #
 ###########################################
 variable "clickhouse_private_endpoint_service_name" {
   type        = string
