@@ -235,7 +235,7 @@ locals {
   default_bucket_config = {
     provider  = "az"
     name      = var.storage_account
-    path      = var.blob_container
+    path      = "${var.blob_container}/${var.bucket_path}"
     accessKey = var.storage_key
   }
   bucket_config = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
@@ -263,13 +263,13 @@ module "wandb" {
         bucket        = local.bucket_config == null ?  {
           provider  = "az"
           name      = module.storage[0].account.name
-          path      = module.storage[0].container.name
+          path      = "${module.storage[0].container.name}/${var.bucket_path}"
           accessKey = module.storage[0].account.primary_access_key
         } : local.bucket_config
         defaultBucket = {
           provider  = "az"
           name      = module.storage[0].account.name
-          path      = module.storage[0].container.name
+          path      = "${module.storage[0].container.name}/${var.bucket_path}"
           accessKey = module.storage[0].account.primary_access_key
         }
         azureIdentityForBucket = {
