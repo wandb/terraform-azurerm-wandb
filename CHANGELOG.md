@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.14.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.13.2...v2.14.0) (2024-08-26)
+
+
+### Features
+
+* Add optional path var for instance level bucket path  ([#84](https://github.com/wandb/terraform-azurerm-wandb/issues/84)) ([2f430f2](https://github.com/wandb/terraform-azurerm-wandb/commit/2f430f25b98cac894c794edce12215d1847df475))
+
 ### [2.13.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.13.1...v2.13.2) (2024-08-05)
 
 
