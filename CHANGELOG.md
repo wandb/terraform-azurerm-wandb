@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.15.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.14.0...v2.15.0) (2024-08-26)
+
+
+### Features
+
+* Add support for Private Link to ClickHouse ([#93](https://github.com/wandb/terraform-azurerm-wandb/issues/93)) ([c9b4d66](https://github.com/wandb/terraform-azurerm-wandb/commit/c9b4d664dfc85c5f603e6a14b694923af8d1259d))
+
 ## [2.14.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.13.2...v2.14.0) (2024-08-26)
 
 
