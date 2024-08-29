@@ -18,10 +18,12 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 
   default_node_pool {
-    enable_auto_scaling         = false
+    enable_auto_scaling         = true
     max_pods                    = var.max_pods
     name                        = "default"
-    node_count                  = var.node_pool_vm_count
+    node_count                  = var.node_pool_min_vm_count
+    max_count = var.node_pool_max_vm_count
+    min_count = var.node_pool_min_vm_count
     temporary_name_for_rotation = "rotating"
     type                        = "VirtualMachineScaleSets"
     vm_size                     = var.node_pool_vm_size

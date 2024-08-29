@@ -2,6 +2,12 @@ locals {
   fqdn       = var.subdomain == null ? var.domain_name : "${var.subdomain}.${var.domain_name}"
   url_prefix = var.ssl ? "https" : "http"
   url        = "${local.url_prefix}://${local.fqdn}"
+
+  redis_capacity = coalesce(var.redis_capacity, local.deployment_size[var.size].cache)
+  database_sku_name = coalesce(var.database_sku_name, local.deployment_size[var.size].db)
+  kubernetes_instance_type   = coalesce(var.kubernetes_instance_type, local.deployment_size[var.size].node_instance)
+  kubernetes_min_node_count = coalesce(var.kubernetes_min_node_count, local.deployment_size[var.size].min_node_count)
+  kubernetes_max_node_count = coalesce(var.kubernetes_max_node_count, local.deployment_size[var.size].max_node_count)
 }
 
 resource "azurerm_resource_group" "default" {
@@ -40,7 +46,7 @@ module "database" {
   database_version             = var.database_version
   database_private_dns_zone_id = module.networking.database_private_dns_zone.id
   database_subnet_id           = module.networking.database_subnet.id
-  sku_name                     = try(local.deployment_size[var.size].db, var.database_sku_name)
+  sku_name                     = local.database_sku_name
   deletion_protection          = var.deletion_protection
 
   database_key_id = try(module.vault.vault_internal_keys[module.vault.vault_key_map.database].id, null)
@@ -58,7 +64,7 @@ module "redis" {
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
-  capacity            = try(local.deployment_size[var.size].cache, var.redis_capacity)
+  capacity            = local.redis_capacity
   depends_on          = [module.networking]
 }
 
@@ -117,8 +123,9 @@ module "app_aks" {
   identity              = module.identity.identity
   location              = azurerm_resource_group.default.location
   namespace             = var.namespace
-  node_pool_vm_count    = try(local.deployment_size[var.size].node_count, var.kubernetes_node_count)
-  node_pool_vm_size     = try(local.deployment_size[var.size].node_instance, var.kubernetes_instance_type)
+  node_pool_min_vm_count    = local.kubernetes_min_node_count
+  node_pool_max_vm_count    = local.kubernetes_max_node_count
+  node_pool_vm_size     = local.kubernetes_instance_type
   node_pool_zones       = var.node_pool_zones
   public_subnet         = module.networking.public_subnet
   resource_group        = azurerm_resource_group.default
