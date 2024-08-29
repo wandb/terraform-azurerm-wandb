@@ -39,6 +39,6 @@ variable "private_subnet" {
 }
 
 variable "private_link" {
-  type = bool
+  type        = bool
   description = "Specifies the Azure private link creation"
 }

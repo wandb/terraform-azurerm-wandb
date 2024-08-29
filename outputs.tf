@@ -58,7 +58,7 @@ output "aks_node_instance_type" {
 }
 
 output "database_instance_type" {
-  value =local.database_sku_name
+  value = local.database_sku_name
 }
 
 output "client_id" {
