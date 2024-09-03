@@ -107,6 +107,14 @@ module "app_lb" {
   tags = var.tags
 }
 
+data "external" "az_zones" {
+  program = ["bash", "${path.module}/vmtype_to_az.sh", local.kubernetes_instance_type, azurerm_resource_group.default.location]
+}
+
+locals {
+  node_pool_zones = (var.node_pool_zones == null) ? jsondecode(data.external.az_zones.result.zones) : var.node_pool_zones
+}
+
 module "app_aks" {
   source     = "./modules/app_aks"
   depends_on = [module.app_lb]
