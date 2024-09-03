@@ -211,7 +211,7 @@ variable "cluster_sku_tier" {
 variable "node_pool_zones" {
   type        = list(string)
   description = "Availability zones for the node pool"
-  default     = ["1", "2"]
+  default     = null
 }
 
 variable "node_max_pods" {
