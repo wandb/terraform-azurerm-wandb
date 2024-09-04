@@ -17,7 +17,7 @@ locals {
   listener_name                  = "${var.network.name}-httplstn"
   request_routing_rule_name      = "${var.network.name}-rqrt"
   redirect_configuration_name    = "${var.network.name}-rdrcfg"
-  app_gateway_name                = var.private_link ? "${var.namespace}-ag-private-link" : "${var.namespace}-ag"
+  app_gateway_name               = var.private_link ? "${var.namespace}-ag-private-link" : "${var.namespace}-ag"
 }
 
 
