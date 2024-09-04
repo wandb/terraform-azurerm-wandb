@@ -260,7 +260,7 @@ module "wandb" {
         host          = local.url
         license       = var.license
         cloudProvider = "azure"
-        bucket        = local.bucket_config == null ?  {
+        bucket = local.bucket_config == null ? {
           provider  = "az"
           name      = module.storage[0].account.name
           path      = "${module.storage[0].container.name}/${var.bucket_path}"
