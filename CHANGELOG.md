@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+### [2.15.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.15.0...v2.15.1) (2024-09-12)
+
+
+### Bug Fixes
+
+* Bump operator chart and controller image ([#99](https://github.com/wandb/terraform-azurerm-wandb/issues/99)) ([76e2511](https://github.com/wandb/terraform-azurerm-wandb/commit/76e25119c12157c8ee19c013c6544305ddd62b7c))
+
+## [2.15.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.14.0...v2.15.0) (2024-08-26)
+
+
+### Features
+
+* Add support for Private Link to ClickHouse ([#93](https://github.com/wandb/terraform-azurerm-wandb/issues/93)) ([c9b4d66](https://github.com/wandb/terraform-azurerm-wandb/commit/c9b4d664dfc85c5f603e6a14b694923af8d1259d))
+
+## [2.14.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.13.2...v2.14.0) (2024-08-26)
+
+
+### Features
+
+* Add optional path var for instance level bucket path  ([#84](https://github.com/wandb/terraform-azurerm-wandb/issues/84)) ([2f430f2](https://github.com/wandb/terraform-azurerm-wandb/commit/2f430f25b98cac894c794edce12215d1847df475))
+
 ### [2.13.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.13.1...v2.13.2) (2024-08-05)
 
 

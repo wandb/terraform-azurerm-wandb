@@ -41,6 +41,8 @@ module "wandb" {
 
   deletion_protection = false
 
+  bucket_path = var.bucket_path
+
   tags = {
     "Example" : "PublicDns"
   }

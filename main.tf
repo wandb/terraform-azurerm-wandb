@@ -228,6 +228,19 @@ module "cert_manager" {
   depends_on = [module.app_aks]
 }
 
+module "clickhouse" {
+  count               = var.clickhouse_private_endpoint_service_name != "" ? 1 : 0
+  source              = "./modules/clickhouse"
+  namespace           = var.namespace
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+  network_id          = module.networking.network.id
+  private_subnet_id   = module.networking.private_subnet.id
+
+  clickhouse_private_endpoint_service_name = var.clickhouse_private_endpoint_service_name
+  clickhouse_region                        = var.clickhouse_region
+}
+
 locals {
   use_customer_bucket = (
     var.storage_account != "" &&
@@ -237,7 +250,7 @@ locals {
   default_bucket_config = {
     provider  = "az"
     name      = var.storage_account
-    path      = var.blob_container
+    path      = "${var.blob_container}/${var.bucket_path}"
     accessKey = var.storage_key
   }
   bucket_config = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
@@ -253,8 +266,8 @@ module "wandb" {
     module.database,
     module.storage,
   ]
-  controller_image_tag   = "1.12.0"
-  operator_chart_version = "1.2.4"
+  controller_image_tag   = "1.13.0"
+  operator_chart_version = "1.3.1"
 
   spec = {
     values = {
@@ -265,13 +278,13 @@ module "wandb" {
         bucket = local.bucket_config == null ? {
           provider  = "az"
           name      = module.storage[0].account.name
-          path      = module.storage[0].container.name
+          path      = "${module.storage[0].container.name}/${var.bucket_path}"
           accessKey = module.storage[0].account.primary_access_key
         } : local.bucket_config
         defaultBucket = {
           provider  = "az"
           name      = module.storage[0].account.name
-          path      = module.storage[0].container.name
+          path      = "${module.storage[0].container.name}/${var.bucket_path}"
           accessKey = module.storage[0].account.primary_access_key
         }
         azureIdentityForBucket = {
