@@ -19,6 +19,22 @@ preparation, however it does have the following pre-requisites:
 
 ## How to Use This Module
 
+## Cluster Sizing
+
+By default, the type of kubernetes instances, number of instances, redis cluster size, and database instance sizes are
+standardized via configurations in [./deployment-size.tf](deployment-size.tf), and is configured via the `size` input
+variable.
+
+Available sizes are, `small`, `medium`, `large`, `xlarge`, and `xxlarge`.  Default is `small`.
+
+All the values set via `deployment-size.tf` can be overridden by setting the appropriate input variables.
+
+- `kubernetes_instance_type` - The instance type for the EKS nodes
+- `kubernetes_min_node_count` - The minimum number of nodes in the EKS cluster
+- `kubernetes_max_node_count` - The maximum number of nodes in the EKS cluster
+- `redis_capacity` - The instance type for the redis cluster
+- `database_sku_name` - The instance type for the database
+
 ## Examples
 
 We have included documentation and reference examples for additional common
@@ -142,3 +158,25 @@ resources that lack official modules.
 | <a name="output_tenant_id"></a> [tenant\_id](#output\_tenant\_id) | n/a |
 | <a name="output_url"></a> [url](#output\_url) | The URL to the W&B application |
 <!-- END_TF_DOCS -->
+
+## Upgrading from 2.x to 3.x
+
+3.0.0 introduced autoscaling to the AKS cluster and made the `size` variable the preferred way to set the cluster size.
+Previously, unless the `size` variable was set explicitly, there were default values for the following variables:
+- `kubernetes_instance_type`
+- `kubernetes_node_count`
+- `redis_capacity`
+- `database_sku_name`
+
+The `size` variable is now defaulted to `small`, and the following values to can be used to partially override the values
+set by the `size` variable:
+- `kubernetes_instance_type`
+- `kubernetes_min_node_count`
+- `kubernetes_max_node_count`
+- `redis_capacity`
+- `database_sku_name`
+
+For more information on the available sizes, see the [Cluster Sizing](#cluster-sizing) section.
+
+If having the cluster scale nodes in and out is not desired, the `kubernetes_min_node_count` and 
+`kubernetes_max_node_count` can be set to the same value to prevent the cluster from scaling.
