@@ -225,6 +225,12 @@ variable "node_pool_zones" {
   default     = null
 }
 
+variable "node_pool_num_zones" {
+  type        = number
+  description = "Number of availability zones to use for the node pool when node_pool_zones is not set. If neither are set, 3 zones will be used"
+  default     = null
+}
+
 variable "node_max_pods" {
   type        = number
   description = "Maximum number of pods per node"

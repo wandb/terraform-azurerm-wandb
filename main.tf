@@ -114,7 +114,7 @@ module "app_lb" {
 }
 
 data "external" "az_zones" {
-  program = ["bash", "${path.module}/vmtype_to_az.sh", local.kubernetes_instance_type, azurerm_resource_group.default.location]
+  program = ["bash", "${path.module}/vmtype_to_az.sh", local.kubernetes_instance_type, azurerm_resource_group.default.location, var.node_pool_num_zones]
 }
 
 locals {
