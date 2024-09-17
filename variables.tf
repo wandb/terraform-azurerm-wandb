@@ -308,3 +308,15 @@ variable "clickhouse_region" {
   description = "ClickHouse region (eastus2, westus3, etc)."
   default     = ""
 }
+
+variable "license_secret_name" {
+  type        = string
+  description = "Wandb licence secret name"
+  default     = ""
+}
+
+variable "license_secret_key_name" {
+  type        = string
+  description = "Wandb licence secret key name"
+  default     = ""
+}

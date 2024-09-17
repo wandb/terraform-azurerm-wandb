@@ -257,10 +257,14 @@ module "wandb" {
   spec = {
     values = {
       global = {
-        host          = local.url
-        license       = var.license
+        host    = local.url
+        license = var.license
+        licenseSecret = {
+          name = var.license_secret_name, ## this will support wandb-operator chart version 0.17.9
+          key  = var.license_secret_key_name
+        }
         cloudProvider = "azure"
-        bucket        = local.bucket_config == null ?  {
+        bucket = local.bucket_config == null ? {
           provider  = "az"
           name      = module.storage[0].account.name
           path      = "${module.storage[0].container.name}/${var.bucket_path}"
