@@ -36,6 +36,18 @@ module "storage" {
   blob_container_name = var.namespace
 
   deletion_protection = var.deletion_protection
+
+  blob_properties = {
+    delete_retention_policy = {
+      enabled = var.deletion_protection
+      days    = 365
+    }
+
+    container_delete_retention_policy = {
+      enabled = var.deletion_protection
+      days = 7
+    }
+  }
 }
 
 resource "azurerm_role_assignment" "account" {
