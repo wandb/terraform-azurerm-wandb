@@ -107,6 +107,10 @@ module "app_lb" {
   tags = var.tags
 }
 
+locals {
+    kubernetes_instance_type = try(local.deployment_size[var.size].node_type, var.kubernetes_instance_type)
+}
+
 data "external" "az_zones" {
   program = ["bash", "${path.module}/vmtype_to_az.sh", local.kubernetes_instance_type, azurerm_resource_group.default.location, var.node_pool_num_zones]
 }
@@ -126,7 +130,7 @@ module "app_aks" {
   location              = azurerm_resource_group.default.location
   namespace             = var.namespace
   node_pool_vm_count    = try(local.deployment_size[var.size].node_count, var.kubernetes_node_count)
-  node_pool_vm_size     = try(local.deployment_size[var.size].node_instance, var.kubernetes_instance_type)
+  node_pool_vm_size     = local.kubernetes_instance_type
   node_pool_zones       = var.node_pool_zones
   public_subnet         = module.networking.public_subnet
   resource_group        = azurerm_resource_group.default
