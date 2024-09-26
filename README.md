@@ -43,6 +43,7 @@ resources that lack official modules.
 |------|---------|
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 3.17 |
 | <a name="provider_external"></a> [external](#provider\_external) | n/a |
+| <a name="provider_null"></a> [null](#provider\_null) | n/a |
 
 ## Modules
 
