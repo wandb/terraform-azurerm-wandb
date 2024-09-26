@@ -111,6 +111,19 @@ locals {
     kubernetes_instance_type = try(local.deployment_size[var.size].node_type, var.kubernetes_instance_type)
 }
 
+resource "null_resource" "install_az_cli" {
+  provisioner "local-exec" {
+    command = <<EOF
+      . /etc/lsb-release
+      wget https://packages.microsoft.com/repos/azure-cli/pool/main/a/azure-cli/azure-cli_2.36.0-1~$${DISTRIB_CODENAME}_all.deb
+      mkdir ./env && dpkg -x *.deb ./env
+    EOF
+  }
+  triggers = {
+    always_run = uuid()
+  }
+}
+
 data "external" "az_zones" {
   program = ["bash", "${path.module}/vmtype_to_az.sh", local.kubernetes_instance_type, azurerm_resource_group.default.location, var.node_pool_num_zones]
 }
