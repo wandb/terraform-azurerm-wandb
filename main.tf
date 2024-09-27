@@ -107,6 +107,30 @@ module "app_lb" {
   tags = var.tags
 }
 
+locals {
+  kubernetes_instance_type = try(local.deployment_size[var.size].node_type, var.kubernetes_instance_type)
+}
+
+data "azapi_resource_list" "az_zones" {
+  parent_id = "/subscriptions/${data.azurerm_subscription.current.subscription_id}"
+  type      = "Microsoft.Compute/skus@2021-07-01"
+
+  response_export_values = ["value"]
+}
+
+locals {
+  vm_skus = [
+    for sku in jsondecode(data.azapi_resource_list.az_zones.output).value :
+    sku if(
+      sku.resourceType == "virtualMachines" &&
+      lower(sku.locations[0]) == lower(azurerm_resource_group.default.location) &&
+      sku.name == local.kubernetes_instance_type
+    )
+  ]
+  num_zones       = var.node_pool_zones != null ? length(var.node_pool_zones) : var.node_pool_num_zones
+  node_pool_zones = var.node_pool_zones != null ? var.node_pool_zones : slice(sort(local.vm_skus[0].locationInfo[0].zones), 0, local.num_zones)
+}
+
 module "app_aks" {
   source     = "./modules/app_aks"
   depends_on = [module.app_lb]
@@ -118,8 +142,8 @@ module "app_aks" {
   location              = azurerm_resource_group.default.location
   namespace             = var.namespace
   node_pool_vm_count    = try(local.deployment_size[var.size].node_count, var.kubernetes_node_count)
-  node_pool_vm_size     = try(local.deployment_size[var.size].node_instance, var.kubernetes_instance_type)
-  node_pool_zones       = var.node_pool_zones
+  node_pool_vm_size     = local.kubernetes_instance_type
+  node_pool_zones       = local.node_pool_zones
   public_subnet         = module.networking.public_subnet
   resource_group        = azurerm_resource_group.default
   sku_tier              = var.cluster_sku_tier
