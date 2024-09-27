@@ -123,7 +123,7 @@ locals {
     for sku in jsondecode(data.azapi_resource_list.az_zones.output).value :
     sku if(
       sku.resourceType == "virtualMachines" &&
-      contains(sku.locations, azurerm_resource_group.default.location) &&
+      lower(sku.locations[0]) == lower(azurerm_resource_group.default.location) &&
       sku.name == local.kubernetes_instance_type
     )
   ]
