@@ -33,6 +33,7 @@ resources that lack official modules.
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
+| <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) | ~> 1.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.17 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | ~> 2.6 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | ~> 2.23 |
@@ -41,9 +42,8 @@ resources that lack official modules.
 
 | Name | Version |
 |------|---------|
+| <a name="provider_azapi"></a> [azapi](#provider\_azapi) | ~> 1.0 |
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 3.17 |
-| <a name="provider_external"></a> [external](#provider\_external) | n/a |
-| <a name="provider_null"></a> [null](#provider\_null) | n/a |
 
 ## Modules
 
@@ -67,8 +67,8 @@ resources that lack official modules.
 
 | Name | Type |
 |------|------|
+| [azapi_resource_list.az_zones](https://registry.terraform.io/providers/azure/azapi/latest/docs/data-sources/resource_list) | data source |
 | [azurerm_subscription.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subscription) | data source |
-| [external_external.az_zones](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) | data source |
 
 ## Inputs
 
