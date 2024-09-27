@@ -6,7 +6,7 @@ terraform {
       version = "~> 3.17"
     }
     azapi = {
-      source = "azure/azapi"
+      source  = "azure/azapi"
       version = "~> 1.0"
     }
     kubernetes = {

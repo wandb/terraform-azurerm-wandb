@@ -108,7 +108,7 @@ module "app_lb" {
 }
 
 locals {
-    kubernetes_instance_type = try(local.deployment_size[var.size].node_type, var.kubernetes_instance_type)
+  kubernetes_instance_type = try(local.deployment_size[var.size].node_type, var.kubernetes_instance_type)
 }
 
 data "azapi_resource_list" "az_zones" {
@@ -119,15 +119,15 @@ data "azapi_resource_list" "az_zones" {
 }
 
 locals {
-  vm_skus = [ 
-    for sku in jsondecode(data.azapi_resource_list.az_zones.output).value : 
-      sku if (
-        sku.resourceType == "virtualMachines" && 
-        contains(sku.locations, azurerm_resource_group.default.location) && 
-        sku.name == local.kubernetes_instance_type
-      ) 
+  vm_skus = [
+    for sku in jsondecode(data.azapi_resource_list.az_zones.output).value :
+    sku if(
+      sku.resourceType == "virtualMachines" &&
+      contains(sku.locations, azurerm_resource_group.default.location) &&
+      sku.name == local.kubernetes_instance_type
+    )
   ]
-  num_zones = var.node_pool_zones != null ? length(var.node_pool_zones) : var.node_pool_num_zones
+  num_zones       = var.node_pool_zones != null ? length(var.node_pool_zones) : var.node_pool_num_zones
   node_pool_zones = var.node_pool_zones != null ? var.node_pool_zones : slice(sort(local.vm_skus[0].locationInfo[0].zones), 0, local.num_zones)
 }
 
