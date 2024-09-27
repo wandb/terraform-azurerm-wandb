@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.15.1...v3.0.0) (2024-09-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* Automatically select availability zones based on node type when not specified (#102)
+
+### Features
+
+* Automatically select availability zones based on node type when not specified ([#102](https://github.com/wandb/terraform-azurerm-wandb/issues/102)) ([8a17acc](https://github.com/wandb/terraform-azurerm-wandb/commit/8a17accd070035004e7665cb46a30c0fe41283fb))
+
 ### [2.15.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.15.0...v2.15.1) (2024-09-12)
 
 
