@@ -141,3 +141,31 @@ resources that lack official modules.
 | <a name="output_tenant_id"></a> [tenant\_id](#output\_tenant\_id) | n/a |
 | <a name="output_url"></a> [url](#output\_url) | The URL to the W&B application |
 <!-- END_TF_DOCS -->
+
+## Migrations
+
+### Upgrading from 2.x to 3.x
+
+When upgrading from 2.x to 3.x, the following changes are required:
+
+1. Add the `azapi` provider to the `required_providers` block:
+
+```hcl
+terraform {
+  required_providers {
+    azapi = {
+      source  = "azure/azapi"
+      version = "~> 1.0"
+    }
+  }
+}
+```
+
+2. Add the `azapi` provider to the `provider` block:
+
+```hcl
+provider "azapi" {
+    # azapi provider configuration should be the same as azurerm provider configuration
+}
+```
+
