@@ -111,25 +111,24 @@ locals {
     kubernetes_instance_type = try(local.deployment_size[var.size].node_type, var.kubernetes_instance_type)
 }
 
-resource "null_resource" "install_az_cli" {
-  provisioner "local-exec" {
-    command = <<EOF
-      . /etc/lsb-release
-      wget https://packages.microsoft.com/repos/azure-cli/pool/main/a/azure-cli/azure-cli_2.36.0-1~$${DISTRIB_CODENAME}_all.deb
-      mkdir ./env && dpkg -x *.deb ./env
-    EOF
-  }
-  triggers = {
-    always_run = uuid()
-  }
-}
+data "azapi_resource_list" "az_zones" {
+  parent_id = "/subscriptions/${data.azurerm_subscription.current.subscription_id}"
+  type      = "Microsoft.Compute/skus@2021-07-01"
 
-data "external" "az_zones" {
-  program = ["bash", "${path.module}/vmtype_to_az.sh", local.kubernetes_instance_type, azurerm_resource_group.default.location, var.node_pool_num_zones]
+  response_export_values = ["value"]
 }
 
 locals {
-  node_pool_zones = (var.node_pool_zones == null) ? jsondecode(data.external.az_zones.result.zones) : var.node_pool_zones
+  vm_skus = [ 
+    for sku in jsondecode(data.azapi_resource_list.az_zones.output).value : 
+      sku if (
+        sku.resourceType == "virtualMachines" && 
+        contains(sku.locations, azurerm_resource_group.default.location) && 
+        sku.name == local.kubernetes_instance_type
+      ) 
+  ]
+  num_zones = var.node_pool_zones != null ? length(var.node_pool_zones) : var.node_pool_num_zones
+  node_pool_zones = var.node_pool_zones != null ? var.node_pool_zones : slice(sort(local.vm_skus[0].locationInfo[0].zones), 0, local.num_zones)
 }
 
 module "app_aks" {
@@ -144,7 +143,7 @@ module "app_aks" {
   namespace             = var.namespace
   node_pool_vm_count    = try(local.deployment_size[var.size].node_count, var.kubernetes_node_count)
   node_pool_vm_size     = local.kubernetes_instance_type
-  node_pool_zones       = var.node_pool_zones
+  node_pool_zones       = local.node_pool_zones
   public_subnet         = module.networking.public_subnet
   resource_group        = azurerm_resource_group.default
   sku_tier              = var.cluster_sku_tier
