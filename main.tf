@@ -108,7 +108,7 @@ module "app_lb" {
 }
 
 locals {
-  kubernetes_instance_type = try(local.deployment_size[var.size].node_type, var.kubernetes_instance_type)
+  kubernetes_instance_type = try(local.deployment_size[var.size].node_instance, var.kubernetes_instance_type)
 }
 
 data "azapi_resource_list" "az_zones" {
