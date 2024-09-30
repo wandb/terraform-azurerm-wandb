@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.0.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.0...v3.0.1) (2024-09-30)
+
+
+### Bug Fixes
+
+* Add info for users moving from 2.x to 3.x ([#103](https://github.com/wandb/terraform-azurerm-wandb/issues/103)) ([df95c36](https://github.com/wandb/terraform-azurerm-wandb/commit/df95c36a30f024ed1a4f650fc665dc87619577c2))
+* Reference the correct value from deployment sizes ([#104](https://github.com/wandb/terraform-azurerm-wandb/issues/104)) ([d910a41](https://github.com/wandb/terraform-azurerm-wandb/commit/d910a411637352673c1df11a7f0ce8e461eb24db))
+
 ## [3.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.15.1...v3.0.0) (2024-09-27)
 
 
