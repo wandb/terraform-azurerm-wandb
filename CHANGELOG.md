@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.0.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.2...v3.0.3) (2024-10-01)
+
+
+### Bug Fixes
+
+* Handle per subscription AZ restrictions ([#106](https://github.com/wandb/terraform-azurerm-wandb/issues/106)) ([997c48b](https://github.com/wandb/terraform-azurerm-wandb/commit/997c48b1de197ca5c952b5660adf17ec41991241))
+
 ### [3.0.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.1...v3.0.2) (2024-10-01)
 
 
