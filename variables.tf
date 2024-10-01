@@ -87,6 +87,20 @@ variable "other_wandb_env" {
   default     = {}
 }
 
+##########################################
+# Operator                               #
+##########################################
+variable "operator_chart_version" {
+  type        = string
+  description = "Version of the operator chart to deploy"
+}
+
+variable "controller_image_tag" {
+  type        = string
+  description = "Tag of the controller image to deploy"
+}
+
+
 
 ##########################################
 # DNS                                    #
@@ -145,9 +159,9 @@ variable "create_redis" {
 }
 
 variable "redis_capacity" {
-  type    = number
+  type        = number
   description = "Number indicating size of an redis instance"
-  default = 2
+  default     = 2
 }
 
 ##########################################
@@ -210,7 +224,7 @@ variable "node_pool_zones" {
 variable "node_max_pods" {
   type        = number
   description = "Maximum number of pods per node"
-  default = 30
+  default     = 30
 }
 
 ###########################################
@@ -225,7 +239,7 @@ variable "create_private_link" {
 variable "allowed_subscriptions" {
   type        = string
   description = "List of allowed customer subscriptions coma seperated values"
-  default = "" 
+  default     = ""
 }
 ##########################################
 # Network                                #
