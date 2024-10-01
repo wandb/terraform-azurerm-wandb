@@ -128,10 +128,11 @@ locals {
     )
   ]
 
-  num_zones       = var.node_pool_zones != null ? length(var.node_pool_zones) : var.node_pool_num_zones
+  num_zones        = var.node_pool_zones != null ? length(var.node_pool_zones) : var.node_pool_num_zones
   restricted_zones = length(local.vm_skus[0].restrictions) > 0 ? local.vm_skus[0].restrictions[0].restrictionInfo.zones : []
-  valid_zones      = setsubtract(local.vm_skus[0].locationInfo[0].zones, local.restricted_zones)
-  node_pool_zones = var.node_pool_zones != null ? var.node_pool_zones : slice(sort(local.valid_zones), 0, local.num_zones)
+  all_zones        = local.vm_skus[0].locationInfo[0].zones
+  valid_zones      = setsubtract(local.all_zones, local.restricted_zones)
+  node_pool_zones  = var.node_pool_zones != null ? var.node_pool_zones : slice(sort(local.valid_zones), 0, local.num_zones)
 }
 
 module "app_aks" {
