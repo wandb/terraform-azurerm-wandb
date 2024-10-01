@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.0.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.1...v3.0.2) (2024-10-01)
+
+
+### Bug Fixes
+
+* Use variables for operator helm release ([#105](https://github.com/wandb/terraform-azurerm-wandb/issues/105)) ([e418924](https://github.com/wandb/terraform-azurerm-wandb/commit/e4189244002c70ddc2fbfa1362afa9c8e769bb64))
+
 ### [3.0.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.0...v3.0.1) (2024-09-30)
 
 
