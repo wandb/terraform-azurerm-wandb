@@ -9,3 +9,7 @@ output "url" {
 output "oidc_issuer_url" {
   value = module.wandb.oidc_issuer_url
 }
+
+output "vm_skus" {
+  value = module.wandb.vm_skus
+}
