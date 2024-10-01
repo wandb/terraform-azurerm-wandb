@@ -93,11 +93,13 @@ variable "other_wandb_env" {
 variable "operator_chart_version" {
   type        = string
   description = "Version of the operator chart to deploy"
+  default     = "1.3.4"
 }
 
 variable "controller_image_tag" {
   type        = string
   description = "Tag of the controller image to deploy"
+  default     = "1.14.0"
 }
 
 
