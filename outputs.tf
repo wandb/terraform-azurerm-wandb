@@ -65,14 +65,3 @@ output "tenant_id" {
   value = module.identity.identity.tenant_id
 }
 
-output "vm_skus" {
-  value = local.vm_skus
-}
-
-output "restricted_zones" {
-  value = local.restricted_zones
-}
-
-output "all_zones" {
-  value = local.all_zones
-}
