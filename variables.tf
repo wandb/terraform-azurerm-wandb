@@ -87,6 +87,22 @@ variable "other_wandb_env" {
   default     = {}
 }
 
+##########################################
+# Operator                               #
+##########################################
+variable "operator_chart_version" {
+  type        = string
+  description = "Version of the operator chart to deploy"
+  default     = "1.3.4"
+}
+
+variable "controller_image_tag" {
+  type        = string
+  description = "Tag of the controller image to deploy"
+  default     = "1.14.0"
+}
+
+
 
 ##########################################
 # DNS                                    #
@@ -228,7 +244,7 @@ variable "node_pool_zones" {
 variable "node_pool_num_zones" {
   type        = number
   description = "Number of availability zones to use for the node pool when node_pool_zones is not set. If neither are set, 3 zones will be used"
-  default     = null
+  default     = 2
 }
 
 variable "node_max_pods" {

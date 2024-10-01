@@ -49,6 +49,7 @@ resources that lack official modules.
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.0 |
+| <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) | ~> 1.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 3.17 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | ~> 2.6 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | ~> 2.23 |
@@ -57,8 +58,8 @@ resources that lack official modules.
 
 | Name | Version |
 |------|---------|
+| <a name="provider_azapi"></a> [azapi](#provider\_azapi) | ~> 1.0 |
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 3.17 |
-| <a name="provider_external"></a> [external](#provider\_external) | n/a |
 
 ## Modules
 
@@ -82,8 +83,8 @@ resources that lack official modules.
 
 | Name | Type |
 |------|------|
+| [azapi_resource_list.az_zones](https://registry.terraform.io/providers/azure/azapi/latest/docs/data-sources/resource_list) | data source |
 | [azurerm_subscription.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subscription) | data source |
-| [external_external.az_zones](https://registry.terraform.io/providers/hashicorp/external/latest/docs/data-sources/external) | data source |
 
 ## Inputs
 
@@ -98,6 +99,7 @@ resources that lack official modules.
 | <a name="input_clickhouse_private_endpoint_service_name"></a> [clickhouse\_private\_endpoint\_service\_name](#input\_clickhouse\_private\_endpoint\_service\_name) | ClickHouse private endpoint 'Service name' (ends in .azure.privatelinkservice). | `string` | `""` | no |
 | <a name="input_clickhouse_region"></a> [clickhouse\_region](#input\_clickhouse\_region) | ClickHouse region (eastus2, westus3, etc). | `string` | `""` | no |
 | <a name="input_cluster_sku_tier"></a> [cluster\_sku\_tier](#input\_cluster\_sku\_tier) | The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers) | `string` | `"Free"` | no |
+| <a name="input_controller_image_tag"></a> [controller\_image\_tag](#input\_controller\_image\_tag) | Tag of the controller image to deploy | `string` | `"1.14.0"` | no |
 | <a name="input_create_private_link"></a> [create\_private\_link](#input\_create\_private\_link) | Use for the azure private link. | `bool` | `false` | no |
 | <a name="input_create_redis"></a> [create\_redis](#input\_create\_redis) | Boolean indicating whether to provision an redis instance (true) or not (false). | `bool` | `false` | no |
 | <a name="input_database_availability_mode"></a> [database\_availability\_mode](#input\_database\_availability\_mode) | n/a | `string` | `"SameZone"` | no |
@@ -118,10 +120,13 @@ resources that lack official modules.
 | <a name="input_node_max_pods"></a> [node\_max\_pods](#input\_node\_max\_pods) | Maximum number of pods per node | `number` | `30` | no |
 | <a name="input_node_pool_num_zones"></a> [node\_pool\_num\_zones](#input\_node\_pool\_num\_zones) | Number of availability zones to use for the node pool when node\_pool\_zones is not set. If neither are set, 3 zones will be used | `number` | `null` | no |
 | <a name="input_node_pool_zones"></a> [node\_pool\_zones](#input\_node\_pool\_zones) | Availability zones for the node pool | `list(string)` | `null` | no |
+| <a name="input_node_pool_num_zones"></a> [node\_pool\_num\_zones](#input\_node\_pool\_num\_zones) | Number of availability zones to use for the node pool when node\_pool\_zones is not set. | `number` | `2` | no |
+| <a name="input_node_pool_zones"></a> [node\_pool\_zones](#input\_node\_pool\_zones) | Availability zones for the node pool | `list(string)` | `null` | no |
 | <a name="input_oidc_auth_method"></a> [oidc\_auth\_method](#input\_oidc\_auth\_method) | OIDC auth method | `string` | `"implicit"` | no |
 | <a name="input_oidc_client_id"></a> [oidc\_client\_id](#input\_oidc\_client\_id) | The Client ID of application in your identity provider | `string` | `""` | no |
 | <a name="input_oidc_issuer"></a> [oidc\_issuer](#input\_oidc\_issuer) | A url to your Open ID Connect identity provider, i.e. https://cognito-idp.us-east-1.amazonaws.com/us-east-1_uiIFNdacd | `string` | `""` | no |
 | <a name="input_oidc_secret"></a> [oidc\_secret](#input\_oidc\_secret) | The Client secret of application in your identity provider | `string` | `""` | no |
+| <a name="input_operator_chart_version"></a> [operator\_chart\_version](#input\_operator\_chart\_version) | Version of the operator chart to deploy | `string` | `"1.3.4"` | no |
 | <a name="input_other_wandb_env"></a> [other\_wandb\_env](#input\_other\_wandb\_env) | Extra environment variables for W&B | `map(any)` | `{}` | no |
 | <a name="input_parquet_wandb_env"></a> [parquet\_wandb\_env](#input\_parquet\_wandb\_env) | Extra environment variables for W&B | `map(string)` | `{}` | no |
 | <a name="input_redis_capacity"></a> [redis\_capacity](#input\_redis\_capacity) | Number indicating size of an redis instance. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
@@ -159,7 +164,7 @@ resources that lack official modules.
 | <a name="output_url"></a> [url](#output\_url) | The URL to the W&B application |
 <!-- END_TF_DOCS -->
 
-## Upgrading from 2.x to 3.x
+## Upgrading from 3.x to 4.x
 
 3.0.0 introduced autoscaling to the AKS cluster and made the `size` variable the preferred way to set the cluster size.
 Previously, unless the `size` variable was set explicitly, there were default values for the following variables:
@@ -180,3 +185,29 @@ For more information on the available sizes, see the [Cluster Sizing](#cluster-s
 
 If having the cluster scale nodes in and out is not desired, the `kubernetes_min_node_count` and 
 `kubernetes_max_node_count` can be set to the same value to prevent the cluster from scaling.
+
+### Upgrading from 2.x to 3.x
+
+When upgrading from 2.x to 3.x, the following changes are required:
+
+1. Add the `azapi` provider to the `required_providers` block:
+
+```hcl
+terraform {
+  required_providers {
+    azapi = {
+      source  = "azure/azapi"
+      version = "~> 1.0"
+    }
+  }
+}
+```
+
+2. Add the `azapi` provider to the `provider` block:
+
+```hcl
+provider "azapi" {
+    # azapi provider configuration should be the same as azurerm provider configuration
+}
+```
+

@@ -113,12 +113,32 @@ module "app_lb" {
   tags = var.tags
 }
 
-data "external" "az_zones" {
-  program = ["bash", "${path.module}/vmtype_to_az.sh", local.kubernetes_instance_type, azurerm_resource_group.default.location, var.node_pool_num_zones]
+locals {
+  kubernetes_instance_type = try(local.deployment_size[var.size].node_instance, var.kubernetes_instance_type)
+}
+
+data "azapi_resource_list" "az_zones" {
+  parent_id = "/subscriptions/${data.azurerm_subscription.current.subscription_id}"
+  type      = "Microsoft.Compute/skus@2021-07-01"
+
+  response_export_values = ["value"]
 }
 
 locals {
-  node_pool_zones = (var.node_pool_zones == null) ? jsondecode(data.external.az_zones.result.zones) : var.node_pool_zones
+  vm_skus = [
+    for sku in jsondecode(data.azapi_resource_list.az_zones.output).value :
+    sku if(
+      sku.resourceType == "virtualMachines" &&
+      lower(sku.locations[0]) == lower(azurerm_resource_group.default.location) &&
+      sku.name == local.kubernetes_instance_type
+    )
+  ]
+
+  num_zones        = var.node_pool_zones != null ? length(var.node_pool_zones) : var.node_pool_num_zones
+  restricted_zones = length(local.vm_skus[0].restrictions) > 0 ? local.vm_skus[0].restrictions[0].restrictionInfo.zones : []
+  all_zones        = local.vm_skus[0].locationInfo[0].zones
+  valid_zones      = setsubtract(local.all_zones, local.restricted_zones)
+  node_pool_zones  = var.node_pool_zones != null ? var.node_pool_zones : slice(sort(local.valid_zones), 0, local.num_zones)
 }
 
 module "app_aks" {
@@ -138,7 +158,6 @@ module "app_aks" {
   public_subnet          = module.networking.public_subnet
   resource_group         = azurerm_resource_group.default
   sku_tier               = var.cluster_sku_tier
-  max_pods               = var.node_max_pods
   tags                   = var.tags
 }
 locals {
@@ -266,8 +285,9 @@ module "wandb" {
     module.database,
     module.storage,
   ]
-  controller_image_tag   = "1.13.0"
-  operator_chart_version = "1.3.1"
+  operator_chart_version = var.operator_chart_version
+  controller_image_tag   = var.controller_image_tag
+
 
   spec = {
     values = {

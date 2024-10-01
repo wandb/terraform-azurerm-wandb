@@ -1,6 +1,32 @@
+terraform {
+  required_version = "~> 1.0"
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 3.17"
+    }
+    azapi = {
+      source  = "azure/azapi"
+      version = "~> 1.0"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.23"
+    }
+    helm = {
+      source  = "hashicorp/helm"
+      version = "~> 2.6"
+    }
+  }
+}
+
 provider "azurerm" {
   subscription_id = var.subscription_id
   features {}
+}
+
+provider "azapi" {
+  subscription_id = var.subscription_id
 }
 
 data "azurerm_subscription" "current" {}
@@ -46,6 +72,7 @@ module "wandb" {
   tags = {
     "Example" : "PublicDns"
   }
+  node_pool_num_zones = 2
 }
 
 # # You'll want to update your DNS with the provisioned IP address

@@ -2,6 +2,39 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.0.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.2...v3.0.3) (2024-10-01)
+
+
+### Bug Fixes
+
+* Handle per subscription AZ restrictions ([#106](https://github.com/wandb/terraform-azurerm-wandb/issues/106)) ([997c48b](https://github.com/wandb/terraform-azurerm-wandb/commit/997c48b1de197ca5c952b5660adf17ec41991241))
+
+### [3.0.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.1...v3.0.2) (2024-10-01)
+
+
+### Bug Fixes
+
+* Use variables for operator helm release ([#105](https://github.com/wandb/terraform-azurerm-wandb/issues/105)) ([e418924](https://github.com/wandb/terraform-azurerm-wandb/commit/e4189244002c70ddc2fbfa1362afa9c8e769bb64))
+
+### [3.0.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.0...v3.0.1) (2024-09-30)
+
+
+### Bug Fixes
+
+* Add info for users moving from 2.x to 3.x ([#103](https://github.com/wandb/terraform-azurerm-wandb/issues/103)) ([df95c36](https://github.com/wandb/terraform-azurerm-wandb/commit/df95c36a30f024ed1a4f650fc665dc87619577c2))
+* Reference the correct value from deployment sizes ([#104](https://github.com/wandb/terraform-azurerm-wandb/issues/104)) ([d910a41](https://github.com/wandb/terraform-azurerm-wandb/commit/d910a411637352673c1df11a7f0ce8e461eb24db))
+
+## [3.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.15.1...v3.0.0) (2024-09-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* Automatically select availability zones based on node type when not specified (#102)
+
+### Features
+
+* Automatically select availability zones based on node type when not specified ([#102](https://github.com/wandb/terraform-azurerm-wandb/issues/102)) ([8a17acc](https://github.com/wandb/terraform-azurerm-wandb/commit/8a17accd070035004e7665cb46a30c0fe41283fb))
+
 ### [2.15.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.15.0...v2.15.1) (2024-09-12)
 
 
