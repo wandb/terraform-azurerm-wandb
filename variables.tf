@@ -194,6 +194,17 @@ variable "external_bucket" {
   default     = null
 }
 
+##########################################
+# Bucket path                            #
+##########################################
+# This setting is meant for users who want to store all of their instance-level
+# bucket's data at a specific path within their bucket. It can be set both for
+# external buckets or the bucket created by this module.
+variable "bucket_path" {
+  description = "path of where to store data for the instance-level bucket"
+  type        = string
+  default     = ""
+}
 
 ##########################################
 # K8s                                    #
@@ -218,7 +229,13 @@ variable "cluster_sku_tier" {
 variable "node_pool_zones" {
   type        = list(string)
   description = "Availability zones for the node pool"
-  default     = ["1", "2"]
+  default     = null
+}
+
+variable "node_pool_num_zones" {
+  type        = number
+  description = "Number of availability zones to use for the node pool when node_pool_zones is not set."
+  default     = 2
 }
 
 variable "node_max_pods" {
@@ -246,7 +263,7 @@ variable "allowed_subscriptions" {
 ##########################################
 
 variable "allowed_ip_ranges" {
-  description = "allowed public IP addresses or CIDR ranges."
+  description = "Allowed public IP addresses or CIDR ranges."
   type        = list(string)
   default     = []
 }
@@ -269,8 +286,45 @@ variable "parquet_wandb_env" {
   default     = {}
 }
 
+##########################################
+# vault key                              #
+##########################################
+
+variable "enable_storage_vault_key" {
+  type        = bool
+  default     = false
+  description = "Flag to enable managed key encryption for the storage account."
+}
+
+variable "disable_storage_vault_key_id" {
+  type        = bool
+  default     = false
+  description = "Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation."
+}
+
+variable "enable_database_vault_key" {
+  type        = bool
+  default     = false
+  description = "Flag to enable managed key encryption for the database. Once enabled, cannot be disabled."
+}
+
 ## To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 
 variable "azuremonitor" {
   type    = bool
   default = false
+}
+
+###########################################
+# ClickHouse endpoint                     #
+###########################################
+variable "clickhouse_private_endpoint_service_name" {
+  type        = string
+  description = "ClickHouse private endpoint 'Service name' (ends in .azure.privatelinkservice)."
+  default     = ""
+}
+
+variable "clickhouse_region" {
+  type        = string
+  description = "ClickHouse region (eastus2, westus3, etc)."
+  default     = ""
 }

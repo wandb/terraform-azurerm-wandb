@@ -27,12 +27,12 @@ module "networking" {
   private_link        = var.create_private_link
   allowed_ip_ranges   = var.allowed_ip_ranges
   tags                = var.tags
-
 }
 
 module "database" {
-  source              = "./modules/database"
-  namespace           = var.namespace
+  source    = "./modules/database"
+  namespace = var.namespace
+
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
@@ -40,10 +40,11 @@ module "database" {
   database_version             = var.database_version
   database_private_dns_zone_id = module.networking.database_private_dns_zone.id
   database_subnet_id           = module.networking.database_subnet.id
+  sku_name                     = try(local.deployment_size[var.size].db, var.database_sku_name)
+  deletion_protection          = var.deletion_protection
 
-  sku_name            = try(local.deployment_size[var.size].db, var.database_sku_name)
-  deletion_protection = var.deletion_protection
-
+  database_key_id = try(module.vault.vault_internal_keys[module.vault.vault_key_map.database].id, null)
+  identity_ids    = module.identity.identity.id
   tags = {
     "customer-ns" = var.namespace,
     "env"         = "managed-install"
@@ -69,18 +70,27 @@ module "vault" {
   namespace          = var.namespace
   resource_group     = azurerm_resource_group.default
 
+  enable_database_vault_key = var.enable_database_vault_key
+  enable_storage_vault_key  = var.enable_storage_vault_key
+
   tags = var.tags
 }
 
 module "storage" {
-  count               = (var.blob_container == "" && var.external_bucket == null) ? 1 : 0
-  source              = "./modules/storage"
+  source = "./modules/storage"
+
+  count               = 1
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   create_queue        = !var.use_internal_queue
+  identity_ids        = module.identity.identity.id
   deletion_protection = var.deletion_protection
-  tags                = var.tags
+
+  storage_key_id               = try(module.vault.vault_internal_keys[module.vault.vault_key_map.storage].id, null)
+  disable_storage_vault_key_id = var.disable_storage_vault_key_id
+
+  tags = var.tags
 }
 
 module "app_lb" {
@@ -97,6 +107,30 @@ module "app_lb" {
   tags = var.tags
 }
 
+locals {
+  kubernetes_instance_type = try(local.deployment_size[var.size].node_instance, var.kubernetes_instance_type)
+}
+
+data "azapi_resource_list" "az_zones" {
+  parent_id = "/subscriptions/${data.azurerm_subscription.current.subscription_id}"
+  type      = "Microsoft.Compute/skus@2021-07-01"
+
+  response_export_values = ["value"]
+}
+
+locals {
+  vm_skus = [
+    for sku in jsondecode(data.azapi_resource_list.az_zones.output).value :
+    sku if(
+      sku.resourceType == "virtualMachines" &&
+      lower(sku.locations[0]) == lower(azurerm_resource_group.default.location) &&
+      sku.name == local.kubernetes_instance_type
+    )
+  ]
+  num_zones       = var.node_pool_zones != null ? length(var.node_pool_zones) : var.node_pool_num_zones
+  node_pool_zones = var.node_pool_zones != null ? var.node_pool_zones : slice(sort(local.vm_skus[0].locationInfo[0].zones), 0, local.num_zones)
+}
+
 module "app_aks" {
   source     = "./modules/app_aks"
   depends_on = [module.app_lb]
@@ -108,29 +142,14 @@ module "app_aks" {
   location              = azurerm_resource_group.default.location
   namespace             = var.namespace
   node_pool_vm_count    = try(local.deployment_size[var.size].node_count, var.kubernetes_node_count)
-  node_pool_vm_size     = try(local.deployment_size[var.size].node_instance, var.kubernetes_instance_type)
-  node_pool_zones       = var.node_pool_zones
+  node_pool_vm_size     = local.kubernetes_instance_type
+  node_pool_zones       = local.node_pool_zones
   public_subnet         = module.networking.public_subnet
   resource_group        = azurerm_resource_group.default
   sku_tier              = var.cluster_sku_tier
   max_pods              = var.node_max_pods
   tags                  = var.tags
 }
-
-locals {
-  container_name  = try(module.storage[0].container.name, "")
-  account_name    = try(module.storage[0].account.name, "")
-  access_key      = try(module.storage[0].account.primary_access_key, "")
-  queue_name      = try(module.storage[0].queue.name, "")
-  blob_container  = var.external_bucket == null ? coalesce(var.blob_container, local.container_name) : ""
-  storage_account = var.external_bucket == null ? coalesce(var.storage_account, local.account_name) : ""
-  storage_key     = var.external_bucket == null ? coalesce(var.storage_key, local.access_key) : ""
-  bucket          = "az://${local.storage_account}/${local.blob_container}"
-  queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == null) ? "internal://" : "az://${local.account_name}/${local.queue_name}"
-
-  redis_connection_string = "redis://:${module.redis.instance.primary_access_key}@${module.redis.instance.hostname}:${module.redis.instance.port}"
-}
-
 locals {
   service_account_name         = "wandb-app"
   private_endpoint_approval_sa = "private-endpoint-sa"
@@ -176,8 +195,9 @@ resource "azurerm_role_assignment" "gateway_role" {
 }
 
 module "cron_job" {
-  count                  = length(var.allowed_subscriptions) > 0 ? 1 : 0 # private endpoint approval application deployed as a cronjob in default namespace
-  source                 = "./modules/cron_job"
+  count  = length(var.allowed_subscriptions) > 0 ? 1 : 0 # private endpoint approval application deployed as a cronjob in default namespace
+  source = "./modules/cron_job"
+
   namespace              = "default"
   client_id              = module.pod_identity[0].identity.client_id
   serviceaccountName     = local.private_endpoint_approval_sa
@@ -186,7 +206,6 @@ module "cron_job" {
   applicationGatewayName = module.app_lb.gateway.name
   allowedSubscriptions   = var.allowed_subscriptions
   depends_on             = [module.app_lb, module.pod_identity]
-
 }
 
 resource "azurerm_role_assignment" "otel_role" {
@@ -194,7 +213,6 @@ resource "azurerm_role_assignment" "otel_role" {
   scope                = azurerm_resource_group.default.id
   role_definition_name = "Contributor"
   principal_id         = module.identity.otel_identity.principal_id
-
 }
 
 resource "azurerm_federated_identity_credential" "otel_app" {
@@ -219,6 +237,34 @@ module "cert_manager" {
   depends_on = [module.app_aks]
 }
 
+module "clickhouse" {
+  count               = var.clickhouse_private_endpoint_service_name != "" ? 1 : 0
+  source              = "./modules/clickhouse"
+  namespace           = var.namespace
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+  network_id          = module.networking.network.id
+  private_subnet_id   = module.networking.private_subnet.id
+
+  clickhouse_private_endpoint_service_name = var.clickhouse_private_endpoint_service_name
+  clickhouse_region                        = var.clickhouse_region
+}
+
+locals {
+  use_customer_bucket = (
+    var.storage_account != "" &&
+    var.blob_container != "" &&
+    var.storage_key != ""
+  )
+  default_bucket_config = {
+    provider  = "az"
+    name      = var.storage_account
+    path      = "${var.blob_container}/${var.bucket_path}"
+    accessKey = var.storage_key
+  }
+  bucket_config = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
+}
+
 module "wandb" {
   source  = "wandb/wandb/helm"
   version = "1.2.0"
@@ -232,18 +278,29 @@ module "wandb" {
   operator_chart_version = var.operator_chart_version
   controller_image_tag   = var.controller_image_tag
 
+
   spec = {
     values = {
       global = {
-        host    = local.url
-        license = var.license
-
-        bucket = var.external_bucket == null ? {
+        host          = local.url
+        license       = var.license
+        cloudProvider = "azure"
+        bucket = local.bucket_config == null ? {
           provider  = "az"
-          name      = local.storage_account
-          path      = local.blob_container
-          accessKey = local.storage_key
-        } : var.external_bucket
+          name      = module.storage[0].account.name
+          path      = "${module.storage[0].container.name}/${var.bucket_path}"
+          accessKey = module.storage[0].account.primary_access_key
+        } : local.bucket_config
+        defaultBucket = {
+          provider  = "az"
+          name      = module.storage[0].account.name
+          path      = "${module.storage[0].container.name}/${var.bucket_path}"
+          accessKey = module.storage[0].account.primary_access_key
+        }
+        azureIdentityForBucket = {
+          clientID = module.identity.identity.client_id
+          tenantID = module.identity.identity.tenant_id
+        }
 
         mysql = {
           host     = module.database.address
