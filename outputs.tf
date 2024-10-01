@@ -64,3 +64,4 @@ output "client_id" {
 output "tenant_id" {
   value = module.identity.identity.tenant_id
 }
+
