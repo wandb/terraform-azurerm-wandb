@@ -53,6 +53,24 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 }
 
+resource "kubernetes_storage_class" "standard_zrs" {
+  metadata {
+    annotations = {
+      "storageclass.kubernetes.io/is-default-class" = "true"
+    }
+    labels = {
+      "addonmanager.kubernetes.io/mode" = "EnsureExists"
+      "kubernetes.io/cluster-service" = "true"
+    }
+  }
+  storage_provisioner = "disk.csi.azure.com"
+  parameters = {
+      skuname = "StandardSSD_ZRS"
+  }
+  reclaim_policy = "Delete"
+  volume_binding_mode = "WaitForFirstConsumer"
+}
+
 locals {
   ingress_gateway_principal_id = azurerm_kubernetes_cluster.default.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
 
