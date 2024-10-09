@@ -217,13 +217,13 @@ variable "kubernetes_instance_type" {
   default     = null
 }
 
-variable "kubernetes_min_node_count" {
+variable "kubernetes_min_node_per_az" {
   description = "Minimum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used"
   type        = number
   default     = null
 }
 
-variable "kubernetes_max_node_count" {
+variable "kubernetes_max_node_per_az" {
   description = "Maximum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used"
   type        = number
   default     = null

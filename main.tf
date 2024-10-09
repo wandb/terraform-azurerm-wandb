@@ -6,8 +6,8 @@ locals {
   redis_capacity            = coalesce(var.redis_capacity, local.deployment_size[var.size].cache)
   database_sku_name         = coalesce(var.database_sku_name, local.deployment_size[var.size].db)
   kubernetes_instance_type  = coalesce(var.kubernetes_instance_type, local.deployment_size[var.size].node_instance)
-  kubernetes_min_node_count = coalesce(var.kubernetes_min_node_count, local.deployment_size[var.size].min_node_count)
-  kubernetes_max_node_count = coalesce(var.kubernetes_max_node_count, local.deployment_size[var.size].max_node_count)
+  kubernetes_min_node_per_az = coalesce(var.kubernetes_min_node_per_az, local.deployment_size[var.size].min_node_count)
+  kubernetes_max_node_per_az = coalesce(var.kubernetes_max_node_per_az, local.deployment_size[var.size].max_node_count)
 }
 
 resource "azurerm_resource_group" "default" {
@@ -113,10 +113,6 @@ module "app_lb" {
   tags = var.tags
 }
 
-locals {
-  kubernetes_instance_type = try(local.deployment_size[var.size].node_instance, var.kubernetes_instance_type)
-}
-
 data "azapi_resource_list" "az_zones" {
   parent_id = "/subscriptions/${data.azurerm_subscription.current.subscription_id}"
   type      = "Microsoft.Compute/skus@2021-07-01"
@@ -151,8 +147,8 @@ module "app_aks" {
   identity               = module.identity.identity
   location               = azurerm_resource_group.default.location
   namespace              = var.namespace
-  node_pool_min_vm_count = local.kubernetes_min_node_count
-  node_pool_max_vm_count = local.kubernetes_max_node_count
+  node_pool_min_vm_per_az = local.kubernetes_min_node_per_az
+  node_pool_max_vm_per_az = local.kubernetes_max_node_per_az
   node_pool_vm_size      = local.kubernetes_instance_type
   node_pool_zones        = local.node_pool_zones
   public_subnet          = module.networking.public_subnet

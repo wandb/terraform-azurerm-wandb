@@ -46,11 +46,11 @@ output "standardized_size" {
 }
 
 output "aks_min_node_count" {
-  value = local.kubernetes_min_node_count
+  value = local.kubernetes_min_node_per_az
 }
 
 output "aks_max_node_count" {
-  value = local.kubernetes_max_node_count
+  value = local.kubernetes_max_node_per_az
 }
 
 output "aks_node_instance_type" {

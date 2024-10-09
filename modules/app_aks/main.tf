@@ -21,14 +21,14 @@ resource "azurerm_kubernetes_cluster" "default" {
     enable_auto_scaling         = true
     max_pods                    = var.max_pods
     name                        = "default"
-    node_count                  = var.node_pool_min_vm_count
-    max_count                   = var.node_pool_max_vm_count
-    min_count                   = var.node_pool_min_vm_count
+    node_count                  = var.node_pool_min_vm_per_az
+    max_count                   = var.node_pool_max_vm_per_az
+    min_count                   = var.node_pool_min_vm_per_az
     temporary_name_for_rotation = "rotating"
     type                        = "VirtualMachineScaleSets"
     vm_size                     = var.node_pool_vm_size
     vnet_subnet_id              = var.cluster_subnet_id
-    zones                       = var.node_pool_zones
+    zones                       = [ var.node_pool_zones[0] ]
   }
 
   identity {
@@ -51,6 +51,24 @@ resource "azurerm_kubernetes_cluster" "default" {
   key_management_service {
     key_vault_key_id = var.etcd_key_vault_key_id
   }
+}
+
+locals {
+  additonal_zones = slice(var.node_pool_zones, 1, length(var.node_pool_zones))
+}
+
+resource "azurerm_kubernetes_cluster_node_pool" "additional" {
+  count                       = length(local.additonal_zones)
+  kubernetes_cluster_id       = azurerm_kubernetes_cluster.default.id
+  enable_auto_scaling         = true
+  max_pods                    = var.max_pods
+  name                        = "zone${local.additonal_zones[count.index]}"
+  node_count                  = var.node_pool_min_vm_per_az
+  max_count                   = var.node_pool_max_vm_per_az
+  min_count                   = var.node_pool_min_vm_per_az
+  vm_size                     = var.node_pool_vm_size
+  vnet_subnet_id              = var.cluster_subnet_id
+  zones                       = [ var.node_pool_zones[0] ]
 }
 
 locals {

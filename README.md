@@ -30,8 +30,8 @@ Available sizes are, `small`, `medium`, `large`, `xlarge`, and `xxlarge`.  Defau
 All the values set via `deployment-size.tf` can be overridden by setting the appropriate input variables.
 
 - `kubernetes_instance_type` - The instance type for the EKS nodes
-- `kubernetes_min_node_count` - The minimum number of nodes in the EKS cluster
-- `kubernetes_max_node_count` - The maximum number of nodes in the EKS cluster
+- `kubernetes_min_node_per_az` - The minimum number of nodes in the EKS cluster
+- `kubernetes_max_node_per_az` - The maximum number of nodes in the EKS cluster
 - `redis_capacity` - The instance type for the redis cluster
 - `database_sku_name` - The instance type for the database
 
@@ -112,8 +112,8 @@ resources that lack official modules.
 | <a name="input_enable_storage_vault_key"></a> [enable\_storage\_vault\_key](#input\_enable\_storage\_vault\_key) | Flag to enable managed key encryption for the storage account. | `bool` | `false` | no |
 | <a name="input_external_bucket"></a> [external\_bucket](#input\_external\_bucket) | config an external bucket | `any` | `null` | no |
 | <a name="input_kubernetes_instance_type"></a> [kubernetes\_instance\_type](#input\_kubernetes\_instance\_type) | Instance type for primary node group. Defaults to null and value from deployment-size.tf is used | `string` | `null` | no |
-| <a name="input_kubernetes_max_node_count"></a> [kubernetes\_max\_node\_count](#input\_kubernetes\_max\_node\_count) | Maximum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
-| <a name="input_kubernetes_min_node_count"></a> [kubernetes\_min\_node\_count](#input\_kubernetes\_min\_node\_count) | Minimum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
+| <a name="input_kubernetes_max_node_per_az"></a> [kubernetes\_max\_node\_count](#input\_kubernetes\_max\_node\_count) | Maximum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
+| <a name="input_kubernetes_min_node_per_az"></a> [kubernetes\_min\_node\_count](#input\_kubernetes\_min\_node\_count) | Minimum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
 | <a name="input_license"></a> [license](#input\_license) | Your wandb/local license | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | String used for prefix resources. | `string` | n/a | yes |
@@ -174,15 +174,15 @@ Previously, unless the `size` variable was set explicitly, there were default va
 The `size` variable is now defaulted to `small`, and the following values to can be used to partially override the values
 set by the `size` variable:
 - `kubernetes_instance_type`
-- `kubernetes_min_node_count`
-- `kubernetes_max_node_count`
+- `kubernetes_min_node_per_az`
+- `kubernetes_max_node_per_az`
 - `redis_capacity`
 - `database_sku_name`
 
 For more information on the available sizes, see the [Cluster Sizing](#cluster-sizing) section.
 
-If having the cluster scale nodes in and out is not desired, the `kubernetes_min_node_count` and 
-`kubernetes_max_node_count` can be set to the same value to prevent the cluster from scaling.
+If having the cluster scale nodes in and out is not desired, the `kubernetes_min_node_per_az` and 
+`kubernetes_max_node_per_az` can be set to the same value to prevent the cluster from scaling.
 
 ### Upgrading from 2.x to 3.x
 
