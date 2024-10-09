@@ -56,7 +56,7 @@ variable "tags" {
 }
 
 variable "private_link" {
-  type = bool
+  type        = bool
   description = "Private link flag for multi region storage endpoint access"
 }
 

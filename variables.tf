@@ -29,7 +29,7 @@ variable "use_internal_queue" {
 }
 
 variable "size" {
-  default     = null
+  default     = "small"
   description = "Deployment size"
   nullable    = true
   type        = string
@@ -147,8 +147,8 @@ variable "database_availability_mode" {
 
 variable "database_sku_name" {
   type        = string
-  default     = "GP_Standard_D4ds_v4"
-  description = "Specifies the SKU Name for this MySQL Server"
+  default     = null
+  description = "Specifies the SKU Name for this MySQL Server. Defaults to null and value from deployment-size.tf is used"
 }
 
 ##########################################
@@ -162,8 +162,8 @@ variable "create_redis" {
 
 variable "redis_capacity" {
   type        = number
-  description = "Number indicating size of an redis instance"
-  default     = 2
+  description = "Number indicating size of an redis instance. Defaults to null and value from deployment-size.tf is used"
+  default     = null
 }
 
 ##########################################
@@ -212,14 +212,21 @@ variable "bucket_path" {
 # K8s                                    #
 ##########################################
 variable "kubernetes_instance_type" {
+  description = "Instance type for primary node group. Defaults to null and value from deployment-size.tf is used"
   type        = string
-  description = "Use for the Kubernetes cluster."
-  default     = "Standard_D4a_v4"
+  default     = null
 }
 
-variable "kubernetes_node_count" {
-  default = 2
-  type    = number
+variable "kubernetes_min_node_per_az" {
+  description = "Minimum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used"
+  type        = number
+  default     = null
+}
+
+variable "kubernetes_max_node_per_az" {
+  description = "Maximum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used"
+  type        = number
+  default     = null
 }
 
 variable "cluster_sku_tier" {
@@ -236,7 +243,7 @@ variable "node_pool_zones" {
 
 variable "node_pool_num_zones" {
   type        = number
-  description = "Number of availability zones to use for the node pool when node_pool_zones is not set."
+  description = "Number of availability zones to use for the node pool when node_pool_zones is not set. If neither are set, 3 zones will be used"
   default     = 2
 }
 
