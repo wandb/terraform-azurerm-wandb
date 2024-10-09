@@ -45,7 +45,7 @@ resource "azurerm_kubernetes_cluster" "default" {
   tags = var.tags
 
   lifecycle {
-    ignore_changes = [microsoft_defender]
+    ignore_changes = [microsoft_defender, default_node_pool.0.node_count]
   }
 
   key_management_service {
@@ -69,6 +69,10 @@ resource "azurerm_kubernetes_cluster_node_pool" "additional" {
   vm_size                     = var.node_pool_vm_size
   vnet_subnet_id              = var.cluster_subnet_id
   zones                       = [ var.node_pool_zones[0] ]
+
+  lifecycle {
+    ignore_changes = [node_count]
+  }
 }
 
 locals {
