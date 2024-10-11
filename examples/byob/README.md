@@ -84,4 +84,4 @@ Retrieve the storage key as shown above.
 
 ## Using Azure Portal
 
-Please refer to the (public documentation)[https://docs.wandb.ai/guides/hosting/data-security/secure-storage-connector#provision-the-kms-key] on how to create all required resources manually.
+Please refer to the (public documentation)[https://docs.wandb.ai/guides/hosting/data-security/secure-storage-connector#provision-the-azure-blob-storage] on how to create all required resources manually.
