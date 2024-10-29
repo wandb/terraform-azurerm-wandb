@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.3...v4.0.0) (2024-10-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* Enable autoscaling (#98)
+
+### Features
+
+* Enable autoscaling ([#98](https://github.com/wandb/terraform-azurerm-wandb/issues/98)) ([4ec49cd](https://github.com/wandb/terraform-azurerm-wandb/commit/4ec49cd865697edec72c8b8105e90b2d7cbf346d))
+
 ### [3.0.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.2...v3.0.3) (2024-10-01)
 
 
