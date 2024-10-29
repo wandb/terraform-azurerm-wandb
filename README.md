@@ -19,6 +19,22 @@ preparation, however it does have the following pre-requisites:
 
 ## How to Use This Module
 
+## Cluster Sizing
+
+By default, the type of kubernetes instances, number of instances, redis cluster size, and database instance sizes are
+standardized via configurations in [./deployment-size.tf](deployment-size.tf), and is configured via the `size` input
+variable.
+
+Available sizes are, `small`, `medium`, `large`, `xlarge`, and `xxlarge`.  Default is `small`.
+
+All the values set via `deployment-size.tf` can be overridden by setting the appropriate input variables.
+
+- `kubernetes_instance_type` - The instance type for the EKS nodes
+- `kubernetes_min_node_per_az` - The minimum number of nodes in the EKS cluster
+- `kubernetes_max_node_per_az` - The maximum number of nodes in the EKS cluster
+- `redis_capacity` - The instance type for the redis cluster
+- `database_sku_name` - The instance type for the database
+
 ## Examples
 
 We have included documentation and reference examples for additional common
@@ -87,7 +103,7 @@ resources that lack official modules.
 | <a name="input_create_private_link"></a> [create\_private\_link](#input\_create\_private\_link) | Use for the azure private link. | `bool` | `false` | no |
 | <a name="input_create_redis"></a> [create\_redis](#input\_create\_redis) | Boolean indicating whether to provision an redis instance (true) or not (false). | `bool` | `false` | no |
 | <a name="input_database_availability_mode"></a> [database\_availability\_mode](#input\_database\_availability\_mode) | n/a | `string` | `"SameZone"` | no |
-| <a name="input_database_sku_name"></a> [database\_sku\_name](#input\_database\_sku\_name) | Specifies the SKU Name for this MySQL Server | `string` | `"GP_Standard_D4ds_v4"` | no |
+| <a name="input_database_sku_name"></a> [database\_sku\_name](#input\_database\_sku\_name) | Specifies the SKU Name for this MySQL Server. Defaults to null and value from deployment-size.tf is used | `string` | `null` | no |
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version for MySQL | `string` | `"5.7"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | If the instance should have deletion protection enabled. The database / Bucket can't be deleted when this value is set to `true`. | `bool` | `true` | no |
 | <a name="input_disable_storage_vault_key_id"></a> [disable\_storage\_vault\_key\_id](#input\_disable\_storage\_vault\_key\_id) | Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation. | `bool` | `false` | no |
@@ -95,13 +111,14 @@ resources that lack official modules.
 | <a name="input_enable_database_vault_key"></a> [enable\_database\_vault\_key](#input\_enable\_database\_vault\_key) | Flag to enable managed key encryption for the database. Once enabled, cannot be disabled. | `bool` | `false` | no |
 | <a name="input_enable_storage_vault_key"></a> [enable\_storage\_vault\_key](#input\_enable\_storage\_vault\_key) | Flag to enable managed key encryption for the storage account. | `bool` | `false` | no |
 | <a name="input_external_bucket"></a> [external\_bucket](#input\_external\_bucket) | config an external bucket | `any` | `null` | no |
-| <a name="input_kubernetes_instance_type"></a> [kubernetes\_instance\_type](#input\_kubernetes\_instance\_type) | Use for the Kubernetes cluster. | `string` | `"Standard_D4a_v4"` | no |
-| <a name="input_kubernetes_node_count"></a> [kubernetes\_node\_count](#input\_kubernetes\_node\_count) | n/a | `number` | `2` | no |
+| <a name="input_kubernetes_instance_type"></a> [kubernetes\_instance\_type](#input\_kubernetes\_instance\_type) | Instance type for primary node group. Defaults to null and value from deployment-size.tf is used | `string` | `null` | no |
+| <a name="input_kubernetes_max_node_per_az"></a> [kubernetes\_max\_node\_per\_az](#input\_kubernetes\_max\_node\_per\_az) | Maximum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
+| <a name="input_kubernetes_min_node_per_az"></a> [kubernetes\_min\_node\_per\_az](#input\_kubernetes\_min\_node\_per\_az) | Minimum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
 | <a name="input_license"></a> [license](#input\_license) | Your wandb/local license | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | String used for prefix resources. | `string` | n/a | yes |
 | <a name="input_node_max_pods"></a> [node\_max\_pods](#input\_node\_max\_pods) | Maximum number of pods per node | `number` | `30` | no |
-| <a name="input_node_pool_num_zones"></a> [node\_pool\_num\_zones](#input\_node\_pool\_num\_zones) | Number of availability zones to use for the node pool when node\_pool\_zones is not set. | `number` | `2` | no |
+| <a name="input_node_pool_num_zones"></a> [node\_pool\_num\_zones](#input\_node\_pool\_num\_zones) | Number of availability zones to use for the node pool when node\_pool\_zones is not set. If neither are set, 3 zones will be used | `number` | `2` | no |
 | <a name="input_node_pool_zones"></a> [node\_pool\_zones](#input\_node\_pool\_zones) | Availability zones for the node pool | `list(string)` | `null` | no |
 | <a name="input_oidc_auth_method"></a> [oidc\_auth\_method](#input\_oidc\_auth\_method) | OIDC auth method | `string` | `"implicit"` | no |
 | <a name="input_oidc_client_id"></a> [oidc\_client\_id](#input\_oidc\_client\_id) | The Client ID of application in your identity provider | `string` | `""` | no |
@@ -110,8 +127,8 @@ resources that lack official modules.
 | <a name="input_operator_chart_version"></a> [operator\_chart\_version](#input\_operator\_chart\_version) | Version of the operator chart to deploy | `string` | `"1.3.4"` | no |
 | <a name="input_other_wandb_env"></a> [other\_wandb\_env](#input\_other\_wandb\_env) | Extra environment variables for W&B | `map(any)` | `{}` | no |
 | <a name="input_parquet_wandb_env"></a> [parquet\_wandb\_env](#input\_parquet\_wandb\_env) | Extra environment variables for W&B | `map(string)` | `{}` | no |
-| <a name="input_redis_capacity"></a> [redis\_capacity](#input\_redis\_capacity) | Number indicating size of an redis instance | `number` | `2` | no |
-| <a name="input_size"></a> [size](#input\_size) | Deployment size | `string` | `null` | no |
+| <a name="input_redis_capacity"></a> [redis\_capacity](#input\_redis\_capacity) | Number indicating size of an redis instance. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
+| <a name="input_size"></a> [size](#input\_size) | Deployment size | `string` | `"small"` | no |
 | <a name="input_ssl"></a> [ssl](#input\_ssl) | Enable SSL certificate | `bool` | `true` | no |
 | <a name="input_storage_account"></a> [storage\_account](#input\_storage\_account) | Azure storage account name | `string` | `""` | no |
 | <a name="input_storage_key"></a> [storage\_key](#input\_storage\_key) | Azure primary storage access key | `string` | `""` | no |
@@ -127,7 +144,8 @@ resources that lack official modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_address"></a> [address](#output\_address) | n/a |
-| <a name="output_aks_node_count"></a> [aks\_node\_count](#output\_aks\_node\_count) | n/a |
+| <a name="output_aks_max_node_count"></a> [aks\_max\_node\_count](#output\_aks\_max\_node\_count) | n/a |
+| <a name="output_aks_min_node_count"></a> [aks\_min\_node\_count](#output\_aks\_min\_node\_count) | n/a |
 | <a name="output_aks_node_instance_type"></a> [aks\_node\_instance\_type](#output\_aks\_node\_instance\_type) | n/a |
 | <a name="output_client_id"></a> [client\_id](#output\_client\_id) | n/a |
 | <a name="output_cluster_ca_certificate"></a> [cluster\_ca\_certificate](#output\_cluster\_ca\_certificate) | n/a |
@@ -144,7 +162,27 @@ resources that lack official modules.
 | <a name="output_url"></a> [url](#output\_url) | The URL to the W&B application |
 <!-- END_TF_DOCS -->
 
-## Migrations
+## Upgrading from 3.x to 4.x
+
+3.0.0 introduced autoscaling to the AKS cluster and made the `size` variable the preferred way to set the cluster size.
+Previously, unless the `size` variable was set explicitly, there were default values for the following variables:
+- `kubernetes_instance_type`
+- `kubernetes_node_count`
+- `redis_capacity`
+- `database_sku_name`
+
+The `size` variable is now defaulted to `small`, and the following values to can be used to partially override the values
+set by the `size` variable:
+- `kubernetes_instance_type`
+- `kubernetes_min_node_per_az`
+- `kubernetes_max_node_per_az`
+- `redis_capacity`
+- `database_sku_name`
+
+For more information on the available sizes, see the [Cluster Sizing](#cluster-sizing) section.
+
+If having the cluster scale nodes in and out is not desired, the `kubernetes_min_node_per_az` and 
+`kubernetes_max_node_per_az` can be set to the same value to prevent the cluster from scaling.
 
 ### Upgrading from 2.x to 3.x
 
