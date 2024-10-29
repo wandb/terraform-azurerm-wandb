@@ -68,7 +68,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "additional" {
   min_count                   = var.node_pool_min_vm_per_az
   vm_size                     = var.node_pool_vm_size
   vnet_subnet_id              = var.cluster_subnet_id
-  zones                       = [ var.node_pool_zones[0] ]
+  zones                       = [ local.additonal_zones[count.index] ]
 
   lifecycle {
     ignore_changes = [node_count]
