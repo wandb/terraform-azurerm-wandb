@@ -341,8 +341,8 @@ variable "clickhouse_region" {
 ###########################################
 # Internal Service                        #
 ###########################################
-variable "weave_trace_service_account_oidc_issuer_url" {
+variable "kubernetes_cluster_oidc_issuer_url" {
   type        = string
-  description = "OIDC issuer URL for the weave trace service account"
+  description = "OIDC issuer URL for the Kubernetes cluster. Can be determined using kubectl get --raw /.well-known/openid-configuration"
   default     = ""
 }
