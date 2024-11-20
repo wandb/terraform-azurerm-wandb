@@ -337,3 +337,12 @@ variable "clickhouse_region" {
   description = "ClickHouse region (eastus2, westus3, etc)."
   default     = ""
 }
+
+###########################################
+# Internal Service                        #
+###########################################
+variable "weave_trace_service_account_oidc_issuer_url" {
+  type        = string
+  description = "OIDC issuer URL for the weave trace service account"
+  default     = ""
+}
