@@ -342,7 +342,7 @@ module "wandb" {
         }
         internalJWTMap = [
           {
-            subject = "system:serviceaccount:${var.namespace}:${local.weave_trace_service_account_name}",
+            subject = "system:serviceaccount:default:${local.weave_trace_service_account_name}",
             issuer = var.kubernetes_cluster_oidc_issuer_url
           }
         ]
