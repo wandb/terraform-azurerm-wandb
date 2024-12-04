@@ -269,6 +269,7 @@ locals {
     accessKey = var.storage_key
   }
   bucket_config = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
+  weave_trace_service_account_name = "wandb-weave-trace"
 }
 
 module "wandb" {
@@ -339,6 +340,12 @@ module "wandb" {
           annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
           labels      = { "azure.workload.identity/use" = "true" }
         }
+        internalJWTMap = [
+          {
+            subject = "system:serviceaccount:default:${local.weave_trace_service_account_name}",
+            issuer = var.kubernetes_cluster_oidc_issuer_url
+          }
+        ]
       }
 
       ingress = {
