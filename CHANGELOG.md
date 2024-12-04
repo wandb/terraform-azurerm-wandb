@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v4.0.0...v4.1.0) (2024-12-04)
+
+
+### Features
+
+* Add internalJWTMap used for inter service communication authentication ([#109](https://github.com/wandb/terraform-azurerm-wandb/issues/109)) ([5bf0177](https://github.com/wandb/terraform-azurerm-wandb/commit/5bf017752966db335d711cbb147f618664d6f1b7))
+
 ## [4.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.3...v4.0.0) (2024-10-29)
 
 
