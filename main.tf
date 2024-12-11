@@ -343,7 +343,7 @@ module "wandb" {
         internalJWTMap = [
           {
             subject = "system:serviceaccount:default:${local.weave_trace_service_account_name}",
-            issuer = azurerm_kubernetes_cluster.cluster.oidc_issuer_url
+            issuer = module.app_aks.oidc_issuer_url
           }
         ]
       }
