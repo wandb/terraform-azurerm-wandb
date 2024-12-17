@@ -51,10 +51,7 @@ module "database" {
 
   database_key_id = try(module.vault.vault_internal_keys[module.vault.vault_key_map.database].id, null)
   identity_ids    = module.identity.identity.id
-  tags = {
-    "customer-ns" = var.namespace,
-    "env"         = "managed-install"
-  }
+  tags = var.tags
 
   depends_on = [module.networking]
 }
