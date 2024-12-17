@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [4.1.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v4.1.0...v4.1.1) (2024-12-17)
+
+
+### Bug Fixes
+
+* Don't put special tags on the DB, added this to the var we pass in ([#112](https://github.com/wandb/terraform-azurerm-wandb/issues/112)) ([7f5c51d](https://github.com/wandb/terraform-azurerm-wandb/commit/7f5c51d6d48d173fd1c1542ac6e28d63395dea94))
+
 ## [4.1.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v4.0.0...v4.1.0) (2024-12-04)
 
 
