@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [4.1.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v4.1.1...v4.1.2) (2024-12-18)
+
+
+### Bug Fixes
+
+* Tags were missing on redis ([#113](https://github.com/wandb/terraform-azurerm-wandb/issues/113)) ([48afa7c](https://github.com/wandb/terraform-azurerm-wandb/commit/48afa7ca3fbbcd1a1308fe7dd3f4055bac8fd503))
+
 ### [4.1.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v4.1.0...v4.1.1) (2024-12-17)
 
 
