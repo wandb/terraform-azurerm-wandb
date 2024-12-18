@@ -63,6 +63,8 @@ module "redis" {
   location            = azurerm_resource_group.default.location
   capacity            = local.redis_capacity
   depends_on          = [module.networking]
+
+  tags = var.tags
 }
 
 module "vault" {

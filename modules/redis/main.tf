@@ -8,6 +8,8 @@ resource "azurerm_redis_cache" "default" {
 
   enable_non_ssl_port = true
 
+  tags = var.tags
+
   redis_configuration {
   }
 
