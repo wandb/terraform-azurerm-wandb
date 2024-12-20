@@ -13,7 +13,7 @@ audit logging and single sign-on.
 This module is intended to run in an Azure account with minimal
 preparation, however it does have the following pre-requisites:
 
-### Terraform version >= 1
+### Terraform version >= 1.9
 
 ### Credentials / Permissions
 
