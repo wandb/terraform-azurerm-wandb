@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v4.1.2...v5.0.0) (2025-01-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* Bump helm-wandb vers to v2.0.0, requires TF > 1.9 (#114)
+
+### Features
+
+* Bump helm-wandb vers to v2.0.0, requires TF > 1.9 ([#114](https://github.com/wandb/terraform-azurerm-wandb/issues/114)) ([77b7639](https://github.com/wandb/terraform-azurerm-wandb/commit/77b763934f52875af7fb77fbc102c49c21bc7d33))
+
 ### [4.1.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v4.1.1...v4.1.2) (2024-12-18)
 
 
