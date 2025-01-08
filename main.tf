@@ -347,6 +347,12 @@ module "wandb" {
         ]
       }
 
+      console = {
+        extraEnv = {
+          "BUCKET_ACCESS_IDENTITY" = "CLIENT_ID=${module.identity.indentity.client_id},TENANT_ID=${module.identity.identity.tenant_id}"
+        }
+      }
+
       ingress = {
         // TODO: For now we will use the existing issuer. We can move this into
         // the operator after testing. Trying to reduce the diff.
