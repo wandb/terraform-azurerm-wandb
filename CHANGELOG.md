@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.1.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.0.0...v5.1.0) (2025-01-08)
+
+
+### Features
+
+* Pass console identity info ([#115](https://github.com/wandb/terraform-azurerm-wandb/issues/115)) ([d945e4c](https://github.com/wandb/terraform-azurerm-wandb/commit/d945e4cea3d623382283d23d24d820332b2ba18b))
+
 ## [5.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v4.1.2...v5.0.0) (2025-01-07)
 
 
