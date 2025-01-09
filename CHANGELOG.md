@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [5.1.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.1.0...v5.1.1) (2025-01-09)
+
+
+### Bug Fixes
+
+* Identity typo ([#116](https://github.com/wandb/terraform-azurerm-wandb/issues/116)) ([5c46eea](https://github.com/wandb/terraform-azurerm-wandb/commit/5c46eeaf99920eb32e97b66d1c7c9e6f1326b33f))
+
 ## [5.1.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.0.0...v5.1.0) (2025-01-08)
 
 
