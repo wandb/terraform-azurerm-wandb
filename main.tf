@@ -349,7 +349,7 @@ module "wandb" {
 
       console = {
         extraEnv = {
-          "BUCKET_ACCESS_IDENTITY" = "CLIENT_ID=${module.identity.identity.client_id},TENANT_ID=${module.identity.identity.tenant_id}"
+          "BUCKET_ACCESS_IDENTITY" = "CLIENT_ID=${module.identity.identity.client_id} - TENANT_ID=${module.identity.identity.tenant_id}"
         }
       }
 
