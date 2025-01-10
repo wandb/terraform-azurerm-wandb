@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [5.1.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.1.1...v5.1.2) (2025-01-10)
+
+
+### Bug Fixes
+
+* Helm cursed comma ([#117](https://github.com/wandb/terraform-azurerm-wandb/issues/117)) ([a405ed0](https://github.com/wandb/terraform-azurerm-wandb/commit/a405ed0af7458dced02c54f43d2855087fd596bd))
+
 ### [5.1.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.1.0...v5.1.1) (2025-01-09)
 
 
