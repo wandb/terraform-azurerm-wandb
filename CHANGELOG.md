@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [5.1.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.1.2...v5.1.3) (2025-01-13)
+
+
+### Bug Fixes
+
+* Proper bucket vs default bucket usage ([#110](https://github.com/wandb/terraform-azurerm-wandb/issues/110)) ([a91ad9e](https://github.com/wandb/terraform-azurerm-wandb/commit/a91ad9e041ea2deb8bb2b76712d3f38b91e37cd9))
+
 ### [5.1.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.1.1...v5.1.2) (2025-01-10)
 
 
