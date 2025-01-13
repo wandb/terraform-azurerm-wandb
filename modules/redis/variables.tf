@@ -19,6 +19,12 @@ variable "sku_name" {
   description = "Specifies the SKU Name for this Redis instance"
 }
 
+variable "tags" {
+  default     = {}
+  type        = map(string)
+  description = "Map of tags for resource"
+}
+
 variable "family" {
   type    = string
   default = "C"

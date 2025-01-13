@@ -51,10 +51,7 @@ module "database" {
 
   database_key_id = try(module.vault.vault_internal_keys[module.vault.vault_key_map.database].id, null)
   identity_ids    = module.identity.identity.id
-  tags = {
-    "customer-ns" = var.namespace,
-    "env"         = "managed-install"
-  }
+  tags = var.tags
 
   depends_on = [module.networking]
 }
@@ -66,6 +63,8 @@ module "redis" {
   location            = azurerm_resource_group.default.location
   capacity            = local.redis_capacity
   depends_on          = [module.networking]
+
+  tags = var.tags
 }
 
 module "vault" {
@@ -274,7 +273,7 @@ locals {
 
 module "wandb" {
   source  = "wandb/wandb/helm"
-  version = "1.2.0"
+  version = "2.0.0"
 
   depends_on = [
     module.app_aks,
@@ -284,7 +283,7 @@ module "wandb" {
   ]
   operator_chart_version = var.operator_chart_version
   controller_image_tag   = var.controller_image_tag
-
+  enable_helm_release    = var.enable_helm_release
 
   spec = {
     values = {
@@ -341,6 +340,12 @@ module "wandb" {
             issuer  = var.kubernetes_cluster_oidc_issuer_url
           }
         ]
+      }
+
+      console = {
+        extraEnv = {
+          "BUCKET_ACCESS_IDENTITY" = "CLIENT_ID=${module.identity.identity.client_id} - TENANT_ID=${module.identity.identity.tenant_id}"
+        }
       }
 
       ingress = {
