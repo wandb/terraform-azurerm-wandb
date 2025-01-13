@@ -267,7 +267,8 @@ locals {
     path      = "${var.blob_container}/${var.bucket_path}"
     accessKey = var.storage_key
   }
-  bucket_config                    = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
+
+  bucket_config = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
   weave_trace_service_account_name = "wandb-weave-trace"
 }
 
