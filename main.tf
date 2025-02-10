@@ -282,6 +282,7 @@ module "wandb" {
     module.cert_manager,
     module.database,
     module.storage,
+    module.redis,
   ]
   operator_chart_version = var.operator_chart_version
   controller_image_tag   = var.controller_image_tag
@@ -317,9 +318,9 @@ module "wandb" {
           host     = var.external_redis_host
           port     = var.external_redis_port
         } : {
-          host     = module.redis.instance.hostname
-          password = module.redis.instance.primary_access_key
-          port     = module.redis.instance.port
+          host     = var.create_redis ? module.redis.instance.hostname : null
+          password = var.create_redis ? module.redis.instance.primary_access_key : null
+          port     = var.create_redis ? module.redis.instance.port : null
         }
 
         extraEnv = var.other_wandb_env
