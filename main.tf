@@ -58,6 +58,7 @@ module "database" {
 
 module "redis" {
   source              = "./modules/redis"
+  count               = var.create_redis ? 1 : 0
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
@@ -312,14 +313,16 @@ module "wandb" {
           port     = 3306
         }
 
-        redis = {
+        redis = var.use_external_redis ? {
+          host     = var.external_redis_host
+          port     = var.external_redis_port
+        } : {
           host     = module.redis.instance.hostname
           password = module.redis.instance.primary_access_key
           port     = module.redis.instance.port
         }
 
         extraEnv = var.other_wandb_env
-
       }
 
       app = {
