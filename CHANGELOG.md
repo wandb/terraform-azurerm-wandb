@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.2.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.1.3...v5.2.0) (2025-02-10)
+
+
+### Features
+
+* INFRA-383 support for "external" redis creation ([#119](https://github.com/wandb/terraform-azurerm-wandb/issues/119)) ([4a94066](https://github.com/wandb/terraform-azurerm-wandb/commit/4a9406642aaf2743872e68bcc4192c825a4cf6cd))
+
 ### [5.1.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.1.2...v5.1.3) (2025-01-13)
 
 
