@@ -313,9 +313,9 @@ module "wandb" {
           port     = 3306
         }
 
-        redis = var.use_core_managed_redis ? {
-          host     = var.core_redis_host
-          port     = var.core_redis_port
+        redis = var.use_external_redis ? {
+          host     = var.external_redis_host
+          port     = var.external_redis_port
         } : {
           host     = module.redis.instance.hostname
           password = module.redis.instance.primary_access_key
