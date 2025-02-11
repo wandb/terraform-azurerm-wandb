@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+### [5.2.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.2.1...v5.2.2) (2025-02-11)
+
+
+### Bug Fixes
+
+* INFRA-383 finicky terraform fixes ([#121](https://github.com/wandb/terraform-azurerm-wandb/issues/121)) ([f412a04](https://github.com/wandb/terraform-azurerm-wandb/commit/f412a045e81c6701cd5c034681c484c03b0b8f88))
+
+### [5.2.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.2.0...v5.2.1) (2025-02-11)
+
+
+### Bug Fixes
+
+* INFRA-383 some redis tf var null protection ([#120](https://github.com/wandb/terraform-azurerm-wandb/issues/120)) ([bfd5fe9](https://github.com/wandb/terraform-azurerm-wandb/commit/bfd5fe9eaea07fc25302bb44fd65a8e34608eec0))
+
+## [5.2.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.1.3...v5.2.0) (2025-02-10)
+
+
+### Features
+
+* INFRA-383 support for "external" redis creation ([#119](https://github.com/wandb/terraform-azurerm-wandb/issues/119)) ([4a94066](https://github.com/wandb/terraform-azurerm-wandb/commit/4a9406642aaf2743872e68bcc4192c825a4cf6cd))
+
 ### [5.1.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.1.2...v5.1.3) (2025-01-13)
 
 
