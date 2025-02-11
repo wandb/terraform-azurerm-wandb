@@ -177,9 +177,9 @@ variable "use_external_redis" {
 }
 
 variable "external_redis_host" {
-    type        = string
-    description = "host for the redis instance created externally"
-    default     = null
+  type        = string
+  description = "host for the redis instance created externally"
+  default     = null
 }
 
 variable "external_redis_port" {
