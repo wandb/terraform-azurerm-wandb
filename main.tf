@@ -51,7 +51,7 @@ module "database" {
 
   database_key_id = try(module.vault.vault_internal_keys[module.vault.vault_key_map.database].id, null)
   identity_ids    = module.identity.identity.id
-  tags = var.tags
+  tags            = var.tags
 
   depends_on = [module.networking]
 }
@@ -269,7 +269,7 @@ locals {
     accessKey = var.storage_key
   }
 
-  bucket_config = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
+  bucket_config                    = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
   weave_trace_service_account_name = "wandb-weave-trace"
 }
 
@@ -282,6 +282,7 @@ module "wandb" {
     module.cert_manager,
     module.database,
     module.storage,
+    module.redis,
   ]
   operator_chart_version = var.operator_chart_version
   controller_image_tag   = var.controller_image_tag
@@ -314,12 +315,12 @@ module "wandb" {
         }
 
         redis = var.use_external_redis ? {
-          host     = var.external_redis_host
-          port     = var.external_redis_port
-        } : {
-          host     = module.redis.instance.hostname
-          password = module.redis.instance.primary_access_key
-          port     = module.redis.instance.port
+          host = var.external_redis_host
+          port = var.external_redis_port
+          } : {
+          host     = var.create_redis ? module.redis.instance.hostname : null
+          password = var.create_redis ? module.redis.instance.primary_access_key : null
+          port     = var.create_redis ? module.redis.instance.port : null
         }
 
         extraEnv = var.other_wandb_env
