@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [5.2.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.2.1...v5.2.2) (2025-02-11)
+
+
+### Bug Fixes
+
+* INFRA-383 finicky terraform fixes ([#121](https://github.com/wandb/terraform-azurerm-wandb/issues/121)) ([f412a04](https://github.com/wandb/terraform-azurerm-wandb/commit/f412a045e81c6701cd5c034681c484c03b0b8f88))
+
 ### [5.2.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.2.0...v5.2.1) (2025-02-11)
 
 
