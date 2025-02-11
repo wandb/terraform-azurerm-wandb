@@ -317,6 +317,12 @@ variable "allowed_subscriptions" {
   description = "List of allowed customer subscriptions coma seperated values"
   default     = ""
 }
+
+variable "create_public_endpoint" {
+  type        = bool
+  default     = true
+  description = "Use for the azure public endpoint."
+}
 ##########################################
 # Network                                #
 ##########################################
