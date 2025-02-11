@@ -319,6 +319,7 @@ module "wandb" {
           port = var.external_redis_port
           } : {
           host     = var.create_redis ? module.redis[0].hostname : null
+          password = (var.create_redis && can(module.redis[0].primary_access_key)) ? module.redis[0].primary_access_key : null
           port     = var.create_redis ? module.redis[0].port : null
         }
 
