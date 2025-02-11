@@ -20,9 +20,9 @@ resource "azurerm_federated_identity_credential" "app" {
   parent_id           = azurerm_user_assigned_identity.default.id
   name                = "${var.namespace}-federated-credential"
   resource_group_name = data.azurerm_resource_group.group.name
-  audience            = ["api://AzureADTokenExchange"]
+  audience            = var.audience
   issuer              = var.oidc_issuer_url
-  subject             = "system:serviceaccount:default:wandb-app"
+  subject             = var.subject
 }
 
 module "storage" {

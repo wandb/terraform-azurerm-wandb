@@ -23,3 +23,15 @@ variable "subscription_id" {
   type    = string
   default = null
 }
+
+variable "subject" {
+  type        = string
+  description = "The subject of the federated identity credential"
+  default     = "system:serviceaccount:default:wandb-app"
+}
+
+variable "audience" {
+  type        = list(string)
+  description = "The audience of the federated identity credential"
+  default     = ["api://AzureADTokenExchange"]
+}

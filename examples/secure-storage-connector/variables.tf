@@ -22,3 +22,13 @@ variable "oidc_issuer_url" {
     description = "The OIDC issuer URL from the AKS cluster that is meant to connect to this container. Make sure to include the trailing '/'"
     type        = string
 }
+
+variable "subject" {
+    type        = string
+    description = "The subject of the federated identity credential"
+}
+
+variable "audience" {
+    type        = list(string)
+    description = "The audience of the federated identity credential"
+}

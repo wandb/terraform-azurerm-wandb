@@ -1,5 +1,5 @@
 provider "azurerm" {
-  features {} 
+  features {}
   tenant_id           = var.tenant_id
 }
 
@@ -9,4 +9,5 @@ module "secure_storage_connector" {
   resource_group_name = var.resource_group_name
   oidc_issuer_url     = var.oidc_issuer_url
   subscription_id     = var.subscription_id
+  deletion_protection = false
 }
