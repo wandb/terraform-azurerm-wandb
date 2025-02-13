@@ -5,7 +5,8 @@ variable "namespace" {
 
 variable "oidc_issuer_url" {
   type        = string
-  description = "OIDC Issuer URL from server deployment's AKS Cluster. Make sure to include the trailing '/'"
+  description = "OIDC Issuer URL"
+  default     = "https://accounts.google.com"
 }
 
 variable "deletion_protection" {
@@ -27,11 +28,11 @@ variable "subscription_id" {
 variable "subject" {
   type        = string
   description = "The subject of the federated identity credential"
-  default     = "system:serviceaccount:default:wandb-app"
+  default     = "101148871499660386821"
 }
 
 variable "audience" {
   type        = list(string)
   description = "The audience of the federated identity credential"
-  default     = ["api://AzureADTokenExchange"]
+  default     = ["32555940559.apps.googleusercontent.com"]
 }
