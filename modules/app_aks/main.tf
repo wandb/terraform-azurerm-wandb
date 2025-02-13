@@ -28,7 +28,7 @@ resource "azurerm_kubernetes_cluster" "default" {
     type                        = "VirtualMachineScaleSets"
     vm_size                     = var.node_pool_vm_size
     vnet_subnet_id              = var.cluster_subnet_id
-    zones                       = [var.node_pool_zones[0]]
+    zones                       = [ var.node_pool_zones[0] ]
   }
 
   identity {
@@ -58,17 +58,17 @@ locals {
 }
 
 resource "azurerm_kubernetes_cluster_node_pool" "additional" {
-  count                 = length(local.additonal_zones)
-  kubernetes_cluster_id = azurerm_kubernetes_cluster.default.id
-  enable_auto_scaling   = true
-  max_pods              = var.max_pods
-  name                  = "zone${local.additonal_zones[count.index]}"
-  node_count            = var.node_pool_min_vm_per_az
-  max_count             = var.node_pool_max_vm_per_az
-  min_count             = var.node_pool_min_vm_per_az
-  vm_size               = var.node_pool_vm_size
-  vnet_subnet_id        = var.cluster_subnet_id
-  zones                 = [local.additonal_zones[count.index]]
+  count                       = length(local.additonal_zones)
+  kubernetes_cluster_id       = azurerm_kubernetes_cluster.default.id
+  enable_auto_scaling         = true
+  max_pods                    = var.max_pods
+  name                        = "zone${local.additonal_zones[count.index]}"
+  node_count                  = var.node_pool_min_vm_per_az
+  max_count                   = var.node_pool_max_vm_per_az
+  min_count                   = var.node_pool_min_vm_per_az
+  vm_size                     = var.node_pool_vm_size
+  vnet_subnet_id              = var.cluster_subnet_id
+  zones                       = [ local.additonal_zones[count.index] ]
 
   lifecycle {
     ignore_changes = [node_count]
