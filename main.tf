@@ -56,6 +56,11 @@ module "database" {
   depends_on = [module.networking]
 }
 
+moved {
+  from = module.redis.azurerm_redis_cache.default
+  to   = module.redis[0].azurerm_redis_cache.default
+}
+
 module "redis" {
   source              = "./modules/redis"
   count               = var.create_redis ? 1 : 0
