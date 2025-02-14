@@ -61,7 +61,11 @@ variable "controller_image_tag" {
   default     = "1.14.0"
 }
 
-
+variable "enable_helm_release" {
+  type        = bool
+  default     = true
+  description = "Enable or disable applying and releasing Helm chart"
+}
 
 ##########################################
 # DNS                                    #
@@ -118,6 +122,25 @@ variable "redis_capacity" {
   description = "Number indicating size of an redis instance. Defaults to null and value from deployment-size.tf is used"
   default     = null
 }
+
+variable "use_external_redis" {
+  type        = bool
+  description = "Boolean indicating whether to use the redis instance created externally"
+  default     = false
+}
+
+variable "external_redis_host" {
+  type        = string
+  description = "host for the redis instance created externally"
+  default     = null
+}
+
+variable "external_redis_port" {
+  type        = string
+  description = "port for the redis instance created externally"
+  default     = null
+}
+
 
 ##########################################
 # External Bucket                        #
@@ -276,5 +299,14 @@ variable "clickhouse_private_endpoint_service_name" {
 variable "clickhouse_region" {
   type        = string
   description = "ClickHouse region (eastus2, westus3, etc)."
+  default     = ""
+}
+
+###########################################
+# Internal Service                        #
+###########################################
+variable "kubernetes_cluster_oidc_issuer_url" {
+  type        = string
+  description = "OIDC issuer URL for the Kubernetes cluster. Can be determined using `kubectl get --raw /.well-known/openid-configuration`"
   default     = ""
 }
