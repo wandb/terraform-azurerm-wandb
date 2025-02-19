@@ -322,10 +322,14 @@ module "wandb" {
         redis = var.use_external_redis ? {
           host = var.external_redis_host
           port = var.external_redis_port
+          } : var.create_redis ? {
+          host     = module.redis[0].hostname
+          password = can(module.redis[0].) ? module.redis[0].primary_access_key : null
+          port     = module.redis[0].port
           } : {
-          host     = var.create_redis ? module.redis[0].hostname : null
-          password = (var.create_redis && can(module.redis[0].primary_access_key)) ? module.redis[0].primary_access_key : null
-          port     = var.create_redis ? module.redis[0].port : null
+          host     = null
+          password = null
+          port     = null
         }
 
         extraEnv = var.other_wandb_env
