@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.2.2...v6.0.0) (2025-02-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* INFRA-478 external-redis toggles (#124)
+
+### Features
+
+* INFRA-478 external-redis toggles ([#124](https://github.com/wandb/terraform-azurerm-wandb/issues/124)) ([4bc1cd1](https://github.com/wandb/terraform-azurerm-wandb/commit/4bc1cd1bd0766f5f30d27bd7c396c56faadfbac1))
+
 ### [5.2.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.2.1...v5.2.2) (2025-02-11)
 
 
