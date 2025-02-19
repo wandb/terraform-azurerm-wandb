@@ -56,6 +56,11 @@ module "database" {
   depends_on = [module.networking]
 }
 
+moved {
+  from = module.redis.azurerm_redis_cache.default
+  to   = module.redis[0].azurerm_redis_cache.default
+}
+
 module "redis" {
   source              = "./modules/redis"
   count               = var.create_redis ? 1 : 0
@@ -317,10 +322,14 @@ module "wandb" {
         redis = var.use_external_redis ? {
           host = var.external_redis_host
           port = var.external_redis_port
+          } : var.create_redis ? {
+          host     = module.redis[0].instance.hostname
+          password = module.redis[0].instance.primary_access_key
+          port     = module.redis[0].instance.port
           } : {
-          host     = var.create_redis ? module.redis[0].hostname : null
-          password = (var.create_redis && can(module.redis[0].primary_access_key)) ? module.redis[0].primary_access_key : null
-          port     = var.create_redis ? module.redis[0].port : null
+          host     = null
+          password = null
+          port     = null
         }
 
         extraEnv = var.other_wandb_env
