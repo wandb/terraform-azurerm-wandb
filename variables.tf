@@ -161,7 +161,7 @@ variable "database_sku_name" {
 variable "create_redis" {
   type        = bool
   description = "Boolean indicating whether to provision an redis instance (true) or not (false)."
-  default     = false
+  default     = true
 }
 
 variable "redis_capacity" {
