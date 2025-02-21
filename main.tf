@@ -420,7 +420,10 @@ module "wandb" {
       }
 
       mysql = { install = false }
-      redis = { install = false }
+      redis = {
+        install = !var.create_redis && !var.use_external_redis
+        external = var.use_external_redis
+      }
 
       parquet = {
         extraEnv = var.parquet_wandb_env
