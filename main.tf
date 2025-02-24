@@ -327,12 +327,10 @@ module "wandb" {
           host     = module.redis[0].instance.hostname
           password = module.redis[0].instance.primary_access_key
           port     = module.redis[0].instance.port
-          external = false
           } : {
           host     = null
           password = null
           port     = null
-          external = false
         }
 
         extraEnv = var.other_wandb_env
