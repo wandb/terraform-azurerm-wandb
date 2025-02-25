@@ -322,6 +322,7 @@ module "wandb" {
         redis = var.use_external_redis ? {
           host = var.external_redis_host
           port = var.external_redis_port
+          external = true
           } : var.create_redis ? {
           host     = module.redis[0].instance.hostname
           password = module.redis[0].instance.primary_access_key
