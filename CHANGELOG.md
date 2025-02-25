@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v6.0.0...v7.0.0) (2025-02-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* Expose externalized redis to helm for console metrics (#125)
+
+### Bug Fixes
+
+* Expose externalized redis to helm for console metrics ([#125](https://github.com/wandb/terraform-azurerm-wandb/issues/125)) ([7c07d00](https://github.com/wandb/terraform-azurerm-wandb/commit/7c07d00f9fe46ce3ce5ceccd9af0c6bd672945f5))
+
 ## [6.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.2.2...v6.0.0) (2025-02-19)
 
 
