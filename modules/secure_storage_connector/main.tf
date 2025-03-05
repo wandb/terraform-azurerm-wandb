@@ -1,6 +1,5 @@
 provider "azurerm" {
   features {}
-  subscription_id = var.subscription_id
 }
 
 data "azurerm_client_config" "current" {
@@ -20,9 +19,9 @@ resource "azurerm_federated_identity_credential" "app" {
   parent_id           = azurerm_user_assigned_identity.default.id
   name                = "${var.namespace}-federated-credential"
   resource_group_name = data.azurerm_resource_group.group.name
-  audience            = var.audience
+  audience            = ["api://AzureADTokenExchange"]
   issuer              = var.oidc_issuer_url
-  subject             = var.subject
+  subject             = "system:serviceaccount:default:wandb-app"
 }
 
 module "storage" {
@@ -35,9 +34,8 @@ module "storage" {
   location            = data.azurerm_resource_group.group.location
   resource_group_name = data.azurerm_resource_group.group.name
   blob_container_name = var.namespace
+
   deletion_protection = var.deletion_protection
-  storage_key_id      = null
-  identity_ids        = ""
 }
 
 resource "azurerm_role_assignment" "account" {
