@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.0.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.0.0...v7.0.1) (2025-03-06)
+
+
+### Bug Fixes
+
+* Revert Provision Azure storage container for SaaS BYOB ([#118](https://github.com/wandb/terraform-azurerm-wandb/issues/118)) ([#126](https://github.com/wandb/terraform-azurerm-wandb/issues/126)) ([fddeb5d](https://github.com/wandb/terraform-azurerm-wandb/commit/fddeb5d269c43a2330efbc9d30a4e6f0c18e3b70))
+
 ## [7.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v6.0.0...v7.0.0) (2025-02-25)
 
 
