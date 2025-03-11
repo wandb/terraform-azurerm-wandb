@@ -77,7 +77,7 @@ resources that lack official modules.
 | <a name="module_redis"></a> [redis](#module\_redis) | ./modules/redis | n/a |
 | <a name="module_storage"></a> [storage](#module\_storage) | ./modules/storage | n/a |
 | <a name="module_vault"></a> [vault](#module\_vault) | ./modules/vault | n/a |
-| <a name="module_wandb"></a> [wandb](#module\_wandb) | wandb/wandb/helm | 2.0.0 |
+| <a name="module_wandb"></a> [wandb](#module\_wandb) | wandb/wandb/helm | 3.0.0 |
 
 ## Resources
 
@@ -109,7 +109,8 @@ resources that lack official modules.
 | <a name="input_disable_storage_vault_key_id"></a> [disable\_storage\_vault\_key\_id](#input\_disable\_storage\_vault\_key\_id) | Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation. | `bool` | `false` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain for accessing the Weights & Biases UI. | `string` | `null` | no |
 | <a name="input_enable_database_vault_key"></a> [enable\_database\_vault\_key](#input\_enable\_database\_vault\_key) | Flag to enable managed key encryption for the database. Once enabled, cannot be disabled. | `bool` | `false` | no |
-| <a name="input_enable_helm_release"></a> [enable\_helm\_release](#input\_enable\_helm\_release) | Enable or disable applying and releasing Helm chart | `bool` | `true` | no |
+| <a name="input_enable_helm_operator"></a> [enable\_helm\_operator](#input\_enable\_helm\_operator) | Enable or disable applying and releasing W&B Operator chart | `bool` | `true` | no |
+| <a name="input_enable_helm_wandb"></a> [enable\_helm\_wandb](#input\_enable\_helm\_wandb) | Enable or disable applying and releasing CR chart | `bool` | `true` | no |
 | <a name="input_enable_storage_vault_key"></a> [enable\_storage\_vault\_key](#input\_enable\_storage\_vault\_key) | Flag to enable managed key encryption for the storage account. | `bool` | `false` | no |
 | <a name="input_external_bucket"></a> [external\_bucket](#input\_external\_bucket) | config an external bucket | `any` | `null` | no |
 | <a name="input_external_redis_host"></a> [external\_redis\_host](#input\_external\_redis\_host) | host for the redis instance created externally | `string` | `null` | no |

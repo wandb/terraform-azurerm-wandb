@@ -280,7 +280,7 @@ locals {
 
 module "wandb" {
   source  = "wandb/wandb/helm"
-  version = "2.0.0"
+  version = "3.0.0"
 
   depends_on = [
     module.app_aks,
@@ -291,7 +291,8 @@ module "wandb" {
   ]
   operator_chart_version = var.operator_chart_version
   controller_image_tag   = var.controller_image_tag
-  enable_helm_release    = var.enable_helm_release
+  enable_helm_operator   = var.enable_helm_operator
+  enable_helm_wandb      = var.enable_helm_wandb
 
   spec = {
     values = {
@@ -320,8 +321,8 @@ module "wandb" {
         }
 
         redis = var.use_external_redis ? {
-          host = var.external_redis_host
-          port = var.external_redis_port
+          host     = var.external_redis_host
+          port     = var.external_redis_port
           external = true
           } : var.create_redis ? {
           host     = module.redis[0].instance.hostname
