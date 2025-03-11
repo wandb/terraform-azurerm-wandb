@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.1.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.0.1...v7.1.0) (2025-03-11)
+
+
+### Features
+
+* Add helm chart toggles ([#127](https://github.com/wandb/terraform-azurerm-wandb/issues/127)) ([11d40ca](https://github.com/wandb/terraform-azurerm-wandb/commit/11d40ca747bb08ab21a2fb189e6bd87b822ac43f))
+
 ### [7.0.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.0.0...v7.0.1) (2025-03-06)
 
 
