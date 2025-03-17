@@ -328,9 +328,10 @@ module "wandb" {
         }
 
         redis = var.use_ctrlplane_redis ? {
-          host   = local.ctrlplane_redis_host
-          port   = local.ctrlplane_redis_port
-          params = local.ctrlplane_redis_params
+          host     = local.ctrlplane_redis_host
+          port     = local.ctrlplane_redis_port
+          params   = local.ctrlplane_redis_params
+          external = true
         } : var.use_external_redis ? {
           host     = var.external_redis_host
           port     = var.external_redis_port
@@ -339,10 +340,12 @@ module "wandb" {
           host     = module.redis[0].instance.hostname
           password = module.redis[0].instance.primary_access_key
           port     = module.redis[0].instance.port
+          external = false
           } : {
           host     = null
           password = null
           port     = null
+          external = false
         }
 
         extraEnv = var.other_wandb_env
