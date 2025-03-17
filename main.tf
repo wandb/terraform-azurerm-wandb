@@ -342,9 +342,9 @@ module "wandb" {
           port     = module.redis[0].instance.port
           external = false
           } : {
-          host     = null
-          password = null
-          port     = null
+          host     = ""
+          password = ""
+          port     = ""
           external = false
         }
 
