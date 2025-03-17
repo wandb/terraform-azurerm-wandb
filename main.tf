@@ -276,6 +276,13 @@ locals {
 
   bucket_config                    = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
   weave_trace_service_account_name = "wandb-weave-trace"
+
+  ctrlplane_redis_host = "redis.redis.svc.cluster.local"
+  ctrlplane_redis_port = 26379
+  ctrlplane_redis_params = {
+    ttlInSeconds = 604800
+    master_name  = "gorilla"
+  }
 }
 
 module "wandb" {
@@ -320,7 +327,11 @@ module "wandb" {
           port     = 3306
         }
 
-        redis = var.use_external_redis ? {
+        redis = var.use_ctrlplane_redis ? {
+          host   = local.ctrlplane_redis_host
+          port   = local.ctrlplane_redis_port
+          params = local.ctrlplane_redis_params
+        } : var.use_external_redis ? {
           host     = var.external_redis_host
           port     = var.external_redis_port
           external = true
