@@ -278,9 +278,9 @@ locals {
   weave_trace_service_account_name = "wandb-weave-trace"
 
   ctrlplane_redis_host = "redis.redis.svc.cluster.local"
-  ctrlplane_redis_port = 26379
+  ctrlplane_redis_port = "26379"
   ctrlplane_redis_params = {
-    ttlInSeconds = 604800
+    ttlInSeconds = "604800"
     master_name  = "gorilla"
   }
 }
