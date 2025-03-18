@@ -331,19 +331,19 @@ module "wandb" {
           host     = local.ctrlplane_redis_host
           password = ""
           port     = local.ctrlplane_redis_port
-          parameters   = local.ctrlplane_redis_params
+          params   = local.ctrlplane_redis_params
           external = true
         } : var.use_external_redis ? {
           host     = var.external_redis_host
           password = ""
           port     = var.external_redis_port
-          parameters   = var.external_redis_params
+          params   = var.external_redis_params
           external = true
           } : var.create_redis ? {
           host     = module.redis[0].instance.hostname
           password = module.redis[0].instance.primary_access_key
           port     = module.redis[0].instance.port
-          parameters   = {
+          params   = {
             ttlInSeconds = "604800"
           }
           external = false
@@ -351,7 +351,7 @@ module "wandb" {
           host     = ""
           password = ""
           port     = ""
-          parameters   = {}
+          params   = {}
           external = false
         }
 
