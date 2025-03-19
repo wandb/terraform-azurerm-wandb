@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.2.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.1.0...v7.2.0) (2025-03-19)
+
+
+### Features
+
+* **deploy:** Support ctrlplane redis ([#128](https://github.com/wandb/terraform-azurerm-wandb/issues/128)) ([0b65265](https://github.com/wandb/terraform-azurerm-wandb/commit/0b65265698b24c83bef515f4313122159621bbe1))
+
 ## [7.1.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.0.1...v7.1.0) (2025-03-11)
 
 
