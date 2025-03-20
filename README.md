@@ -96,6 +96,7 @@ resources that lack official modules.
 | <a name="input_azuremonitor"></a> [azuremonitor](#input\_azuremonitor) | # To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 | `bool` | `false` | no |
 | <a name="input_blob_container"></a> [blob\_container](#input\_blob\_container) | Use an existing bucket. | `string` | `""` | no |
 | <a name="input_bucket_path"></a> [bucket\_path](#input\_bucket\_path) | path of where to store data for the instance-level bucket | `string` | `""` | no |
+| <a name="input_cache_size"></a> [cache\_size](#input\_cache\_size) | Size of the redis cache, when use\_ctrlplane\_redis is true. These values map to preset sizes in the bitnami helm chart. | `string` | `"nano"` | no |
 | <a name="input_clickhouse_private_endpoint_service_name"></a> [clickhouse\_private\_endpoint\_service\_name](#input\_clickhouse\_private\_endpoint\_service\_name) | ClickHouse private endpoint 'Service name' (ends in .azure.privatelinkservice). | `string` | `""` | no |
 | <a name="input_clickhouse_region"></a> [clickhouse\_region](#input\_clickhouse\_region) | ClickHouse region (eastus2, westus3, etc). | `string` | `""` | no |
 | <a name="input_cluster_sku_tier"></a> [cluster\_sku\_tier](#input\_cluster\_sku\_tier) | The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers) | `string` | `"Free"` | no |
