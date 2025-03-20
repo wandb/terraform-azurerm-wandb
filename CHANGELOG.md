@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.2.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.2.0...v7.2.1) (2025-03-20)
+
+
+### Bug Fixes
+
+* Tag cache_size on cloud managed K8s ([#129](https://github.com/wandb/terraform-azurerm-wandb/issues/129)) ([3b6b86f](https://github.com/wandb/terraform-azurerm-wandb/commit/3b6b86f1ed65db6c0431ef4a4dfb153bda8eff85))
+
 ## [7.2.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.1.0...v7.2.0) (2025-03-19)
 
 
