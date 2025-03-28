@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.2.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.2.1...v7.2.2) (2025-03-28)
+
+
+### Bug Fixes
+
+* Patch deploy ([#132](https://github.com/wandb/terraform-azurerm-wandb/issues/132)) ([29ec3b6](https://github.com/wandb/terraform-azurerm-wandb/commit/29ec3b6f0ced89c27c9a3872118ca62c86c8c538))
+
 ### [7.2.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.2.0...v7.2.1) (2025-03-20)
 
 
