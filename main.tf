@@ -159,7 +159,7 @@ module "app_aks" {
   public_subnet           = module.networking.public_subnet
   resource_group          = azurerm_resource_group.default
   sku_tier                = var.cluster_sku_tier
-  tags                    = merge(var.tags, {cache_size = var.cache_size})
+  tags                    = merge(var.tags, { cache_size = var.cache_size })
 }
 locals {
   service_account_name         = "wandb-app"
@@ -280,7 +280,7 @@ locals {
   ctrlplane_redis_host = "redis.redis.svc.cluster.local"
   ctrlplane_redis_port = "26379"
   ctrlplane_redis_params = {
-    master       = "gorilla"
+    master = "gorilla"
   }
 }
 
@@ -303,6 +303,7 @@ module "wandb" {
   spec = {
     values = {
       global = {
+        size          = var.size
         host          = local.url
         license       = var.license
         cloudProvider = "azure"
@@ -343,15 +344,15 @@ module "wandb" {
           password = module.redis[0].instance.primary_access_key
           port     = module.redis[0].instance.port
           params = {
-            master       = ""
+            master = ""
           }
           external = false
           } : {
           host     = ""
           password = ""
           port     = ""
-          params   = {
-            master       = ""
+          params = {
+            master = ""
           }
           external = false
         }
