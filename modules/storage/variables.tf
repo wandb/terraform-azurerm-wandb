@@ -20,31 +20,35 @@ variable "create_queue" {
 
 variable "tags" {
   default     = {}
-  type        = map(string)
   description = "Map of tags for resource"
+  type        = map(string)
 }
 
 variable "deletion_protection" {
-  description = "If the instance should have deletion protection enabled. The storage container can't be deleted when this value is set to `true`."
   type        = bool
+  description = "If the instance should have deletion protection enabled. The storage container can't be deleted when this value is set to `true`."
 }
 
 variable "storage_key_id" {
-  type = string
+  type        = string
+  description = "The ID of the storage key to use for the storage account."
+  default     = null
 }
 
 variable "disable_storage_vault_key_id" {
   type        = bool
-  default     = false
   description = "Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation."
+  default     = false
 }
 
 variable "identity_ids" {
-  type = string
+  type        = string
+  description = "The ID of the user assigned identity to use for the storage account."
+  default     = null
 }
 
 variable "blob_container_name" {
-  description = "Name of azure storage account container for storing blobs"
   type        = string
+  description = "Name of azure storage account container for storing blobs"
   default     = "wandb"
 }

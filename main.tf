@@ -176,6 +176,33 @@ resource "azurerm_federated_identity_credential" "app" {
   subject             = "system:serviceaccount:default:${local.service_account_name}"
 }
 
+locals {
+  sa_map = {
+    "wandb-api"                     = "wandb-api",
+    "wandb-console"                 = "wandb-console",
+    "wandb-executor"                = "wandb-executor",
+    "wandb-flat-run-fields-updater" = "wandb-flat-run-fields-updater",
+    "wandb-parquet"                 = "wandb-parquet",
+    "wandb-filestream"              = "wandb-filestream",
+    "wandb-filemeta"                = "wandb-filemeta",
+    "wandb-glue"                    = "wandb-glue",
+    "wandb-weave"                   = "wandb-weave",
+    "wandb-weave-trace"             = "wandb-weave-trace",
+    "wandb-settings-migration-job"  = "wandb-settings-migration-job",
+    "wandb-bufstream"               = "bufstream-service-account"
+  }
+}
+
+resource "azurerm_federated_identity_credential" "sa_map" {
+  for_each            = local.sa_map
+  parent_id           = azurerm_user_assigned_identity.default.id
+  name                = "${var.namespace}-federated-credential-${each.value}"
+  resource_group_name = data.azurerm_resource_group.group.name
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = module.app_aks.oidc_issuer_url
+  subject             = "system:serviceaccount:default:${each.value}"
+}
+
 # aks workload identity resources for private endpoint approval application
 module "pod_identity" {
   count          = length(var.allowed_subscriptions) > 0 ? 1 : 0
@@ -381,9 +408,22 @@ module "wandb" {
         ]
       }
 
+      api = {
+        serviceAccount = {
+          name        = local.sa_map["wandb-api"]
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+      }
+
       console = {
         extraEnv = {
           "BUCKET_ACCESS_IDENTITY" = "CLIENT_ID=${module.identity.identity.client_id} - TENANT_ID=${module.identity.identity.tenant_id}"
+        }
+        serviceAccount = {
+          name        = local.sa_map["wandb-console"]
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
         }
       }
 
@@ -439,17 +479,86 @@ module "wandb" {
       }
 
       weave = {
+        serviceAccount = {
+          name        = local.sa_map["wandb-weave"]
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
         persistence = {
           provider = "azurefile"
         }
       }
 
+      weave-trace = {
+        serviceAccount = {
+          name        = local.sa_map["wandb-weave-trace"]
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+      }
+
+      bufstream = {
+        serviceAccount = {
+          name        = local.sa_map["wandb-bufstream"]
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+      }
+
+
+
       mysql = { install = false }
       redis = { install = false }
 
       parquet = {
+        serviceAccount = {
+          name        = local.sa_map["wandb-parquet"]
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
         extraEnv = var.parquet_wandb_env
       }
+
+      executor = {
+        serviceAccount = {
+          name        = local.sa_map["wandb-executor"]
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+      }
+
+      settingsMigrationJob = {
+        serviceAccount = {
+          name        = local.sa_map["wandb-settings-migration-job"]
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+      }
+
+      glue = {
+        serviceAccount = {
+          name        = local.sa_map["wandb-glue"]
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+      }
+
+      filestream = {
+        serviceAccount = {
+          name        = local.sa_map["wandb-filestream"]
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+      }
+
+      filemeta = {
+        serviceAccount = {
+          name        = local.sa_map["wandb-filemeta"]
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+      }
+
     }
   }
 }
