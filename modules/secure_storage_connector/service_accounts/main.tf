@@ -11,7 +11,7 @@ locals {
     weaveTrace           = "wandb-weave-trace",
     settingsMigrationJob = "wandb-settings-migration-job",
     bufstream            = "bufstream-service-account",
-    bucket-access        = "wandb-bucket-access"
+    bucketAccess         = "wandb-bucket-access"
     # "flatRunFieldsUpdater" = "wandb-flat-run-fields-updater",
   }
 }
