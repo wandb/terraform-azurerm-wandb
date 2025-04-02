@@ -385,6 +385,9 @@ module "wandb" {
           "GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
           "GORILLA_CUSTOMER_SECRET_STORE_SOURCE"              = "az-secretmanager://wandb",
         }
+
+        # Parts of the helm chart use pod label patterns with different patterns.
+        # The following is done to support both patterns.
         pod = {
           labels = { "azure.workload.identity/use" = "true" }
         }
