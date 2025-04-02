@@ -5,22 +5,17 @@ data "azurerm_resource_group" "group" {
   name = var.resource_group_name
 }
 
+module "service_accounts" {
+  source = "./service_accounts"
+}
+
 locals {
-  sa_map = {
-    "wandb-app"                     = "wandb-app",
-    "wandb-api"                     = "wandb-api",
-    "wandb-console"                 = "wandb-console",
-    "wandb-executor"                = "wandb-executor",
-    "wandb-flat-run-fields-updater" = "wandb-flat-run-fields-updater",
-    "wandb-parquet"                 = "wandb-parquet",
-    "wandb-filestream"              = "wandb-filestream",
-    "wandb-filemeta"                = "wandb-filemeta",
-    "wandb-glue"                    = "wandb-glue",
-    "wandb-weave"                   = "wandb-weave",
-    "wandb-weave-trace"             = "wandb-weave-trace",
-    "wandb-settings-migration-job"  = "wandb-settings-migration-job",
-    "wandb-bufstream"               = "bufstream-service-account"
-  }
+  k8s_sa_map = merge(
+    {
+      app = "wandb-app"
+    },
+    module.service_accounts.k8s_sa_map
+  )
 }
 
 resource "azurerm_user_assigned_identity" "default" {
@@ -30,7 +25,7 @@ resource "azurerm_user_assigned_identity" "default" {
 }
 
 resource "azurerm_federated_identity_credential" "sa_map" {
-  for_each            = local.sa_map
+  for_each            = local.k8s_sa_map
   parent_id           = azurerm_user_assigned_identity.default.id
   name                = "${var.namespace}-federated-credential-${each.value}"
   resource_group_name = data.azurerm_resource_group.group.name
