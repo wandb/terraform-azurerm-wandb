@@ -34,8 +34,7 @@ variable "tags" {
 }
 
 variable "private_subnet" {
-  type        = string
-  description = "Specifies the supported Azure subnet where the resource exists."
+  type        = object({ id = string })
 }
 
 variable "private_link" {

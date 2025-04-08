@@ -112,7 +112,7 @@ module "app_lb" {
   location       = azurerm_resource_group.default.location
   network        = module.networking.network
   public_subnet  = module.networking.public_subnet
-  private_subnet = module.networking.private_subnet.id
+  private_subnet = module.networking.private_subnet
   private_link   = var.create_private_link
 
   tags = var.tags
@@ -389,7 +389,6 @@ module "wandb" {
 
       ingress = {
         issuer = { create = false }
-        create = var.create_public_endpoint
         annotations = {
           "kubernetes.io/ingress.class"                 = "azure/application-gateway"
           "cert-manager.io/cluster-issuer"              = "cert-issuer"
@@ -400,7 +399,7 @@ module "wandb" {
         labels = var.create_private_link ? {
             "sha_hash" = substr(sha256("yes"), 0, 50)
           } : {}
-        
+
         tls = [
           { hosts = [trimprefix(trimprefix(local.url, "https://"), "http://")], secretName = "wandb-ssl-cert" }
         ]
@@ -413,7 +412,9 @@ module "wandb" {
             "appgw.ingress.kubernetes.io/request-timeout" = "300"
             "appgw.ingress.kubernetes.io/use-private-ip" : "true"
           }
-          tls = [] 
+          tls = [
+            { hosts = [trimprefix(trimprefix(local.url, "https://"), "http://")], secretName = "wandb-ssl-cert" }
+          ]
         }
       }
  
