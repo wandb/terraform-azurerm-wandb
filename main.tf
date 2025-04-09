@@ -440,6 +440,8 @@ module "wandb" {
   source  = "wandb/wandb/helm"
   version = "3.0.0"
 
+  spec = local.spec
+
   depends_on = [
     module.app_aks,
     module.cert_manager,
@@ -451,6 +453,4 @@ module "wandb" {
   controller_image_tag   = var.controller_image_tag
   enable_helm_operator   = var.enable_helm_operator
   enable_helm_wandb      = var.enable_helm_wandb
-
-  spec = local.spec
 }
