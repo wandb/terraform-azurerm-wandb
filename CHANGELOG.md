@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.3.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.2.2...v7.3.0) (2025-04-09)
+
+
+### Features
+
+* Output spec ([#135](https://github.com/wandb/terraform-azurerm-wandb/issues/135)) ([5fdea4f](https://github.com/wandb/terraform-azurerm-wandb/commit/5fdea4fbe649b009a0d7868428d08c6df4a96192))
+
 ### [7.2.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.2.1...v7.2.2) (2025-03-28)
 
 
