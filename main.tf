@@ -282,24 +282,6 @@ locals {
   ctrlplane_redis_params = {
     master = "gorilla"
   }
-}
-
-module "wandb" {
-  source  = "wandb/wandb/helm"
-  version = "3.0.0"
-
-  depends_on = [
-    module.app_aks,
-    module.cert_manager,
-    module.database,
-    module.storage,
-    module.redis,
-  ]
-  operator_chart_version = var.operator_chart_version
-  controller_image_tag   = var.controller_image_tag
-  enable_helm_operator   = var.enable_helm_operator
-  enable_helm_wandb      = var.enable_helm_wandb
-
   spec = {
     values = {
       global = {
@@ -454,4 +436,21 @@ module "wandb" {
   }
 }
 
+module "wandb" {
+  source  = "wandb/wandb/helm"
+  version = "3.0.0"
 
+  depends_on = [
+    module.app_aks,
+    module.cert_manager,
+    module.database,
+    module.storage,
+    module.redis,
+  ]
+  operator_chart_version = var.operator_chart_version
+  controller_image_tag   = var.controller_image_tag
+  enable_helm_operator   = var.enable_helm_operator
+  enable_helm_wandb      = var.enable_helm_wandb
+
+  spec = local.spec
+}
