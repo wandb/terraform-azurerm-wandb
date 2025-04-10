@@ -282,6 +282,11 @@ locals {
   ctrlplane_redis_params = {
     master = "gorilla"
   }
+
+  secret_env = {
+    "GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
+    "GORILLA_CUSTOMER_SECRET_STORE_SOURCE"              = "az-secretmanager://wandb",
+  }
 }
 
 module "wandb" {
@@ -360,11 +365,12 @@ module "wandb" {
         extraEnv = var.other_wandb_env
       }
 
+      api = {
+        extraEnv = local.secret_env
+      }
+
       app = {
-        extraEnv = {
-          "GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
-          "GORILLA_CUSTOMER_SECRET_STORE_SOURCE"              = "az-secretmanager://wandb",
-        }
+        extraEnv = local.secret_env
         pod = {
           labels = { "azure.workload.identity/use" = "true" }
         }
