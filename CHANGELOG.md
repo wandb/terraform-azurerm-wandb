@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.3.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.1...v7.3.2) (2025-04-10)
+
+
+### Bug Fixes
+
+* Use vars in secure_storage_connector examples ([#136](https://github.com/wandb/terraform-azurerm-wandb/issues/136)) ([686ecd1](https://github.com/wandb/terraform-azurerm-wandb/commit/686ecd148534d848bfda8048eac156a9a71e4a05))
+
 ### [7.3.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.0...v7.3.1) (2025-04-10)
 
 
