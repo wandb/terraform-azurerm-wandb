@@ -26,5 +26,5 @@ variable "oidc_issuer_url" {
 variable "deletion_protection" {
   type        = bool
   description = "If the instance should have deletion protection enabled. The storage container can't be deleted when this value is set to `true`"
-  default     = false
+  default     = true
 }
