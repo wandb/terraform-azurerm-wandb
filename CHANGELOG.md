@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.3.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.0...v7.3.1) (2025-04-10)
+
+
+### Bug Fixes
+
+* Workload Identity ([#133](https://github.com/wandb/terraform-azurerm-wandb/issues/133)) ([4599ca6](https://github.com/wandb/terraform-azurerm-wandb/commit/4599ca63838e43ca620d6ec9950728423cf7a753))
+
 ## [7.3.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.2.2...v7.3.0) (2025-04-09)
 
 
