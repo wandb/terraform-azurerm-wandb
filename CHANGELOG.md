@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.3.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.2...v7.3.3) (2025-04-11)
+
+
+### Bug Fixes
+
+* Use internal oidc issuer url instead of variable / fix secret store ([#134](https://github.com/wandb/terraform-azurerm-wandb/issues/134)) ([c6c89c8](https://github.com/wandb/terraform-azurerm-wandb/commit/c6c89c8e5476bc55a44d0f9e25b7ac2db5ba258a))
+
 ### [7.3.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.1...v7.3.2) (2025-04-10)
 
 
