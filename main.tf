@@ -176,6 +176,26 @@ resource "azurerm_federated_identity_credential" "app" {
   subject             = "system:serviceaccount:default:${local.service_account_name}"
 }
 
+
+
+module "service_accounts" {
+  source = "./modules/secure_storage_connector/service_accounts"
+}
+
+locals {
+  k8s_sa_map = module.service_accounts.k8s_sa_map
+}
+
+resource "azurerm_federated_identity_credential" "sa_map" {
+  for_each            = local.k8s_sa_map
+  parent_id           = module.identity.identity.id
+  name                = "${var.namespace}-federated-credential-${each.value}"
+  resource_group_name = azurerm_resource_group.default.name
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = module.app_aks.oidc_issuer_url
+  subject             = "system:serviceaccount:default:${each.value}"
+}
+
 # aks workload identity resources for private endpoint approval application
 module "pod_identity" {
   count          = length(var.allowed_subscriptions) > 0 ? 1 : 0
@@ -282,27 +302,6 @@ locals {
   ctrlplane_redis_params = {
     master = "gorilla"
   }
-
-  secret_env = {
-  }
-}
-
-module "wandb" {
-  source  = "wandb/wandb/helm"
-  version = "3.0.0"
-
-  depends_on = [
-    module.app_aks,
-    module.cert_manager,
-    module.database,
-    module.storage,
-    module.redis,
-  ]
-  operator_chart_version = var.operator_chart_version
-  controller_image_tag   = var.controller_image_tag
-  enable_helm_operator   = var.enable_helm_operator
-  enable_helm_wandb      = var.enable_helm_wandb
-
   spec = {
     values = {
       global = {
@@ -367,9 +366,12 @@ module "wandb" {
       }
 
       app = {
+        # Parts of the helm chart use pod label patterns with different patterns.
+        # The following is done to support both patterns.
         pod = {
           labels = { "azure.workload.identity/use" = "true" }
         }
+        podLabels = { "azure.workload.identity/use" = "true" }
         serviceAccount = {
           name        = local.service_account_name
           annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
@@ -383,10 +385,31 @@ module "wandb" {
         ]
       }
 
+      api = {
+        serviceAccount = {
+          name        = local.k8s_sa_map.api
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+        pod = {
+          labels = { "azure.workload.identity/use" = "true" }
+        }
+        podLabels = { "azure.workload.identity/use" = "true" }
+      }
+
       console = {
         extraEnv = {
-          "BUCKET_ACCESS_IDENTITY" = "CLIENT_ID=${module.identity.identity.client_id} - TENANT_ID=${module.identity.identity.tenant_id}"
+          "BUCKET_ACCESS_IDENTITY" = "CLIENT_ID=${module.identity.identity.client_id} - TENANT_ID=${module.identity.identity.tenant_id} - OIDC_ISSUER_URL=${module.app_aks.oidc_issuer_url}"
         }
+        serviceAccount = {
+          name        = local.k8s_sa_map.console
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+        pod = {
+          labels = { "azure.workload.identity/use" = "true" }
+        }
+        podLabels = { "azure.workload.identity/use" = "true" }
       }
 
       ingress = {
@@ -441,19 +464,141 @@ module "wandb" {
       }
 
       weave = {
+        serviceAccount = {
+          name        = local.k8s_sa_map.weave
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
         persistence = {
           provider = "azurefile"
         }
+        pod = {
+          labels = { "azure.workload.identity/use" = "true" }
+        }
+        podLabels = { "azure.workload.identity/use" = "true" }
       }
+
+      weave-trace = {
+        serviceAccount = {
+          name        = local.k8s_sa_map.weaveTrace
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+        pod = {
+          labels = { "azure.workload.identity/use" = "true" }
+        }
+        podLabels = { "azure.workload.identity/use" = "true" }
+      }
+
+      bufstream = {
+        serviceAccount = {
+          name        = local.k8s_sa_map.bufstream
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+        pod = {
+          labels = { "azure.workload.identity/use" = "true" }
+        }
+        podLabels = { "azure.workload.identity/use" = "true" }
+      }
+
+
 
       mysql = { install = false }
       redis = { install = false }
 
       parquet = {
-        extraEnv = var.parquet_wandb_env
+        serviceAccount = {
+          name        = local.k8s_sa_map.parquet
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+        pod = {
+          labels = { "azure.workload.identity/use" = "true" }
+        }
+        podLabels = { "azure.workload.identity/use" = "true" }
+        extraEnv  = var.parquet_wandb_env
       }
+
+      executor = {
+        serviceAccount = {
+          name        = local.k8s_sa_map.executor
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+        pod = {
+          labels = { "azure.workload.identity/use" = "true" }
+        }
+        podLabels = { "azure.workload.identity/use" = "true" }
+      }
+
+      settingsMigrationJob = {
+        serviceAccount = {
+          name        = local.k8s_sa_map.settingsMigrationJob
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+        pod = {
+          labels = { "azure.workload.identity/use" = "true" }
+        }
+        podLabels = { "azure.workload.identity/use" = "true" }
+      }
+
+      glue = {
+        serviceAccount = {
+          name        = local.k8s_sa_map.glue
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+        pod = {
+          labels = { "azure.workload.identity/use" = "true" }
+        }
+        podLabels = { "azure.workload.identity/use" = "true" }
+      }
+
+      filestream = {
+        serviceAccount = {
+          name        = local.k8s_sa_map.filestream
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+        pod = {
+          labels = { "azure.workload.identity/use" = "true" }
+        }
+        podLabels = { "azure.workload.identity/use" = "true" }
+      }
+
+      filemeta = {
+        serviceAccount = {
+          name        = local.k8s_sa_map.filemeta
+          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+      }
+      pod = {
+        labels = { "azure.workload.identity/use" = "true" }
+      }
+      podLabels = { "azure.workload.identity/use" = "true" }
+
     }
   }
 }
 
+module "wandb" {
+  source  = "wandb/wandb/helm"
+  version = "3.0.0"
 
+  spec = local.spec
+
+  depends_on = [
+    module.app_aks,
+    module.cert_manager,
+    module.database,
+    module.storage,
+    module.redis,
+  ]
+  operator_chart_version = var.operator_chart_version
+  controller_image_tag   = var.controller_image_tag
+  enable_helm_operator   = var.enable_helm_operator
+  enable_helm_wandb      = var.enable_helm_wandb
+}
