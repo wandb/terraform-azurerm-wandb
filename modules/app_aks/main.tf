@@ -5,9 +5,10 @@ resource "azurerm_kubernetes_cluster" "default" {
   dns_prefix          = var.namespace
   sku_tier            = var.sku_tier
 
-  automatic_channel_upgrade         = "stable"
+  automatic_upgrade_channel         = "stable"
   role_based_access_control_enabled = true
   http_application_routing_enabled  = false
+  image_cleaner_interval_hours      = 48
 
   azure_policy_enabled      = true
   oidc_issuer_enabled       = true
@@ -18,7 +19,7 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 
   default_node_pool {
-    enable_auto_scaling         = true
+    auto_scaling_enabled        = true
     max_pods                    = var.max_pods
     name                        = "default"
     node_count                  = var.node_pool_min_vm_per_az
@@ -60,7 +61,7 @@ locals {
 resource "azurerm_kubernetes_cluster_node_pool" "additional" {
   count                 = length(local.additonal_zones)
   kubernetes_cluster_id = azurerm_kubernetes_cluster.default.id
-  enable_auto_scaling   = true
+  auto_scaling_enabled  = true
   max_pods              = var.max_pods
   name                  = "zone${local.additonal_zones[count.index]}"
   node_count            = var.node_pool_min_vm_per_az
