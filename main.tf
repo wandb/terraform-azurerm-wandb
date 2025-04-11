@@ -359,15 +359,13 @@ locals {
           external = false
         }
 
-        extraEnv = var.other_wandb_env
+        extraEnv = merge({
+          "GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
+          "GORILLA_CUSTOMER_SECRET_STORE_SOURCE"              = "az-secretmanager://wandb",
+        }, var.other_wandb_env)
       }
 
       app = {
-        extraEnv = {
-          "GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
-          "GORILLA_CUSTOMER_SECRET_STORE_SOURCE"              = "az-secretmanager://wandb",
-        }
-
         # Parts of the helm chart use pod label patterns with different patterns.
         # The following is done to support both patterns.
         pod = {
@@ -382,7 +380,7 @@ locals {
         internalJWTMap = [
           {
             subject = "system:serviceaccount:default:${local.weave_trace_service_account_name}",
-            issuer  = var.kubernetes_cluster_oidc_issuer_url
+            issuer  = module.app_aks.oidc_issuer_url
           }
         ]
       }
