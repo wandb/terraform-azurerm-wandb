@@ -75,6 +75,7 @@ resources that lack official modules.
 | <a name="module_networking"></a> [networking](#module\_networking) | ./modules/networking | n/a |
 | <a name="module_pod_identity"></a> [pod\_identity](#module\_pod\_identity) | ./modules/identity | n/a |
 | <a name="module_redis"></a> [redis](#module\_redis) | ./modules/redis | n/a |
+| <a name="module_service_accounts"></a> [service\_accounts](#module\_service\_accounts) | ./modules/secure_storage_connector/service_accounts | n/a |
 | <a name="module_storage"></a> [storage](#module\_storage) | ./modules/storage | n/a |
 | <a name="module_vault"></a> [vault](#module\_vault) | ./modules/vault | n/a |
 | <a name="module_wandb"></a> [wandb](#module\_wandb) | wandb/wandb/helm | 3.0.0 |
@@ -117,7 +118,6 @@ resources that lack official modules.
 | <a name="input_external_redis_host"></a> [external\_redis\_host](#input\_external\_redis\_host) | host for the redis instance created externally | `string` | `null` | no |
 | <a name="input_external_redis_params"></a> [external\_redis\_params](#input\_external\_redis\_params) | queryVar params for redis instance created externally | `object({})` | `null` | no |
 | <a name="input_external_redis_port"></a> [external\_redis\_port](#input\_external\_redis\_port) | port for the redis instance created externally | `string` | `null` | no |
-| <a name="input_kubernetes_cluster_oidc_issuer_url"></a> [kubernetes\_cluster\_oidc\_issuer\_url](#input\_kubernetes\_cluster\_oidc\_issuer\_url) | OIDC issuer URL for the Kubernetes cluster. Can be determined using `kubectl get --raw /.well-known/openid-configuration` | `string` | `""` | no |
 | <a name="input_kubernetes_instance_type"></a> [kubernetes\_instance\_type](#input\_kubernetes\_instance\_type) | Instance type for primary node group. Defaults to null and value from deployment-size.tf is used | `string` | `null` | no |
 | <a name="input_kubernetes_max_node_per_az"></a> [kubernetes\_max\_node\_per\_az](#input\_kubernetes\_max\_node\_per\_az) | Maximum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
 | <a name="input_kubernetes_min_node_per_az"></a> [kubernetes\_min\_node\_per\_az](#input\_kubernetes\_min\_node\_per\_az) | Minimum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
@@ -169,6 +169,7 @@ resources that lack official modules.
 | <a name="output_standardized_size"></a> [standardized\_size](#output\_standardized\_size) | n/a |
 | <a name="output_tenant_id"></a> [tenant\_id](#output\_tenant\_id) | n/a |
 | <a name="output_url"></a> [url](#output\_url) | The URL to the W&B application |
+| <a name="output_wandb_spec"></a> [wandb\_spec](#output\_wandb\_spec) | n/a |
 <!-- END_TF_DOCS -->
 
 ## Upgrading from 3.x to 4.x

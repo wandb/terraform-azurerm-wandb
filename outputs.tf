@@ -69,3 +69,7 @@ output "tenant_id" {
   value = module.identity.identity.tenant_id
 }
 
+output "wandb_spec" {
+  value     = local.spec
+  sensitive = true
+}

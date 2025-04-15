@@ -388,12 +388,3 @@ variable "clickhouse_region" {
   description = "ClickHouse region (eastus2, westus3, etc)."
   default     = ""
 }
-
-###########################################
-# Internal Service                        #
-###########################################
-variable "kubernetes_cluster_oidc_issuer_url" {
-  type        = string
-  description = "OIDC issuer URL for the Kubernetes cluster. Can be determined using `kubectl get --raw /.well-known/openid-configuration`"
-  default     = ""
-}

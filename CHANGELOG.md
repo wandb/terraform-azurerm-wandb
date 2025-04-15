@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.3.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.2...v7.3.3) (2025-04-11)
+
+
+### Bug Fixes
+
+* Use internal oidc issuer url instead of variable / fix secret store ([#134](https://github.com/wandb/terraform-azurerm-wandb/issues/134)) ([c6c89c8](https://github.com/wandb/terraform-azurerm-wandb/commit/c6c89c8e5476bc55a44d0f9e25b7ac2db5ba258a))
+
+### [7.3.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.1...v7.3.2) (2025-04-10)
+
+
+### Bug Fixes
+
+* Use vars in secure_storage_connector examples ([#136](https://github.com/wandb/terraform-azurerm-wandb/issues/136)) ([686ecd1](https://github.com/wandb/terraform-azurerm-wandb/commit/686ecd148534d848bfda8048eac156a9a71e4a05))
+
+### [7.3.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.0...v7.3.1) (2025-04-10)
+
+
+### Bug Fixes
+
+* Workload Identity ([#133](https://github.com/wandb/terraform-azurerm-wandb/issues/133)) ([4599ca6](https://github.com/wandb/terraform-azurerm-wandb/commit/4599ca63838e43ca620d6ec9950728423cf7a753))
+
+## [7.3.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.2.2...v7.3.0) (2025-04-09)
+
+
+### Features
+
+* Output spec ([#135](https://github.com/wandb/terraform-azurerm-wandb/issues/135)) ([5fdea4f](https://github.com/wandb/terraform-azurerm-wandb/commit/5fdea4fbe649b009a0d7868428d08c6df4a96192))
+
 ### [7.2.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.2.1...v7.2.2) (2025-03-28)
 
 
