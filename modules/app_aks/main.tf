@@ -6,6 +6,7 @@ resource "azurerm_kubernetes_cluster" "default" {
   sku_tier            = var.sku_tier
 
   automatic_upgrade_channel         = "stable"
+  node_os_upgrade_channel           = "None"
   role_based_access_control_enabled = true
   http_application_routing_enabled  = false
   image_cleaner_interval_hours      = 48
