@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.4.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.3...v7.4.0) (2025-04-28)
+
+
+### Features
+
+* AKS Cluster Tags ([#137](https://github.com/wandb/terraform-azurerm-wandb/issues/137)) ([bcebf52](https://github.com/wandb/terraform-azurerm-wandb/commit/bcebf52933168a8e79407bcaaf485cc9ba33b94b))
+
 ### [7.3.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.2...v7.3.3) (2025-04-11)
 
 
