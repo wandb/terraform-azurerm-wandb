@@ -112,7 +112,7 @@ module "app_lb" {
   location       = azurerm_resource_group.default.location
   network        = module.networking.network
   public_subnet  = module.networking.public_subnet
-  private_subnet = module.networking.private_subnet.id
+  private_subnet = module.networking.private_subnet
   private_link   = var.create_private_link
 
   tags = var.tags
@@ -413,21 +413,36 @@ locals {
       }
 
       ingress = {
-        // TODO: For now we will use the existing issuer. We can move this into
-        // the operator after testing. Trying to reduce the diff.
         issuer = { create = false }
-
         annotations = {
           "kubernetes.io/ingress.class"                 = "azure/application-gateway"
           "cert-manager.io/cluster-issuer"              = "cert-issuer"
           "cert-manager.io/acme-challenge-type"         = "http01"
           "appgw.ingress.kubernetes.io/request-timeout" = "300"
         }
+        
+        labels = var.create_private_link ? {
+            "sha_hash" = substr(sha256("yes"), 0, 50)
+          } : {}
 
         tls = [
           { hosts = [trimprefix(trimprefix(local.url, "https://"), "http://")], secretName = "wandb-ssl-cert" }
         ]
+        ## In order to support secondary ingress required min version 0.13.0 of operator-wandb chart
+        secondary = {
+          create       = var.create_private_link
+          nameOverride = "${var.namespace}-private-ingress"
+          annotations = {
+            "kubernetes.io/ingress.class"                   = "azure/application-gateway"
+            "appgw.ingress.kubernetes.io/request-timeout" = "300"
+            "appgw.ingress.kubernetes.io/use-private-ip" : "true"
+          }
+          tls = [
+            { hosts = [trimprefix(trimprefix(local.url, "https://"), "http://")], secretName = "wandb-ssl-cert" }
+          ]
+        }
       }
+ 
 
       otel = {
         daemonset = var.azuremonitor ? {
