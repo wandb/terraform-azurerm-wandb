@@ -279,6 +279,12 @@ variable "kubernetes_max_node_per_az" {
   default     = null
 }
 
+variable "kubernetes_cluster_tags" {
+  description = "A map of tags to apply to all resources managed by the AKS cluster"
+  type        = map(string)
+  default     = {}
+}
+
 variable "cluster_sku_tier" {
   type        = string
   description = "The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers)"
