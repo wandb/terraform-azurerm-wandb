@@ -13,7 +13,8 @@ resource "azurerm_subnet" "private" {
   resource_group_name                           = var.resource_group_name
   address_prefixes                              = [var.network_private_subnet_cidr]
   virtual_network_name                          = azurerm_virtual_network.default.name
-  private_link_service_network_policies_enabled = var.private_link ? false : true
+  private_link_service_network_policies_enabled = false
+  private_endpoint_network_policies             = "Enabled"
 
   service_endpoints = concat(
     ["Microsoft.Sql", "Microsoft.KeyVault"],
@@ -26,6 +27,8 @@ resource "azurerm_subnet" "public" {
   resource_group_name  = var.resource_group_name
   address_prefixes     = [var.network_public_subnet_cidr]
   virtual_network_name = azurerm_virtual_network.default.name
+
+  private_endpoint_network_policies = "Enabled"
 }
 
 resource "azurerm_subnet" "redis" {
@@ -33,6 +36,8 @@ resource "azurerm_subnet" "redis" {
   resource_group_name  = var.resource_group_name
   address_prefixes     = [var.network_redis_subnet_cidr]
   virtual_network_name = azurerm_virtual_network.default.name
+
+  private_endpoint_network_policies = "Enabled"
 }
 
 resource "azurerm_network_security_group" "default" {
