@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.4.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.0...v7.4.1) (2025-05-16)
+
+
+### Bug Fixes
+
+* Bump max node sizes to ensure reliability as we increase HA deployments ([#138](https://github.com/wandb/terraform-azurerm-wandb/issues/138)) ([25ae471](https://github.com/wandb/terraform-azurerm-wandb/commit/25ae471ab1b721e81879c5949ea66f594df76973))
+
 ## [7.4.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.3...v7.4.0) (2025-04-28)
 
 
