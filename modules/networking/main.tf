@@ -28,7 +28,8 @@ resource "azurerm_subnet" "public" {
   address_prefixes     = [var.network_public_subnet_cidr]
   virtual_network_name = azurerm_virtual_network.default.name
 
-  private_endpoint_network_policies = "Enabled"
+  private_link_service_network_policies_enabled = false
+  private_endpoint_network_policies             = "Enabled"
 }
 
 resource "azurerm_subnet" "redis" {
