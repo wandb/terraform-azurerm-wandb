@@ -159,7 +159,7 @@ module "app_aks" {
   public_subnet           = module.networking.public_subnet
   resource_group          = azurerm_resource_group.default
   sku_tier                = var.cluster_sku_tier
-  tags                    = merge(var.tags, { cache_size = var.cache_size })
+  tags                    = merge(var.tags, { cache_size = var.cache_size }, var.kubernetes_cluster_tags)
 }
 locals {
   service_account_name         = "wandb-app"
