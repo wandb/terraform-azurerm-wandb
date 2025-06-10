@@ -6,11 +6,13 @@ resource "azurerm_redis_cache" "default" {
   family              = var.family
   sku_name            = var.sku_name
 
-  enable_non_ssl_port = true
+  access_keys_authentication_enabled = true
+  non_ssl_port_enabled = true
 
   tags = var.tags
 
   redis_configuration {
+    data_persistence_authentication_method = "SAS"
   }
 
 }

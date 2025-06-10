@@ -20,6 +20,8 @@ resource "azurerm_subnet" "database" {
   address_prefixes     = [var.network_database_subnet_cidr]
   virtual_network_name = azurerm_virtual_network.default.name
 
+  private_endpoint_network_policies = "Enabled"
+
   delegation {
     name = "flexibleServers"
     service_delegation {

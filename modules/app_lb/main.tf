@@ -17,7 +17,7 @@ locals {
   listener_name                  = "${var.network.name}-httplstn"
   request_routing_rule_name      = "${var.network.name}-rqrt"
   redirect_configuration_name    = "${var.network.name}-rdrcfg"
-  app_gateway_name               = var.private_link ? "${var.namespace}-ag-private-link" : "${var.namespace}-ag"
+  app_gateway_name               = "${var.namespace}-ag"
 }
 
 
@@ -107,7 +107,7 @@ resource "azurerm_application_gateway" "default" {
 
       ip_configuration {
         name                          = "primary"
-        subnet_id                     = var.private_subnet
+        subnet_id                     = var.private_subnet.id
         private_ip_address_allocation = "Dynamic"
         primary                       = true
       }
@@ -115,7 +115,7 @@ resource "azurerm_application_gateway" "default" {
   }
 
   dynamic "http_listener" {
-    for_each = var.private_link == true ? [1] : []
+    for_each = var.private_link ? [1] : []
     content {
       name                           = "${local.listener_name}-private"
       frontend_ip_configuration_name = "${local.frontend_ip_configuration_name}-private"
@@ -148,7 +148,6 @@ resource "azurerm_application_gateway" "default" {
       http_listener,
       backend_http_settings,
       backend_address_pool,
-      private_link_configuration,
       tags
     ]
   }

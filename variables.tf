@@ -93,13 +93,13 @@ variable "other_wandb_env" {
 variable "operator_chart_version" {
   type        = string
   description = "Version of the operator chart to deploy"
-  default     = "1.3.4"
+  default     = "1.4.1"
 }
 
 variable "controller_image_tag" {
   type        = string
   description = "Tag of the controller image to deploy"
-  default     = "1.14.0"
+  default     = "1.19.3"
 }
 
 variable "enable_helm_operator" {
@@ -323,6 +323,7 @@ variable "allowed_subscriptions" {
   description = "List of allowed customer subscriptions coma seperated values"
   default     = ""
 }
+
 ##########################################
 # Network                                #
 ##########################################

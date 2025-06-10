@@ -9,6 +9,7 @@ resource "azurerm_storage_account" "default" {
   account_tier             = "Standard"
   account_replication_type = "ZRS"
   min_tls_version          = "TLS1_2"
+  cross_tenant_replication_enabled = true
 
   blob_properties {
     cors_rule {
