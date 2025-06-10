@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.4.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.1...v7.4.2) (2025-06-10)
+
+
+### Bug Fixes
+
+* Added support for secondary ingress for private link ([#122](https://github.com/wandb/terraform-azurerm-wandb/issues/122)) ([4151a3a](https://github.com/wandb/terraform-azurerm-wandb/commit/4151a3a27f6b1d718bfa45fb5454421dd087b11b))
+
 ### [7.4.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.0...v7.4.1) (2025-05-16)
 
 
