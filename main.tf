@@ -265,6 +265,10 @@ module "cert_manager" {
   cert_manager_chart_version = "v1.9.1"
   tags                       = var.tags
 
+  # ensure proper values if using dns01
+  use_dns_resolver = var.use_dns_resolver
+  gcp_project      = var.dns_gcp_project
+
   depends_on = [module.app_aks]
 }
 
@@ -417,10 +421,10 @@ locals {
         annotations = {
           "kubernetes.io/ingress.class"                 = "azure/application-gateway"
           "cert-manager.io/cluster-issuer"              = "cert-issuer"
-          "cert-manager.io/acme-challenge-type"         = "http01"
+          "cert-manager.io/acme-challenge-type"         = var.use_dns_challenge ? "dns01" : "http01"
           "appgw.ingress.kubernetes.io/request-timeout" = "300"
         }
-        
+
         labels = var.create_private_link ? {
             "sha_hash" = substr(sha256("yes"), 0, 50)
           } : {}

@@ -135,6 +135,25 @@ variable "ssl" {
   description = "Enable SSL certificate"
 }
 
+# Passthroughs for the cert_manager/issuer modules
+# To handle possible use of a dns01 solver
+variable "use_dns_resolver" {
+  type        = bool
+  default     = false
+  description = "Use the dns01 solver"
+}
+
+varible "dns_gcp_project" {
+  type        = string
+  default     = ""
+  description = "The gcp project containing the required dns records"
+
+  validation {
+    condition     = !(var.use_dns_resolver && var.dns_gcp_project == "")
+    error_message = "dns_gcp_project must be set when use_dns_resolver is true."
+  }
+}
+
 ##########################################
 # Database                               #
 ##########################################
