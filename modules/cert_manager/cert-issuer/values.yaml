@@ -8,6 +8,11 @@ ingressClass: "azure/application-gateway"
 
 privateKeySecretRef: "letsencrypt"
 
+
+# For customer dns resolver override
+useDnsChallenge: false
+gcpProject: ""
+
 # Set Values for cert-issuer dependency chart
 cert-manager:
   installCRDs: true
