@@ -31,3 +31,20 @@ variable "tags" {
   description = "Tags to be passed to created instances"
   default     = {}
 }
+
+variable "use_dns_resolver" {
+  description = "Whether the cert-issuer should have a dns01 solver"
+  type = bool
+  default = false
+}
+
+variable "gcp_project" {
+  description = ""
+  type = string
+  default = ""
+
+  validation {
+    condition     = !(var.use_dns_resolver && var.gcp_project == "")
+    error_message = "gcp_project must be set when use_dns_resolver is true."
+  }
+}

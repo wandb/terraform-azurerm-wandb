@@ -53,5 +53,15 @@ resource "helm_release" "cert_issuer" {
     value = var.acme_server
   }
 
+  set {
+    name = "gcpProject"
+    value = var.gcp_project
+  }
+
+  set {
+    name = "useDnsChallenge"
+    value = var.use_dns_resolver
+  }
+
   depends_on = [helm_release.cert_manager]
 }
