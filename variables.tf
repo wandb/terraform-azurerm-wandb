@@ -143,7 +143,7 @@ variable "use_dns_resolver" {
   description = "Use the dns01 solver"
 }
 
-varible "dns_gcp_project" {
+variable "dns_gcp_project" {
   type        = string
   default     = ""
   description = "The gcp project containing the required dns records"
