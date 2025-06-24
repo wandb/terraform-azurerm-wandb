@@ -17,7 +17,7 @@ resource "kubernetes_ingress_v1" "default" {
       "appgw.ingress.kubernetes.io/appgw-ssl-certificate" = local.ssl_certificate_name
       "appgw.ingress.kubernetes.io/use-private-ip"        = local.deployment_is_private ? "true" : null
       "cert-manager.io/cluster-issuer"                    = local.deployment_is_private ? null : "cert-issuer"
-      "cert-manager.io/acme-challenge-type"               = var.use_dns_challenge ? "dns01" : "http01"
+      "cert-manager.io/acme-challenge-type"               = local.deployment_is_private ? null : "http01"
     }
   }
   spec {
