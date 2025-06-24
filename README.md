@@ -109,6 +109,7 @@ resources that lack official modules.
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version for MySQL | `string` | `"5.7"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | If the instance should have deletion protection enabled. The database / Bucket can't be deleted when this value is set to `true`. | `bool` | `true` | no |
 | <a name="input_disable_storage_vault_key_id"></a> [disable\_storage\_vault\_key\_id](#input\_disable\_storage\_vault\_key\_id) | Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation. | `bool` | `false` | no |
+| <a name="input_dns_gcp_project"></a> [dns\_gcp\_project](#input\_dns\_gcp\_project) | The gcp project containing the required dns records | `string` | `""` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain for accessing the Weights & Biases UI. | `string` | `null` | no |
 | <a name="input_enable_database_vault_key"></a> [enable\_database\_vault\_key](#input\_enable\_database\_vault\_key) | Flag to enable managed key encryption for the database. Once enabled, cannot be disabled. | `bool` | `false` | no |
 | <a name="input_enable_helm_operator"></a> [enable\_helm\_operator](#input\_enable\_helm\_operator) | Enable or disable applying and releasing W&B Operator chart | `bool` | `true` | no |
