@@ -421,7 +421,7 @@ locals {
         annotations = {
           "kubernetes.io/ingress.class"                 = "azure/application-gateway"
           "cert-manager.io/cluster-issuer"              = "cert-issuer"
-          "cert-manager.io/acme-challenge-type"         = var.use_dns_challenge ? "dns01" : "http01"
+          "cert-manager.io/acme-challenge-type"         = var.use_dns_resolver ? "dns01" : "http01"
           "appgw.ingress.kubernetes.io/request-timeout" = "300"
         }
 
