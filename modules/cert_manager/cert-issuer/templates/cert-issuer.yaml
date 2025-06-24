@@ -21,6 +21,6 @@ spec:
         cloudDNS:
           project: {{ .Values.gcpProject }}
           serviceAccountSecretRef:
-           name: gcp-dns-sa
-           key: key.json
+            name: gcp-dns-sa
+            key: key.json
     {{- end }}
