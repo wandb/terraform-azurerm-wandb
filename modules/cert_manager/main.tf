@@ -54,12 +54,12 @@ resource "helm_release" "cert_issuer" {
   }
 
   set {
-    name = "gcpProject"
+    name  = "gcpProject"
     value = var.gcp_project
   }
 
   set {
-    name = "useDnsChallenge"
+    name  = "useDnsChallenge"
     value = var.use_dns_resolver
   }
 

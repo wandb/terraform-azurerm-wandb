@@ -34,14 +34,14 @@ variable "tags" {
 
 variable "use_dns_resolver" {
   description = "Whether the cert-issuer should have a dns01 solver"
-  type = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "gcp_project" {
   description = ""
-  type = string
-  default = ""
+  type        = string
+  default     = ""
 
   validation {
     condition     = !(var.use_dns_resolver && var.gcp_project == "")
