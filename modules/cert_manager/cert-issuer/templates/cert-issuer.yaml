@@ -13,9 +13,6 @@ spec:
       name: {{ .Values.privateKeySecretRef }}
     # Enable the HTTP-01 challenge provider
     solvers:
-    - http01:
-        ingress:
-          class: {{ .Values.ingressClass }}
     {{- if .Values.useDnsChallenge }}
     - dns01:
         cloudDNS:
@@ -23,4 +20,8 @@ spec:
           serviceAccountSecretRef:
             name: gcp-dns-sa
             key: key.json
+    {{- else }}
+    - http01:
+        ingress:
+          class: {{ .Values.ingressClass }}
     {{- end }}
