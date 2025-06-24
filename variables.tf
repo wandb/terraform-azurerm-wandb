@@ -140,13 +140,13 @@ variable "ssl" {
 variable "use_dns_resolver" {
   type        = bool
   default     = false
-  description = "Use the dns01 solver"
+  description = "[Internal Use Only] Use the dns01 solver"
 }
 
 variable "dns_gcp_project" {
   type        = string
   default     = ""
-  description = "The gcp project containing the required dns records"
+  description = "[Internal Use Only] The gcp project containing the required dns records"
 
   validation {
     condition     = !(var.use_dns_resolver && var.dns_gcp_project == "")
