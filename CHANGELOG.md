@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.4.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.2...v7.4.3) (2025-06-25)
+
+
+### Bug Fixes
+
+* Allow for configuring of dns01 challenge ([#139](https://github.com/wandb/terraform-azurerm-wandb/issues/139)) ([f07c468](https://github.com/wandb/terraform-azurerm-wandb/commit/f07c468e0c4d5678cf79fe5426b32f60c97fbc62))
+
 ### [7.4.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.1...v7.4.2) (2025-06-10)
 
 
