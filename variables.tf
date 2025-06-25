@@ -135,6 +135,14 @@ variable "ssl" {
   description = "Enable SSL certificate"
 }
 
+# Passthroughs for the cert_manager/issuer modules
+# To handle possible use of a dns01 solver
+variable "use_dns_resolver" {
+  type        = bool
+  default     = false
+  description = "[Internal Use Only] Use the dns01 solver disabling the auto setup of cert-manager"
+}
+
 ##########################################
 # Database                               #
 ##########################################

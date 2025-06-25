@@ -143,6 +143,7 @@ resources that lack official modules.
 | <a name="input_subdomain"></a> [subdomain](#input\_subdomain) | Subdomain for accessing the Weights & Biases UI. Default creates record at Route53 Route. | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Map of tags for resource | `map(string)` | `{}` | no |
 | <a name="input_use_ctrlplane_redis"></a> [use\_ctrlplane\_redis](#input\_use\_ctrlplane\_redis) | Whether redis is deployed in the cluster via ctrlplane | `bool` | `false` | no |
+| <a name="input_use_dns_resolver"></a> [use\_dns\_resolver](#input\_use\_dns\_resolver) | [Internal Use Only] Use the dns01 solver disabling the auto setup of cert-manager | `bool` | `false` | no |
 | <a name="input_use_external_redis"></a> [use\_external\_redis](#input\_use\_external\_redis) | Boolean indicating whether to use the redis instance created externally | `bool` | `false` | no |
 | <a name="input_use_internal_queue"></a> [use\_internal\_queue](#input\_use\_internal\_queue) | Uses an internal redis queue instead of using azure queue. | `bool` | `false` | no |
 | <a name="input_wandb_image"></a> [wandb\_image](#input\_wandb\_image) | Docker repository of to pull the wandb image from. | `string` | `"wandb/local"` | no |

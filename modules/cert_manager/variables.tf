@@ -31,3 +31,4 @@ variable "tags" {
   description = "Tags to be passed to created instances"
   default     = {}
 }
+
