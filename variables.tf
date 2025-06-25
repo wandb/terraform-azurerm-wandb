@@ -140,18 +140,7 @@ variable "ssl" {
 variable "use_dns_resolver" {
   type        = bool
   default     = false
-  description = "[Internal Use Only] Use the dns01 solver"
-}
-
-variable "dns_gcp_project" {
-  type        = string
-  default     = ""
-  description = "[Internal Use Only] The gcp project containing the required dns records"
-
-  validation {
-    condition     = !(var.use_dns_resolver && var.dns_gcp_project == "")
-    error_message = "dns_gcp_project must be set when use_dns_resolver is true."
-  }
+  description = "[Internal Use Only] Use the dns01 solver disabling the auto setup of cert-manager"
 }
 
 ##########################################

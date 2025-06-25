@@ -257,6 +257,9 @@ resource "azurerm_federated_identity_credential" "otel_app" {
 }
 
 module "cert_manager" {
+  # if use_dns_resolver is set then disable our default install of cert_manager
+  count = var.use_dns_resolver ? 0 : 1
+
   source    = "./modules/cert_manager"
   namespace = var.namespace
 
@@ -264,10 +267,6 @@ module "cert_manager" {
   cert_manager_email         = "sysadmin@wandb.com"
   cert_manager_chart_version = "v1.9.1"
   tags                       = var.tags
-
-  # ensure proper values if using dns01
-  use_dns_resolver = var.use_dns_resolver
-  gcp_project      = var.dns_gcp_project
 
   depends_on = [module.app_aks]
 }
