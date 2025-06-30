@@ -2,5 +2,5 @@ apiVersion: v2
 name: cert-issuer
 description: A Helm chart for Deploying and Configuring Cert Manager
 type: application
-version: 0.1.1
+version: 0.1.0
 appVersion: 1.0.0
