@@ -271,6 +271,11 @@ module "cert_manager" {
   depends_on = [module.app_aks]
 }
 
+moved {
+  from = cert_manager
+  to   = cert_manager[0]
+}
+
 module "clickhouse" {
   count               = var.clickhouse_private_endpoint_service_name != "" ? 1 : 0
   source              = "./modules/clickhouse"
