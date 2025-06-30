@@ -272,8 +272,8 @@ module "cert_manager" {
 }
 
 moved {
-  from = cert_manager
-  to   = cert_manager[0]
+  from = module.cert_manager
+  to   = module.cert_manager[0]
 }
 
 module "clickhouse" {
