@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.4.4](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.3...v7.4.4) (2025-06-30)
+
+
+### Bug Fixes
+
+* Ignore changes to the application gw zone config. ([#140](https://github.com/wandb/terraform-azurerm-wandb/issues/140)) ([08a6663](https://github.com/wandb/terraform-azurerm-wandb/commit/08a66636da8aba422e84874cf361a5d3f3e1b0a2))
+
 ### [7.4.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.2...v7.4.3) (2025-06-25)
 
 
