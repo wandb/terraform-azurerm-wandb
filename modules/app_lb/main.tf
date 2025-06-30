@@ -148,7 +148,8 @@ resource "azurerm_application_gateway" "default" {
       http_listener,
       backend_http_settings,
       backend_address_pool,
-      tags
+      tags,
+      zones
     ]
   }
 }
