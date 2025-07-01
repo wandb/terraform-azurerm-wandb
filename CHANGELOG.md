@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.4.5](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.4...v7.4.5) (2025-07-01)
+
+
+### Bug Fixes
+
+* Add temporary_name_for_rotation for additional node pool ([#141](https://github.com/wandb/terraform-azurerm-wandb/issues/141)) ([7676c7f](https://github.com/wandb/terraform-azurerm-wandb/commit/7676c7f39d4687d9994a4cea489eb8a73e237cf1))
+
 ### [7.4.4](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.3...v7.4.4) (2025-06-30)
 
 
