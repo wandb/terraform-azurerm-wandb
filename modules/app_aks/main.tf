@@ -72,7 +72,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "additional" {
   vnet_subnet_id        = var.cluster_subnet_id
   zones                 = [local.additonal_zones[count.index]]
 
-  temporary_name_for_rotation = "rotating_additional"
+  temporary_name_for_rotation = "rotating"
 
   lifecycle {
     ignore_changes = [node_count]
