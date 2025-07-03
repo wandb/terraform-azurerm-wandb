@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.4.6](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.5...v7.4.6) (2025-07-03)
+
+
+### Bug Fixes
+
+* Bump operator chart and image versions to latest ([#142](https://github.com/wandb/terraform-azurerm-wandb/issues/142)) ([96db8ba](https://github.com/wandb/terraform-azurerm-wandb/commit/96db8baff949065fbb1e107ff94d61e328cd4e1c))
+
 ### [7.4.5](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.4...v7.4.5) (2025-07-01)
 
 
