@@ -1,0 +1,94 @@
+Terraform Azure Private Endpoint Module
+This Terraform module creates and configures an Azure Private Endpoint with optional networking components, such as a Virtual Network, Subnet, and Private DNS Zone. It supports both creating new resources and referencing existing ones.
+
+Features
+Configures a Private Endpoint
+Supports Private DNS Zone creation and linking
+Allows referencing existing networking resources
+Uses conditional logic to enable flexible configurations
+Usage Example
+module "private_endpoint" {
+	source                     = "./modules/private_endpoint"
+	subscription_id            = "your-subscription-id"
+	resource_group_name        = "your-resource-group"
+	location                   = "East US"
+	create_network             = true
+	new_vnet_name              = "my-vnet"
+	new_vnet_address_space     = ["10.0.0.0/16"]
+	new_subnet_name            = "my-subnet"
+	new_subnet_address_prefixes = ["10.0.1.0/24"]
+	private_endpoint_name      = "my-private-endpoint"
+	private_link_resource_id   = "your-private-link-resource-id"
+	private_link_sub_resource_name = "your-sub-resource-name"
+	create_private_dns_zone    = true
+	private_dns_zone_name      = "privatelink.yourdomain.com"
+	dns_name_a_record          = "app-gateway"
+	dns_link_name              = "dns-link"
+}
+Requirements
+Name	Version
+terraform	~> 1.0
+azapi	~> 1.0
+azurerm	~> 3.17
+Providers
+Name	Version
+azurerm	~> 3.17
+Modules
+No modules.
+
+Resources
+Name	Type
+azurerm_private_dns_a_record.app_gateway_a_record	resource
+azurerm_private_dns_zone.private_dns	resource
+azurerm_private_dns_zone_virtual_network_link.dns_link	resource
+azurerm_private_endpoint.private_endpoint	resource
+azurerm_subnet.new_subnet	resource
+azurerm_virtual_network.new_vnet	resource
+azurerm_private_dns_zone.existing_private_dns	data source
+azurerm_private_dns_zone_virtual_network_link.existing_dns_link	data source
+azurerm_subnet.private_subnet	data source
+azurerm_virtual_network.vnet	data source
+Inputs
+Name	Description	Type	Default	Required
+create_network	Whether to create a new network and subnet	bool	false	no
+create_private_dns_zone	Whether to create a new private DNS zone	bool	false	no
+dns_link_name	Private DNS link name	string	n/a	yes
+dns_name_a_record	The DNS name for the A record pointing to the Private Endpoint	string	n/a	yes
+existing_private_dns_zone_id	ID of an existing private DNS zone	string	""	no
+existing_private_dns_zone_name	Name of the existing private DNS zone	string	""	no
+existing_subnet_name	Name of the existing Subnet (if not creating a new one)	string	""	no
+existing_vnet_name	Name of the existing Virtual Network (if not creating a new one)	string	""	no
+location	Azure region	string	n/a	yes
+new_subnet_address_prefixes	Address prefixes for the new Subnet	list(string)	[]	no
+new_subnet_name	Name for the new Subnet (if created)	string	""	no
+new_vnet_address_space	Address space for the new Virtual Network	list(string)	[]	no
+new_vnet_name	Name for the new Virtual Network (if created)	string	""	no
+private_dns_zone_name	Name of the private DNS zone (if creating a new one)	string	""	no
+private_endpoint_name	Private Endpoint name	string	n/a	yes
+private_link_resource_id	Resource ID of the Private Link service	string	n/a	yes
+private_link_sub_resource_name	Subresource name for Private Link connection	string	n/a	yes
+resource_group_name	Existing resource group name	string	n/a	yes
+subscription_id	Azure Subscription ID	string	n/a	yes
+Outputs
+Name	Description
+private_ip_address	Private IP address of the Private Endpoint
+private_url	Full Private URL
+Applying the Module
+To apply the module, run the following Terraform commands:
+
+terraform plan
+terraform apply -auto-approve
+Testing the Module
+To test the module deployment, follow these steps:
+
+Validate the Terraform configuration:
+terraform validate
+Apply the configuration and check outputs:
+terraform output
+Verify the Private Endpoint in the Azure Portal:
+Navigate to Azure Portal → Private Link Center → Private Endpoints.
+Ensure the created Private Endpoint appears with a successful connection.
+Check DNS resolution:
+nslookup <private_url>
+Confirm Private IP connectivity using a Virtual Machine within the VNet:
+ping <private_ip_address>
