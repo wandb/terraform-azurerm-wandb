@@ -1,3 +1,84 @@
+Skip to content
+Navigation Menu
+wandb
+terraform-azurerm-wandb
+
+Type / to search
+Code
+Issues
+3
+Pull requests
+14
+Actions
+Projects
+Wiki
+Security
+Insights
+Settings
+Files
+Go to file
+t
+.github
+examples
+byob
+custom-tf-with-existing-resources
+custom-tf-with-vpc-sql
+public-dns
+secure-storage-connector
+standard-tf
+Readme
+modules
+.checkov.yml
+.gitignore
+.releaserc.json
+.terraform-docs.yml
+CHANGELOG.md
+LICENSE
+NOTICE
+README.md
+data_sources.tf
+deployment-size.tf
+downtime.py
+main.tf
+outputs.tf
+variables.tf
+versions.tf
+vmtype_to_az.sh
+terraform-azurerm-wandb
+/examples/
+LalitSahuWnB
+LalitSahuWnB
+Create Readme
+ae788c8
+ · 
+2 minutes ago
+This branch is 1 commit ahead of main.
+terraform-azurerm-wandb
+/examples/
+Name	Last commit message	Last commit date
+..
+byob
+fix: Azure storage and Vault simplified (#89)
+11 months ago
+custom-tf-with-existing-resources
+feat!: Bump helm-wandb vers to v2.0.0, requires TF > 1.9 (#114)
+6 months ago
+custom-tf-with-vpc-sql
+feat!: Bump helm-wandb vers to v2.0.0, requires TF > 1.9 (#114)
+6 months ago
+public-dns
+fix: Added support for secondary ingress for private link (#122)
+last month
+secure-storage-connector
+fix: Use vars in secure_storage_connector examples (#136)
+3 months ago
+standard-tf
+fix: Make default node pool zone configurable (#75)
+last year
+Readme
+Create Readme
+2 minutes ago
+Readme
 Terraform Azure Private Endpoint Module
 This Terraform module creates and configures an Azure Private Endpoint with optional networking components, such as a Virtual Network, Subnet, and Private DNS Zone. It supports both creating new resources and referencing existing ones.
 
@@ -92,3 +173,4 @@ Check DNS resolution:
 nslookup <private_url>
 Confirm Private IP connectivity using a Virtual Machine within the VNet:
 ping <private_ip_address>
+terraform-azurerm-wandb/examples at private-link · wandb/terraform-azurerm-wandb 
