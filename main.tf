@@ -41,8 +41,9 @@ module "database" {
   database_private_dns_zone_id = module.networking.database_private_dns_zone.id
   database_subnet_id           = module.networking.database_subnet.id
 
-  sku_name            = try(local.deployment_size[var.size].db, var.database_sku_name)
-  deletion_protection = var.deletion_protection
+  sku_name                = try(local.deployment_size[var.size].db, var.database_sku_name)
+  deletion_protection     = var.deletion_protection
+  slow_query_log_enabled  = var.slow_query_log_enabled
 
   tags = {
     "customer-ns" = var.namespace,

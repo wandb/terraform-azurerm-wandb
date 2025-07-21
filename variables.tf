@@ -135,6 +135,12 @@ variable "database_sku_name" {
   description = "Specifies the SKU Name for this MySQL Server"
 }
 
+variable "slow_query_log_enabled" {
+  description = "Enable MySQL slow query log"
+  type        = bool
+  default     = true
+}
+
 ##########################################
 # Redis                                  #
 ##########################################
