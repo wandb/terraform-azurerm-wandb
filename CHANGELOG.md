@@ -2,6 +2,335 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.5.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.6...v7.5.0) (2025-07-22)
+
+
+### Features
+
+* Terraform template for private link endpoint ([#143](https://github.com/wandb/terraform-azurerm-wandb/issues/143)) ([e3e3f9b](https://github.com/wandb/terraform-azurerm-wandb/commit/e3e3f9b605e6580e4c0ff50c5082ecd3618229de))
+
+### [7.4.6](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.5...v7.4.6) (2025-07-03)
+
+
+### Bug Fixes
+
+* Bump operator chart and image versions to latest ([#142](https://github.com/wandb/terraform-azurerm-wandb/issues/142)) ([96db8ba](https://github.com/wandb/terraform-azurerm-wandb/commit/96db8baff949065fbb1e107ff94d61e328cd4e1c))
+
+### [7.4.5](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.4...v7.4.5) (2025-07-01)
+
+
+### Bug Fixes
+
+* Add temporary_name_for_rotation for additional node pool ([#141](https://github.com/wandb/terraform-azurerm-wandb/issues/141)) ([7676c7f](https://github.com/wandb/terraform-azurerm-wandb/commit/7676c7f39d4687d9994a4cea489eb8a73e237cf1))
+
+### [7.4.4](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.3...v7.4.4) (2025-06-30)
+
+
+### Bug Fixes
+
+* Ignore changes to the application gw zone config. ([#140](https://github.com/wandb/terraform-azurerm-wandb/issues/140)) ([08a6663](https://github.com/wandb/terraform-azurerm-wandb/commit/08a66636da8aba422e84874cf361a5d3f3e1b0a2))
+
+### [7.4.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.2...v7.4.3) (2025-06-25)
+
+
+### Bug Fixes
+
+* Allow for configuring of dns01 challenge ([#139](https://github.com/wandb/terraform-azurerm-wandb/issues/139)) ([f07c468](https://github.com/wandb/terraform-azurerm-wandb/commit/f07c468e0c4d5678cf79fe5426b32f60c97fbc62))
+
+### [7.4.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.1...v7.4.2) (2025-06-10)
+
+
+### Bug Fixes
+
+* Added support for secondary ingress for private link ([#122](https://github.com/wandb/terraform-azurerm-wandb/issues/122)) ([4151a3a](https://github.com/wandb/terraform-azurerm-wandb/commit/4151a3a27f6b1d718bfa45fb5454421dd087b11b))
+
+### [7.4.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.0...v7.4.1) (2025-05-16)
+
+
+### Bug Fixes
+
+* Bump max node sizes to ensure reliability as we increase HA deployments ([#138](https://github.com/wandb/terraform-azurerm-wandb/issues/138)) ([25ae471](https://github.com/wandb/terraform-azurerm-wandb/commit/25ae471ab1b721e81879c5949ea66f594df76973))
+
+## [7.4.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.3...v7.4.0) (2025-04-28)
+
+
+### Features
+
+* AKS Cluster Tags ([#137](https://github.com/wandb/terraform-azurerm-wandb/issues/137)) ([bcebf52](https://github.com/wandb/terraform-azurerm-wandb/commit/bcebf52933168a8e79407bcaaf485cc9ba33b94b))
+
+### [7.3.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.2...v7.3.3) (2025-04-11)
+
+
+### Bug Fixes
+
+* Use internal oidc issuer url instead of variable / fix secret store ([#134](https://github.com/wandb/terraform-azurerm-wandb/issues/134)) ([c6c89c8](https://github.com/wandb/terraform-azurerm-wandb/commit/c6c89c8e5476bc55a44d0f9e25b7ac2db5ba258a))
+
+### [7.3.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.1...v7.3.2) (2025-04-10)
+
+
+### Bug Fixes
+
+* Use vars in secure_storage_connector examples ([#136](https://github.com/wandb/terraform-azurerm-wandb/issues/136)) ([686ecd1](https://github.com/wandb/terraform-azurerm-wandb/commit/686ecd148534d848bfda8048eac156a9a71e4a05))
+
+### [7.3.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.3.0...v7.3.1) (2025-04-10)
+
+
+### Bug Fixes
+
+* Workload Identity ([#133](https://github.com/wandb/terraform-azurerm-wandb/issues/133)) ([4599ca6](https://github.com/wandb/terraform-azurerm-wandb/commit/4599ca63838e43ca620d6ec9950728423cf7a753))
+
+## [7.3.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.2.2...v7.3.0) (2025-04-09)
+
+
+### Features
+
+* Output spec ([#135](https://github.com/wandb/terraform-azurerm-wandb/issues/135)) ([5fdea4f](https://github.com/wandb/terraform-azurerm-wandb/commit/5fdea4fbe649b009a0d7868428d08c6df4a96192))
+
+### [7.2.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.2.1...v7.2.2) (2025-03-28)
+
+
+### Bug Fixes
+
+* Patch deploy ([#132](https://github.com/wandb/terraform-azurerm-wandb/issues/132)) ([29ec3b6](https://github.com/wandb/terraform-azurerm-wandb/commit/29ec3b6f0ced89c27c9a3872118ca62c86c8c538))
+
+### [7.2.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.2.0...v7.2.1) (2025-03-20)
+
+
+### Bug Fixes
+
+* Tag cache_size on cloud managed K8s ([#129](https://github.com/wandb/terraform-azurerm-wandb/issues/129)) ([3b6b86f](https://github.com/wandb/terraform-azurerm-wandb/commit/3b6b86f1ed65db6c0431ef4a4dfb153bda8eff85))
+
+## [7.2.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.1.0...v7.2.0) (2025-03-19)
+
+
+### Features
+
+* **deploy:** Support ctrlplane redis ([#128](https://github.com/wandb/terraform-azurerm-wandb/issues/128)) ([0b65265](https://github.com/wandb/terraform-azurerm-wandb/commit/0b65265698b24c83bef515f4313122159621bbe1))
+
+## [7.1.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.0.1...v7.1.0) (2025-03-11)
+
+
+### Features
+
+* Add helm chart toggles ([#127](https://github.com/wandb/terraform-azurerm-wandb/issues/127)) ([11d40ca](https://github.com/wandb/terraform-azurerm-wandb/commit/11d40ca747bb08ab21a2fb189e6bd87b822ac43f))
+
+### [7.0.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.0.0...v7.0.1) (2025-03-06)
+
+
+### Bug Fixes
+
+* Revert Provision Azure storage container for SaaS BYOB ([#118](https://github.com/wandb/terraform-azurerm-wandb/issues/118)) ([#126](https://github.com/wandb/terraform-azurerm-wandb/issues/126)) ([fddeb5d](https://github.com/wandb/terraform-azurerm-wandb/commit/fddeb5d269c43a2330efbc9d30a4e6f0c18e3b70))
+
+## [7.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v6.0.0...v7.0.0) (2025-02-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* Expose externalized redis to helm for console metrics (#125)
+
+### Bug Fixes
+
+* Expose externalized redis to helm for console metrics ([#125](https://github.com/wandb/terraform-azurerm-wandb/issues/125)) ([7c07d00](https://github.com/wandb/terraform-azurerm-wandb/commit/7c07d00f9fe46ce3ce5ceccd9af0c6bd672945f5))
+
+## [6.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.2.2...v6.0.0) (2025-02-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* INFRA-478 external-redis toggles (#124)
+
+### Features
+
+* INFRA-478 external-redis toggles ([#124](https://github.com/wandb/terraform-azurerm-wandb/issues/124)) ([4bc1cd1](https://github.com/wandb/terraform-azurerm-wandb/commit/4bc1cd1bd0766f5f30d27bd7c396c56faadfbac1))
+
+### [5.2.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.2.1...v5.2.2) (2025-02-11)
+
+
+### Bug Fixes
+
+* INFRA-383 finicky terraform fixes ([#121](https://github.com/wandb/terraform-azurerm-wandb/issues/121)) ([f412a04](https://github.com/wandb/terraform-azurerm-wandb/commit/f412a045e81c6701cd5c034681c484c03b0b8f88))
+
+### [5.2.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.2.0...v5.2.1) (2025-02-11)
+
+
+### Bug Fixes
+
+* INFRA-383 some redis tf var null protection ([#120](https://github.com/wandb/terraform-azurerm-wandb/issues/120)) ([bfd5fe9](https://github.com/wandb/terraform-azurerm-wandb/commit/bfd5fe9eaea07fc25302bb44fd65a8e34608eec0))
+
+## [5.2.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.1.3...v5.2.0) (2025-02-10)
+
+
+### Features
+
+* INFRA-383 support for "external" redis creation ([#119](https://github.com/wandb/terraform-azurerm-wandb/issues/119)) ([4a94066](https://github.com/wandb/terraform-azurerm-wandb/commit/4a9406642aaf2743872e68bcc4192c825a4cf6cd))
+
+### [5.1.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.1.2...v5.1.3) (2025-01-13)
+
+
+### Bug Fixes
+
+* Proper bucket vs default bucket usage ([#110](https://github.com/wandb/terraform-azurerm-wandb/issues/110)) ([a91ad9e](https://github.com/wandb/terraform-azurerm-wandb/commit/a91ad9e041ea2deb8bb2b76712d3f38b91e37cd9))
+
+### [5.1.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.1.1...v5.1.2) (2025-01-10)
+
+
+### Bug Fixes
+
+* Helm cursed comma ([#117](https://github.com/wandb/terraform-azurerm-wandb/issues/117)) ([a405ed0](https://github.com/wandb/terraform-azurerm-wandb/commit/a405ed0af7458dced02c54f43d2855087fd596bd))
+
+### [5.1.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.1.0...v5.1.1) (2025-01-09)
+
+
+### Bug Fixes
+
+* Identity typo ([#116](https://github.com/wandb/terraform-azurerm-wandb/issues/116)) ([5c46eea](https://github.com/wandb/terraform-azurerm-wandb/commit/5c46eeaf99920eb32e97b66d1c7c9e6f1326b33f))
+
+## [5.1.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v5.0.0...v5.1.0) (2025-01-08)
+
+
+### Features
+
+* Pass console identity info ([#115](https://github.com/wandb/terraform-azurerm-wandb/issues/115)) ([d945e4c](https://github.com/wandb/terraform-azurerm-wandb/commit/d945e4cea3d623382283d23d24d820332b2ba18b))
+
+## [5.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v4.1.2...v5.0.0) (2025-01-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* Bump helm-wandb vers to v2.0.0, requires TF > 1.9 (#114)
+
+### Features
+
+* Bump helm-wandb vers to v2.0.0, requires TF > 1.9 ([#114](https://github.com/wandb/terraform-azurerm-wandb/issues/114)) ([77b7639](https://github.com/wandb/terraform-azurerm-wandb/commit/77b763934f52875af7fb77fbc102c49c21bc7d33))
+
+### [4.1.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v4.1.1...v4.1.2) (2024-12-18)
+
+
+### Bug Fixes
+
+* Tags were missing on redis ([#113](https://github.com/wandb/terraform-azurerm-wandb/issues/113)) ([48afa7c](https://github.com/wandb/terraform-azurerm-wandb/commit/48afa7ca3fbbcd1a1308fe7dd3f4055bac8fd503))
+
+### [4.1.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v4.1.0...v4.1.1) (2024-12-17)
+
+
+### Bug Fixes
+
+* Don't put special tags on the DB, added this to the var we pass in ([#112](https://github.com/wandb/terraform-azurerm-wandb/issues/112)) ([7f5c51d](https://github.com/wandb/terraform-azurerm-wandb/commit/7f5c51d6d48d173fd1c1542ac6e28d63395dea94))
+
+## [4.1.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v4.0.0...v4.1.0) (2024-12-04)
+
+
+### Features
+
+* Add internalJWTMap used for inter service communication authentication ([#109](https://github.com/wandb/terraform-azurerm-wandb/issues/109)) ([5bf0177](https://github.com/wandb/terraform-azurerm-wandb/commit/5bf017752966db335d711cbb147f618664d6f1b7))
+
+## [4.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.3...v4.0.0) (2024-10-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* Enable autoscaling (#98)
+
+### Features
+
+* Enable autoscaling ([#98](https://github.com/wandb/terraform-azurerm-wandb/issues/98)) ([4ec49cd](https://github.com/wandb/terraform-azurerm-wandb/commit/4ec49cd865697edec72c8b8105e90b2d7cbf346d))
+
+### [3.0.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.2...v3.0.3) (2024-10-01)
+
+
+### Bug Fixes
+
+* Handle per subscription AZ restrictions ([#106](https://github.com/wandb/terraform-azurerm-wandb/issues/106)) ([997c48b](https://github.com/wandb/terraform-azurerm-wandb/commit/997c48b1de197ca5c952b5660adf17ec41991241))
+
+### [3.0.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.1...v3.0.2) (2024-10-01)
+
+
+### Bug Fixes
+
+* Use variables for operator helm release ([#105](https://github.com/wandb/terraform-azurerm-wandb/issues/105)) ([e418924](https://github.com/wandb/terraform-azurerm-wandb/commit/e4189244002c70ddc2fbfa1362afa9c8e769bb64))
+
+### [3.0.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v3.0.0...v3.0.1) (2024-09-30)
+
+
+### Bug Fixes
+
+* Add info for users moving from 2.x to 3.x ([#103](https://github.com/wandb/terraform-azurerm-wandb/issues/103)) ([df95c36](https://github.com/wandb/terraform-azurerm-wandb/commit/df95c36a30f024ed1a4f650fc665dc87619577c2))
+* Reference the correct value from deployment sizes ([#104](https://github.com/wandb/terraform-azurerm-wandb/issues/104)) ([d910a41](https://github.com/wandb/terraform-azurerm-wandb/commit/d910a411637352673c1df11a7f0ce8e461eb24db))
+
+## [3.0.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.15.1...v3.0.0) (2024-09-27)
+
+
+### ⚠ BREAKING CHANGES
+
+* Automatically select availability zones based on node type when not specified (#102)
+
+### Features
+
+* Automatically select availability zones based on node type when not specified ([#102](https://github.com/wandb/terraform-azurerm-wandb/issues/102)) ([8a17acc](https://github.com/wandb/terraform-azurerm-wandb/commit/8a17accd070035004e7665cb46a30c0fe41283fb))
+
+### [2.15.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.15.0...v2.15.1) (2024-09-12)
+
+
+### Bug Fixes
+
+* Bump operator chart and controller image ([#99](https://github.com/wandb/terraform-azurerm-wandb/issues/99)) ([76e2511](https://github.com/wandb/terraform-azurerm-wandb/commit/76e25119c12157c8ee19c013c6544305ddd62b7c))
+
+## [2.15.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.14.0...v2.15.0) (2024-08-26)
+
+
+### Features
+
+* Add support for Private Link to ClickHouse ([#93](https://github.com/wandb/terraform-azurerm-wandb/issues/93)) ([c9b4d66](https://github.com/wandb/terraform-azurerm-wandb/commit/c9b4d664dfc85c5f603e6a14b694923af8d1259d))
+
+## [2.14.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.13.2...v2.14.0) (2024-08-26)
+
+
+### Features
+
+* Add optional path var for instance level bucket path  ([#84](https://github.com/wandb/terraform-azurerm-wandb/issues/84)) ([2f430f2](https://github.com/wandb/terraform-azurerm-wandb/commit/2f430f25b98cac894c794edce12215d1847df475))
+
+### [2.13.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.13.1...v2.13.2) (2024-08-05)
+
+
+### Bug Fixes
+
+* Max Length of Storage Account name ([#90](https://github.com/wandb/terraform-azurerm-wandb/issues/90)) ([38d012f](https://github.com/wandb/terraform-azurerm-wandb/commit/38d012f27a16c9a77d52e90e9bad99ae432bec83))
+
+### [2.13.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.13.0...v2.13.1) (2024-08-05)
+
+
+### Bug Fixes
+
+* Azure storage and Vault simplified ([#89](https://github.com/wandb/terraform-azurerm-wandb/issues/89)) ([4832d24](https://github.com/wandb/terraform-azurerm-wandb/commit/4832d247cdf8e75fe1ae75e7f4da8b528cde93e4))
+
+## [2.13.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.12.2...v2.13.0) (2024-08-01)
+
+
+### Features
+
+* Added for encrypting the database and blob storage with WB-managed key ([#49](https://github.com/wandb/terraform-azurerm-wandb/issues/49)) ([519c340](https://github.com/wandb/terraform-azurerm-wandb/commit/519c340fbf855743fe77b3ae075e6bfdb84740c2))
+
+### [2.12.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.12.1...v2.12.2) (2024-08-01)
+
+
+### Bug Fixes
+
+* Bump operator chart versions ([#87](https://github.com/wandb/terraform-azurerm-wandb/issues/87)) ([51e8736](https://github.com/wandb/terraform-azurerm-wandb/commit/51e873629db3263a27beda2bcf3f40190cc7e0ae))
+
+### [2.12.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.12.0...v2.12.1) (2024-08-01)
+
+
+### Bug Fixes
+
+* Bump operator chart versions ([#86](https://github.com/wandb/terraform-azurerm-wandb/issues/86)) ([d6a38f2](https://github.com/wandb/terraform-azurerm-wandb/commit/d6a38f22ab11cc131f7d7200f77ea39e6e53c8e3))
+
+## [2.12.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.11.3...v2.12.0) (2024-07-31)
+
+
+### Features
+
+* Bump operator image and chart versions ([#85](https://github.com/wandb/terraform-azurerm-wandb/issues/85)) ([d582e7c](https://github.com/wandb/terraform-azurerm-wandb/commit/d582e7ccfb8bb12354f0bff1001bf4ed59e1d9d5))
+
 ### [2.11.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v2.11.2...v2.11.3) (2024-07-11)
 
 

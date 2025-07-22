@@ -5,9 +5,11 @@ resource "azurerm_kubernetes_cluster" "default" {
   dns_prefix          = var.namespace
   sku_tier            = var.sku_tier
 
-  automatic_channel_upgrade         = "stable"
+  automatic_upgrade_channel         = "stable"
+  node_os_upgrade_channel           = "None"
   role_based_access_control_enabled = true
   http_application_routing_enabled  = false
+  image_cleaner_interval_hours      = 48
 
   azure_policy_enabled      = true
   oidc_issuer_enabled       = true
@@ -18,15 +20,17 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 
   default_node_pool {
-    enable_auto_scaling         = false
+    auto_scaling_enabled        = true
     max_pods                    = var.max_pods
     name                        = "default"
-    node_count                  = var.node_pool_vm_count
+    node_count                  = var.node_pool_min_vm_per_az
+    max_count                   = var.node_pool_max_vm_per_az
+    min_count                   = var.node_pool_min_vm_per_az
     temporary_name_for_rotation = "rotating"
     type                        = "VirtualMachineScaleSets"
     vm_size                     = var.node_pool_vm_size
     vnet_subnet_id              = var.cluster_subnet_id
-    zones                       = var.node_pool_zones
+    zones                       = [var.node_pool_zones[0]]
   }
 
   identity {
@@ -43,11 +47,35 @@ resource "azurerm_kubernetes_cluster" "default" {
   tags = var.tags
 
   lifecycle {
-    ignore_changes = [microsoft_defender]
+    ignore_changes = [microsoft_defender, default_node_pool.0.node_count]
   }
 
   key_management_service {
     key_vault_key_id = var.etcd_key_vault_key_id
+  }
+}
+
+locals {
+  additonal_zones = slice(var.node_pool_zones, 1, length(var.node_pool_zones))
+}
+
+resource "azurerm_kubernetes_cluster_node_pool" "additional" {
+  count                 = length(local.additonal_zones)
+  kubernetes_cluster_id = azurerm_kubernetes_cluster.default.id
+  auto_scaling_enabled  = true
+  max_pods              = var.max_pods
+  name                  = "zone${local.additonal_zones[count.index]}"
+  node_count            = var.node_pool_min_vm_per_az
+  max_count             = var.node_pool_max_vm_per_az
+  min_count             = var.node_pool_min_vm_per_az
+  vm_size               = var.node_pool_vm_size
+  vnet_subnet_id        = var.cluster_subnet_id
+  zones                 = [local.additonal_zones[count.index]]
+
+  temporary_name_for_rotation = "rotating"
+
+  lifecycle {
+    ignore_changes = [node_count]
   }
 }
 
@@ -57,21 +85,21 @@ locals {
 }
 
 resource "azurerm_role_assignment" "gateway" {
-  depends_on = [ local.ingress_gateway_principal_id ]
+  depends_on           = [local.ingress_gateway_principal_id]
   scope                = var.gateway.id
   role_definition_name = "Contributor"
   principal_id         = local.ingress_gateway_principal_id
 }
 
 resource "azurerm_role_assignment" "resource_group" {
-  depends_on = [ local.ingress_gateway_principal_id ]
+  depends_on           = [local.ingress_gateway_principal_id]
   scope                = var.resource_group.id
   role_definition_name = "Reader"
   principal_id         = local.ingress_gateway_principal_id
 }
 
 resource "azurerm_role_assignment" "public_subnet" {
-  depends_on = [ local.ingress_gateway_principal_id ]
+  depends_on           = [local.ingress_gateway_principal_id]
   scope                = var.public_subnet.id
   role_definition_name = "Contributor"
   principal_id         = local.ingress_gateway_principal_id

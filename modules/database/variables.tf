@@ -53,12 +53,22 @@ variable "tags" {
 }
 
 variable "deletion_protection" {
-  description = "If the instance should have deletion protection enabled. The database can't be deleted when this value is set to `true`."
   type        = bool
+  description = "If the instance should have deletion protection enabled. The database can't be deleted when this value is set to `true`."
 }
 
 variable "slow_query_log_enabled" {
   description = "Enable MySQL slow query log"
   type        = bool
   default     = true
+}
+
+variable "database_key_id" {
+  type        = string
+  description = "The Azure Key Vault key identifier for the database encryption key."
+}
+
+variable "identity_ids" {
+  type        = string
+  description = "The identity ids to assign to the database when database_key_id is passed."
 }

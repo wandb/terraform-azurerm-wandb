@@ -1,10 +1,15 @@
+locals {
+  postfix             = "storage"
+  truncated_namespace = substr(replace(var.namespace, "-", ""), 0, 24 - length(local.postfix))
+}
 resource "azurerm_storage_account" "default" {
-  name                     = replace("${var.namespace}-storage", "-", "")
+  name                     = "${local.truncated_namespace}${local.postfix}"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"
   account_replication_type = "ZRS"
   min_tls_version          = "TLS1_2"
+  cross_tenant_replication_enabled = true
 
   blob_properties {
     cors_rule {
@@ -26,6 +31,20 @@ resource "azurerm_storage_account" "default" {
     }
   }
 
+  dynamic "identity" {
+    for_each = var.storage_key_id != null ? [1] : []
+    content {
+      type         = "UserAssigned"
+      identity_ids = [var.identity_ids]
+    }
+  }
+  dynamic "customer_managed_key" {
+    for_each = var.storage_key_id != null && var.disable_storage_vault_key_id == false ? [1] : []
+    content {
+      user_assigned_identity_id = var.identity_ids
+      key_vault_key_id          = var.storage_key_id
+    }
+  }
   tags = var.tags
 }
 

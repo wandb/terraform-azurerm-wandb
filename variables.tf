@@ -29,7 +29,7 @@ variable "use_internal_queue" {
 }
 
 variable "size" {
-  default     = null
+  default     = "small"
   description = "Deployment size"
   nullable    = true
   type        = string
@@ -87,6 +87,32 @@ variable "other_wandb_env" {
   default     = {}
 }
 
+##########################################
+# Operator                               #
+##########################################
+variable "operator_chart_version" {
+  type        = string
+  description = "Version of the operator chart to deploy"
+  default     = "1.4.2"
+}
+
+variable "controller_image_tag" {
+  type        = string
+  description = "Tag of the controller image to deploy"
+  default     = "1.20.0"
+}
+
+variable "enable_helm_operator" {
+  type        = bool
+  default     = true
+  description = "Enable or disable applying and releasing W&B Operator chart"
+}
+
+variable "enable_helm_wandb" {
+  type        = bool
+  default     = true
+  description = "Enable or disable applying and releasing CR chart"
+}
 
 ##########################################
 # DNS                                    #
@@ -107,6 +133,14 @@ variable "ssl" {
   type        = bool
   default     = true
   description = "Enable SSL certificate"
+}
+
+# Passthroughs for the cert_manager/issuer modules
+# To handle possible use of a dns01 solver
+variable "use_dns_resolver" {
+  type        = bool
+  default     = false
+  description = "[Internal Use Only] Use the dns01 solver disabling the auto setup of cert-manager"
 }
 
 ##########################################
@@ -131,8 +165,8 @@ variable "database_availability_mode" {
 
 variable "database_sku_name" {
   type        = string
-  default     = "GP_Standard_D4ds_v4"
-  description = "Specifies the SKU Name for this MySQL Server"
+  default     = null
+  description = "Specifies the SKU Name for this MySQL Server. Defaults to null and value from deployment-size.tf is used"
 }
 
 variable "slow_query_log_enabled" {
@@ -147,13 +181,53 @@ variable "slow_query_log_enabled" {
 variable "create_redis" {
   type        = bool
   description = "Boolean indicating whether to provision an redis instance (true) or not (false)."
-  default     = false
+  default     = true
 }
 
 variable "redis_capacity" {
-  type    = number
-  description = "Number indicating size of an redis instance"
-  default = 2
+  type        = number
+  description = "Number indicating size of an redis instance. Defaults to null and value from deployment-size.tf is used"
+  default     = null
+}
+
+variable "use_external_redis" {
+  type        = bool
+  description = "Boolean indicating whether to use the redis instance created externally"
+  default     = false
+}
+
+variable "external_redis_host" {
+  type        = string
+  description = "host for the redis instance created externally"
+  default     = null
+}
+
+variable "external_redis_port" {
+  type        = string
+  description = "port for the redis instance created externally"
+  default     = null
+}
+
+variable "external_redis_params" {
+  type        = object({})
+  description = "queryVar params for redis instance created externally"
+  default     = null
+}
+
+variable "use_ctrlplane_redis" {
+  description = "Whether redis is deployed in the cluster via ctrlplane"
+  type        = bool
+  default     = false
+}
+
+variable "cache_size" {
+  description = "Size of the redis cache, when use_ctrlplane_redis is true. These values map to preset sizes in the bitnami helm chart."
+  type        = string
+  default     = "nano"
+  validation {
+    condition     = contains(["nano", "micro", "small", "medium", "large", "xlarge", "2xlarge"], var.cache_size)
+    error_message = "Invalid value specified for 'cache_size'; must be one of 'nano', 'micro', 'small', 'medium', 'large'"
+  }
 }
 
 ##########################################
@@ -186,19 +260,43 @@ variable "external_bucket" {
   default     = null
 }
 
+##########################################
+# Bucket path                            #
+##########################################
+# This setting is meant for users who want to store all of their instance-level
+# bucket's data at a specific path within their bucket. It can be set both for
+# external buckets or the bucket created by this module.
+variable "bucket_path" {
+  description = "path of where to store data for the instance-level bucket"
+  type        = string
+  default     = ""
+}
 
 ##########################################
 # K8s                                    #
 ##########################################
 variable "kubernetes_instance_type" {
+  description = "Instance type for primary node group. Defaults to null and value from deployment-size.tf is used"
   type        = string
-  description = "Use for the Kubernetes cluster."
-  default     = "Standard_D4a_v4"
+  default     = null
 }
 
-variable "kubernetes_node_count" {
-  default = 2
-  type    = number
+variable "kubernetes_min_node_per_az" {
+  description = "Minimum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used"
+  type        = number
+  default     = null
+}
+
+variable "kubernetes_max_node_per_az" {
+  description = "Maximum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used"
+  type        = number
+  default     = null
+}
+
+variable "kubernetes_cluster_tags" {
+  description = "A map of tags to apply to all resources managed by the AKS cluster"
+  type        = map(string)
+  default     = {}
 }
 
 variable "cluster_sku_tier" {
@@ -210,13 +308,19 @@ variable "cluster_sku_tier" {
 variable "node_pool_zones" {
   type        = list(string)
   description = "Availability zones for the node pool"
-  default     = ["1", "2"]
+  default     = null
+}
+
+variable "node_pool_num_zones" {
+  type        = number
+  description = "Number of availability zones to use for the node pool when node_pool_zones is not set. If neither are set, 3 zones will be used"
+  default     = 2
 }
 
 variable "node_max_pods" {
   type        = number
   description = "Maximum number of pods per node"
-  default = 30
+  default     = 30
 }
 
 ###########################################
@@ -231,14 +335,15 @@ variable "create_private_link" {
 variable "allowed_subscriptions" {
   type        = string
   description = "List of allowed customer subscriptions coma seperated values"
-  default = "" 
+  default     = ""
 }
+
 ##########################################
 # Network                                #
 ##########################################
 
 variable "allowed_ip_ranges" {
-  description = "allowed public IP addresses or CIDR ranges."
+  description = "Allowed public IP addresses or CIDR ranges."
   type        = list(string)
   default     = []
 }
@@ -261,8 +366,45 @@ variable "parquet_wandb_env" {
   default     = {}
 }
 
+##########################################
+# vault key                              #
+##########################################
+
+variable "enable_storage_vault_key" {
+  type        = bool
+  default     = false
+  description = "Flag to enable managed key encryption for the storage account."
+}
+
+variable "disable_storage_vault_key_id" {
+  type        = bool
+  default     = false
+  description = "Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation."
+}
+
+variable "enable_database_vault_key" {
+  type        = bool
+  default     = false
+  description = "Flag to enable managed key encryption for the database. Once enabled, cannot be disabled."
+}
+
 ## To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 
 variable "azuremonitor" {
   type    = bool
   default = false
+}
+
+###########################################
+# ClickHouse endpoint                     #
+###########################################
+variable "clickhouse_private_endpoint_service_name" {
+  type        = string
+  description = "ClickHouse private endpoint 'Service name' (ends in .azure.privatelinkservice)."
+  default     = ""
+}
+
+variable "clickhouse_region" {
+  type        = string
+  description = "ClickHouse region (eastus2, westus3, etc)."
+  default     = ""
 }

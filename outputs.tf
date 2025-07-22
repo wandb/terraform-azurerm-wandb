@@ -33,14 +33,6 @@ output "oidc_issuer_url" {
   value = module.app_aks.oidc_issuer_url
 }
 
-output "storage_account" {
-  value = var.external_bucket != null ? "" : coalesce(var.storage_account, local.account_name, "")
-}
-
-output "storage_container" {
-  value = var.external_bucket != null ? "" : coalesce(var.blob_container, local.container_name)
-}
-
 output "private_link_resource_id" {
   value = module.app_lb.gateway_id
 }
@@ -48,19 +40,36 @@ output "private_link_resource_id" {
 output "private_link_sub_resource_name" {
   value = module.app_lb.frontend_ip_configuration_names
 }
-  
+
 output "standardized_size" {
   value = var.size
 }
 
-output "aks_node_count" {
-  value = try(local.deployment_size[var.size].node_count, var.kubernetes_node_count)
+output "aks_min_node_count" {
+  value = local.kubernetes_min_node_per_az
+}
+
+output "aks_max_node_count" {
+  value = local.kubernetes_max_node_per_az
 }
 
 output "aks_node_instance_type" {
-  value = try(local.deployment_size[var.size].node_instance, var.kubernetes_instance_type)
+  value = local.kubernetes_instance_type
 }
 
 output "database_instance_type" {
-  value = try(local.deployment_size[var.size].db, var.database_sku_name)
+  value = local.database_sku_name
+}
+
+output "client_id" {
+  value = module.identity.identity.client_id
+}
+
+output "tenant_id" {
+  value = module.identity.identity.tenant_id
+}
+
+output "wandb_spec" {
+  value     = local.spec
+  sensitive = true
 }

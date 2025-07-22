@@ -1,12 +1,21 @@
-provider "azurerm" {
-  features {}
-}
-
 data "azurerm_client_config" "current" {
 }
 
 data "azurerm_resource_group" "group" {
   name = var.resource_group_name
+}
+
+module "service_accounts" {
+  source = "./service_accounts"
+}
+
+locals {
+  k8s_sa_map = merge(
+    {
+      app = "wandb-app"
+    },
+    module.service_accounts.k8s_sa_map
+  )
 }
 
 resource "azurerm_user_assigned_identity" "default" {
@@ -15,13 +24,14 @@ resource "azurerm_user_assigned_identity" "default" {
   resource_group_name = data.azurerm_resource_group.group.name
 }
 
-resource "azurerm_federated_identity_credential" "app" {
+resource "azurerm_federated_identity_credential" "sa_map" {
+  for_each            = local.k8s_sa_map
   parent_id           = azurerm_user_assigned_identity.default.id
-  name                = "${var.namespace}-federated-credential"
+  name                = "${var.namespace}-federated-credential-${each.value}"
   resource_group_name = data.azurerm_resource_group.group.name
   audience            = ["api://AzureADTokenExchange"]
   issuer              = var.oidc_issuer_url
-  subject             = "system:serviceaccount:default:wandb-app"
+  subject             = "system:serviceaccount:default:${each.value}"
 }
 
 module "storage" {
