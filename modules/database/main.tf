@@ -81,7 +81,7 @@ resource "azurerm_mysql_flexible_server_configuration" "slow_query_log" {
   name                = "slow_query_log"
   resource_group_name = var.resource_group_name
   server_name         = azurerm_mysql_flexible_server.default.name
-  value               = var.slow_query_log_enabled ? "ON" : "OFF"
+  value               = "ON"
 }
 
 resource "azurerm_mysql_flexible_database" "default" {
