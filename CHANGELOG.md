@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.5.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.6...v7.5.0) (2025-07-22)
+
+
+### Features
+
+* Terraform template for private link endpoint ([#143](https://github.com/wandb/terraform-azurerm-wandb/issues/143)) ([e3e3f9b](https://github.com/wandb/terraform-azurerm-wandb/commit/e3e3f9b605e6580e4c0ff50c5082ecd3618229de))
+
 ### [7.4.6](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.5...v7.4.6) (2025-07-03)
 
 
