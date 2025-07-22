@@ -137,7 +137,6 @@ resources that lack official modules.
 | <a name="input_parquet_wandb_env"></a> [parquet\_wandb\_env](#input\_parquet\_wandb\_env) | Extra environment variables for W&B | `map(string)` | `{}` | no |
 | <a name="input_redis_capacity"></a> [redis\_capacity](#input\_redis\_capacity) | Number indicating size of an redis instance. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
 | <a name="input_size"></a> [size](#input\_size) | Deployment size | `string` | `"small"` | no |
-| <a name="input_slow_query_log_enabled"></a> [slow\_query\_log\_enabled](#input\_slow\_query\_log\_enabled) | Enable MySQL slow query log | `bool` | `true` | no |
 | <a name="input_ssl"></a> [ssl](#input\_ssl) | Enable SSL certificate | `bool` | `true` | no |
 | <a name="input_storage_account"></a> [storage\_account](#input\_storage\_account) | Azure storage account name | `string` | `""` | no |
 | <a name="input_storage_key"></a> [storage\_key](#input\_storage\_key) | Azure primary storage access key | `string` | `""` | no |
