@@ -5,28 +5,28 @@ locals {
       db             = "MO_Standard_E2ds_v4",
       min_node_count = 1,
       max_node_count = 4,
-      node_instance  = "Standard_E4s_v5"
+      node_instance  = "Standard_E8s_v5"
       cache          = "3"
     },
     medium = {
       db             = "MO_Standard_E4ds_v4",
       min_node_count = 1,
       max_node_count = 4,
-      node_instance  = "Standard_E4s_v5"
+      node_instance  = "Standard_E16s_v5"
       cache          = "3"
     },
     large = {
       db             = "MO_Standard_E8ds_v4",
       min_node_count = 1,
       max_node_count = 4,
-      node_instance  = "Standard_E8s_v5"
+      node_instance  = "Standard_E16s_v5"
       cache          = "4"
     },
     xlarge = {
       db             = "MO_Standard_E16ds_v4",
       min_node_count = 1,
       max_node_count = 4,
-      node_instance  = "Standard_E8s_v5"
+      node_instance  = "Standard_E16s_v5"
       cache          = "4"
     },
     xxlarge = {
