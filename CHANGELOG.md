@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.5.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.5.0...v7.5.1) (2025-07-29)
+
+
+### Bug Fixes
+
+* Increase instance sizes on all sizes up to large ([#145](https://github.com/wandb/terraform-azurerm-wandb/issues/145)) ([8b2d1ee](https://github.com/wandb/terraform-azurerm-wandb/commit/8b2d1eee3965a6c067cef9b7ece6d5b55ac8fc2b))
+
 ## [7.5.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.4.6...v7.5.0) (2025-07-22)
 
 
