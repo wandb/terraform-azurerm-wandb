@@ -8,6 +8,11 @@ output "private_subnet" {
   description = "The subnetwork used for W&B"
 }
 
+output "kubernetes_subnet" {
+  value       = azurerm_subnet.kubernetes
+  description = "The subnetwork used for W&B"
+}
+
 output "public_subnet" {
   value       = azurerm_subnet.public
   description = "The subnetwork used the frontend."

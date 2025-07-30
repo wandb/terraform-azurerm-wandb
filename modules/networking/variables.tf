@@ -43,6 +43,12 @@ variable "network_database_subnet_cidr" {
   description = "The CIDR range of the database subnetwork."
 }
 
+variable "network_kubernetes_subnet_cidr" {
+  default     = "10.10.16.0/20"
+  type        = string
+  description = "(Optional) Subnet CIDR range for kubernetes pods"
+}
+
 variable "network_allow_range" {
   default     = "*"
   type        = string

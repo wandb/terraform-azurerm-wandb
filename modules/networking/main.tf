@@ -22,6 +22,20 @@ resource "azurerm_subnet" "private" {
   )
 }
 
+resource "azurerm_subnet" "kubernetes" {
+  name                                          = "${var.namespace}-kubernetes"
+  resource_group_name                           = var.resource_group_name
+  address_prefixes                              = [var.network_kubernetes_subnet_cidr]
+  virtual_network_name                          = azurerm_virtual_network.default.name
+  private_link_service_network_policies_enabled = false
+  private_endpoint_network_policies             = "Enabled"
+
+  service_endpoints = concat(
+    ["Microsoft.Sql", "Microsoft.KeyVault"],
+      var.private_link ? ["Microsoft.Storage.Global"] : ["Microsoft.Storage"]
+  )
+}
+
 resource "azurerm_subnet" "public" {
   name                 = "${var.namespace}-public"
   resource_group_name  = var.resource_group_name

@@ -146,7 +146,7 @@ module "app_aks" {
   source     = "./modules/app_aks"
   depends_on = [module.app_lb]
 
-  cluster_subnet_id       = module.networking.private_subnet.id
+  cluster_subnet_id       = module.networking.kubernetes_subnet.id
   etcd_key_vault_key_id   = module.vault.etcd_key_id
   gateway                 = module.app_lb.gateway
   identity                = module.identity.identity
