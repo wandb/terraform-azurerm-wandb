@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.5.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.5.1...v7.5.2) (2025-07-30)
+
+
+### Bug Fixes
+
+* Create a larger subnet for pods, and allow more pods per node ([#146](https://github.com/wandb/terraform-azurerm-wandb/issues/146)) ([ac286a7](https://github.com/wandb/terraform-azurerm-wandb/commit/ac286a7d91f715d064f77a8c3a7f45ddf3250d2a))
+
 ### [7.5.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.5.0...v7.5.1) (2025-07-29)
 
 
