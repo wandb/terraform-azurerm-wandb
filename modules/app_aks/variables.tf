@@ -62,7 +62,7 @@ variable "sku_tier" {
 variable "max_pods" {
   type        = number
   description = "Maximum number of pods per node"
-  default     = 30
+  default     = 60
 }
 
 variable "node_pool_zones" {
