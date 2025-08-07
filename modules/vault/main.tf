@@ -77,3 +77,26 @@ resource "azurerm_key_vault_key" "intenral_encryption_keys" {
 
   depends_on = [azurerm_key_vault_access_policy.parent, azurerm_key_vault_access_policy.identity]
 }
+
+resource "random_password" "weave_worker_auth" {
+  length  = 32
+  special = true
+}
+
+resource "azurerm_key_vault_secret" "weave_worker_auth" {
+  name         = "weave-worker-auth"
+  value        = random_password.weave_worker_auth.result
+  key_vault_id = azurerm_key_vault.default.id
+}
+
+resource "kubernetes_secret" "weave_worker_auth" {
+  metadata {
+    name = "weave-worker-auth"
+  }
+
+  data = {
+    key = random_password.weave_worker_auth.result
+  }
+
+  type = "Opaque"
+}
