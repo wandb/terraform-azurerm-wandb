@@ -220,3 +220,4 @@ provider "azapi" {
     # azapi provider configuration should be the same as azurerm provider configuration
 }
 ```
+
