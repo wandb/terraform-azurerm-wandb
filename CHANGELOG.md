@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.5.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.5.2...v7.5.3) (2025-08-08)
+
+
+### Bug Fixes
+
+* Remove whitespace to trigger release ([#149](https://github.com/wandb/terraform-azurerm-wandb/issues/149)) ([c125f2f](https://github.com/wandb/terraform-azurerm-wandb/commit/c125f2f17be851eca190bab32b529276079dab30))
+
 ### [7.5.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.5.1...v7.5.2) (2025-07-30)
 
 
