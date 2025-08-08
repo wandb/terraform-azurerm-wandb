@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.5.4](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.5.3...v7.5.4) (2025-08-08)
+
+
+### Bug Fixes
+
+* Fix kubernetes_secret data key ([#150](https://github.com/wandb/terraform-azurerm-wandb/issues/150)) ([7da1e27](https://github.com/wandb/terraform-azurerm-wandb/commit/7da1e27e9b31532907361b35f2965e5f3b630c04))
+
 ### [7.5.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.5.2...v7.5.3) (2025-08-08)
 
 
