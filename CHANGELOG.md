@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.6.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.5.4...v7.6.0) (2025-08-11)
+
+
+### Features
+
+* Add secret store env vars ([#151](https://github.com/wandb/terraform-azurerm-wandb/issues/151)) ([dd1445a](https://github.com/wandb/terraform-azurerm-wandb/commit/dd1445a0b74807f5111961bda0b9d9d2c4ab530f))
+
 ### [7.5.4](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.5.3...v7.5.4) (2025-08-08)
 
 
