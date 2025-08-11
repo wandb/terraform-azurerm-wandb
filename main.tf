@@ -370,6 +370,8 @@ locals {
         extraEnv = merge({
           "GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
           "GORILLA_CUSTOMER_SECRET_STORE_SOURCE"              = "az-secretmanager://wandb",
+          "GORILLA_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
+          "GORILLA_SECRET_STORE_SOURCE"              = "az-secretmanager://wandb",
         }, var.other_wandb_env)
       }
 
