@@ -54,6 +54,13 @@ variable "node_pool_max_vm_per_az" {
   type = number
 }
 
+variable "node_pool_disk_size" {
+  description = "The size of the OS disk volume in GiB for the root block device of node group instances."
+  nullable    = false
+  type        = number
+  default     = 100
+}
+
 variable "sku_tier" {
   type    = string
   default = "Free"
