@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.6.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.6.0...v7.6.1) (2025-08-28)
+
+
+### Bug Fixes
+
+* Allow for a longer ip allow list ([#152](https://github.com/wandb/terraform-azurerm-wandb/issues/152)) ([5882fe7](https://github.com/wandb/terraform-azurerm-wandb/commit/5882fe7a185310f1af2bda24af5ed6683ce0e527))
+
 ## [7.6.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.5.4...v7.6.0) (2025-08-11)
 
 
