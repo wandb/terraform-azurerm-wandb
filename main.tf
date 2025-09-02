@@ -159,7 +159,7 @@ module "app_aks" {
   public_subnet           = module.networking.public_subnet
   resource_group          = azurerm_resource_group.default
   sku_tier                = var.cluster_sku_tier
-  tags                    = merge(var.tags, { cache_size = var.cache_size }, var.kubernetes_cluster_tags)
+  tags                    = merge(var.tags, var.kubernetes_cluster_tags)
 }
 locals {
   service_account_name         = "wandb-app"
@@ -310,6 +310,11 @@ locals {
   ctrlplane_redis_params = {
     master = "gorilla"
   }
+  chainguard_redis_host = "redis.redis-cg.svc.cluster.local"
+  chainguard_redis_port = "26379"
+  chainguard_redis_params = {
+    master = "gorilla"
+  }
   spec = {
     values = {
       global = {
@@ -343,6 +348,13 @@ locals {
           port     = local.ctrlplane_redis_port
           params   = local.ctrlplane_redis_params
           external = true
+          } : var.use_chainguard_redis ? {
+          host     = local.chainguard_redis_host
+          password = ""
+          port     = local.chainguard_redis_port
+          caCert   = ""
+          params   = local.chainguard_redis_params
+          external = true
           } : var.use_external_redis ? {
           host     = var.external_redis_host
           password = ""
@@ -370,8 +382,8 @@ locals {
         extraEnv = merge({
           "GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
           "GORILLA_CUSTOMER_SECRET_STORE_SOURCE"              = "az-secretmanager://wandb",
-          "GORILLA_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
-          "GORILLA_SECRET_STORE_SOURCE"              = "az-secretmanager://wandb",
+          "GORILLA_SECRET_STORE_AZ_CONFIG_VAULT_URI"          = module.vault.vault.vault_uri,
+          "GORILLA_SECRET_STORE_SOURCE"                       = "az-secretmanager://wandb",
         }, var.other_wandb_env)
       }
 
@@ -432,8 +444,8 @@ locals {
         }
 
         labels = var.create_private_link ? {
-            "sha_hash" = substr(sha256("yes"), 0, 50)
-          } : {}
+          "sha_hash" = substr(sha256("yes"), 0, 50)
+        } : {}
 
         tls = [
           { hosts = [trimprefix(trimprefix(local.url, "https://"), "http://")], secretName = "wandb-ssl-cert" }
@@ -443,7 +455,7 @@ locals {
           create       = var.create_private_link
           nameOverride = "${var.namespace}-private-ingress"
           annotations = {
-            "kubernetes.io/ingress.class"                   = "azure/application-gateway"
+            "kubernetes.io/ingress.class"                 = "azure/application-gateway"
             "appgw.ingress.kubernetes.io/request-timeout" = "300"
             "appgw.ingress.kubernetes.io/use-private-ip" : "true"
           }
@@ -452,7 +464,7 @@ locals {
           ]
         }
       }
- 
+
 
       otel = {
         daemonset = var.azuremonitor ? {
