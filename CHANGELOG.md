@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+### [7.6.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.6.0...v7.6.1) (2025-08-28)
+
+
+### Bug Fixes
+
+* Allow for a longer ip allow list ([#152](https://github.com/wandb/terraform-azurerm-wandb/issues/152)) ([5882fe7](https://github.com/wandb/terraform-azurerm-wandb/commit/5882fe7a185310f1af2bda24af5ed6683ce0e527))
+
+## [7.6.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.5.4...v7.6.0) (2025-08-11)
+
+
+### Features
+
+* Add secret store env vars ([#151](https://github.com/wandb/terraform-azurerm-wandb/issues/151)) ([dd1445a](https://github.com/wandb/terraform-azurerm-wandb/commit/dd1445a0b74807f5111961bda0b9d9d2c4ab530f))
+
+### [7.5.4](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.5.3...v7.5.4) (2025-08-08)
+
+
+### Bug Fixes
+
+* Fix kubernetes_secret data key ([#150](https://github.com/wandb/terraform-azurerm-wandb/issues/150)) ([7da1e27](https://github.com/wandb/terraform-azurerm-wandb/commit/7da1e27e9b31532907361b35f2965e5f3b630c04))
+
+### [7.5.3](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.5.2...v7.5.3) (2025-08-08)
+
+
+### Bug Fixes
+
+* Remove whitespace to trigger release ([#149](https://github.com/wandb/terraform-azurerm-wandb/issues/149)) ([c125f2f](https://github.com/wandb/terraform-azurerm-wandb/commit/c125f2f17be851eca190bab32b529276079dab30))
+
 ### [7.5.2](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.5.1...v7.5.2) (2025-07-30)
 
 

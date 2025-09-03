@@ -84,7 +84,7 @@ resource "azurerm_network_security_rule" "allow_cidr" {
 resource "azurerm_network_security_rule" "default" {
   count                       = length(var.allowed_ip_ranges) > 0 ? 1 : 0
   name                        = "defaultAppGatewayV2SkuRule"
-  priority                    = 120
+  priority                    = 300
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "*"
