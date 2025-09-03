@@ -34,7 +34,7 @@ variable "tags" {
 }
 
 variable "private_subnet" {
-  type        = object({ id = string })
+  type = object({ id = string })
 }
 
 variable "private_link" {

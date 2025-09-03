@@ -3,11 +3,11 @@ locals {
   url_prefix = var.ssl ? "https" : "http"
   url        = "${local.url_prefix}://${local.fqdn}"
 
-  redis_capacity             = coalesce(var.redis_capacity, local.deployment_size[var.size].cache)
-  database_sku_name          = coalesce(var.database_sku_name, local.deployment_size[var.size].db)
-  kubernetes_instance_type   = coalesce(var.kubernetes_instance_type, local.deployment_size[var.size].node_instance)
-  kubernetes_min_node_per_az = coalesce(var.kubernetes_min_node_per_az, local.deployment_size[var.size].min_node_count)
-  kubernetes_max_node_per_az = coalesce(var.kubernetes_max_node_per_az, local.deployment_size[var.size].max_node_count)
+  redis_capacity               = coalesce(var.redis_capacity, local.deployment_size[var.size].cache)
+  database_sku_name            = coalesce(var.database_sku_name, local.deployment_size[var.size].db)
+  kubernetes_instance_type     = coalesce(var.kubernetes_instance_type, local.deployment_size[var.size].node_instance)
+  kubernetes_min_node_per_az   = coalesce(var.kubernetes_min_node_per_az, local.deployment_size[var.size].min_node_count)
+  kubernetes_max_node_per_az   = coalesce(var.kubernetes_max_node_per_az, local.deployment_size[var.size].max_node_count)
   kubernetes_node_disk_size_gb = coalesce(var.kubernetes_node_disk_size_gb, local.deployment_size[var.size].root_volume_size)
 }
 
@@ -432,8 +432,8 @@ locals {
         }
 
         labels = var.create_private_link ? {
-            "sha_hash" = substr(sha256("yes"), 0, 50)
-          } : {}
+          "sha_hash" = substr(sha256("yes"), 0, 50)
+        } : {}
 
         tls = [
           { hosts = [trimprefix(trimprefix(local.url, "https://"), "http://")], secretName = "wandb-ssl-cert" }
@@ -443,7 +443,7 @@ locals {
           create       = var.create_private_link
           nameOverride = "${var.namespace}-private-ingress"
           annotations = {
-            "kubernetes.io/ingress.class"                   = "azure/application-gateway"
+            "kubernetes.io/ingress.class"                 = "azure/application-gateway"
             "appgw.ingress.kubernetes.io/request-timeout" = "300"
             "appgw.ingress.kubernetes.io/use-private-ip" : "true"
           }
@@ -452,7 +452,7 @@ locals {
           ]
         }
       }
- 
+
 
       otel = {
         daemonset = var.azuremonitor ? {

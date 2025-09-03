@@ -3,12 +3,12 @@ locals {
   truncated_namespace = substr(replace(var.namespace, "-", ""), 0, 24 - length(local.postfix))
 }
 resource "azurerm_storage_account" "default" {
-  name                     = "${local.truncated_namespace}${local.postfix}"
-  resource_group_name      = var.resource_group_name
-  location                 = var.location
-  account_tier             = "Standard"
-  account_replication_type = "ZRS"
-  min_tls_version          = "TLS1_2"
+  name                             = "${local.truncated_namespace}${local.postfix}"
+  resource_group_name              = var.resource_group_name
+  location                         = var.location
+  account_tier                     = "Standard"
+  account_replication_type         = "ZRS"
+  min_tls_version                  = "TLS1_2"
   cross_tenant_replication_enabled = true
 
   blob_properties {

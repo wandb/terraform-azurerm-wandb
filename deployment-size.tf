@@ -10,35 +10,35 @@ locals {
       root_volume_size = 100
     },
     medium = {
-      db             = "MO_Standard_E4ds_v4",
-      min_node_count = 1,
-      max_node_count = 4,
-      node_instance  = "Standard_E16s_v5"
-      cache          = "3"
+      db               = "MO_Standard_E4ds_v4",
+      min_node_count   = 1,
+      max_node_count   = 4,
+      node_instance    = "Standard_E16s_v5"
+      cache            = "3"
       root_volume_size = 100
     },
     large = {
-      db             = "MO_Standard_E8ds_v4",
-      min_node_count = 1,
-      max_node_count = 4,
-      node_instance  = "Standard_E16s_v5"
-      cache          = "4"
+      db               = "MO_Standard_E8ds_v4",
+      min_node_count   = 1,
+      max_node_count   = 4,
+      node_instance    = "Standard_E16s_v5"
+      cache            = "4"
       root_volume_size = 256
     },
     xlarge = {
-      db             = "MO_Standard_E16ds_v4",
-      min_node_count = 1,
-      max_node_count = 4,
-      node_instance  = "Standard_E16s_v5"
-      cache          = "4"
+      db               = "MO_Standard_E16ds_v4",
+      min_node_count   = 1,
+      max_node_count   = 4,
+      node_instance    = "Standard_E16s_v5"
+      cache            = "4"
       root_volume_size = 256
     },
     xxlarge = {
-      db             = "MO_Standard_E32ds_v4",
-      min_node_count = 1,
-      max_node_count = 4,
-      node_instance  = "Standard_E16s_v5"
-      cache          = "5"
+      db               = "MO_Standard_E32ds_v4",
+      min_node_count   = 1,
+      max_node_count   = 4,
+      node_instance    = "Standard_E16s_v5"
+      cache            = "5"
       root_volume_size = 256
     }
   }
