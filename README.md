@@ -53,6 +53,7 @@ resources that lack official modules.
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.26 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | ~> 2.6 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | ~> 2.23 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | ~> 3.0 |
 
 ## Providers
 
@@ -60,6 +61,7 @@ resources that lack official modules.
 |------|---------|
 | <a name="provider_azapi"></a> [azapi](#provider\_azapi) | ~> 1.0 |
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 4.26 |
+| <a name="provider_null"></a> [null](#provider\_null) | ~> 3.0 |
 
 ## Modules
 
