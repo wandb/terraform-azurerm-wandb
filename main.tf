@@ -638,3 +638,18 @@ module "wandb" {
   enable_helm_operator   = var.enable_helm_operator
   enable_helm_wandb      = var.enable_helm_wandb
 }
+
+resource "null_resource" "use_redis_validation" {
+  triggers = {
+    use_ctrlplane_redis  = var.use_ctrlplane_redis
+    use_chainguard_redis = var.use_chainguard_redis
+    use_external_redis   = var.use_external_redis
+  }
+
+  lifecycle {
+    precondition {
+      condition     = (var.use_ctrlplane_redis ? 1 : 0) + (var.use_chainguard_redis ? 1 : 0) + (var.use_external_redis ? 1 : 0) <= 1
+      error_message = "Enable at most one of: use_ctrlplane_redis, use_chainguard_redis, use_external_redis."
+    }
+  }
+}
