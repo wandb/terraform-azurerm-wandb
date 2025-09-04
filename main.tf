@@ -352,7 +352,6 @@ locals {
           host     = local.chainguard_redis_host
           password = ""
           port     = local.chainguard_redis_port
-          caCert   = ""
           params   = local.chainguard_redis_params
           external = true
           } : var.use_external_redis ? {
