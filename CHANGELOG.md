@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.7.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.6.1...v7.7.0) (2025-09-04)
+
+
+### Features
+
+* Add option for chainguard redis ([#154](https://github.com/wandb/terraform-azurerm-wandb/issues/154)) ([6e11e9b](https://github.com/wandb/terraform-azurerm-wandb/commit/6e11e9b62b6fa07d79d643a7934a804f29e1403c))
+
 ### [7.6.1](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.6.0...v7.6.1) (2025-08-28)
 
 
