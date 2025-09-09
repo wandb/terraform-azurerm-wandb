@@ -286,7 +286,7 @@ variable "kubernetes_max_node_per_az" {
 variable "kubernetes_node_disk_size_gb" {
   type        = number
   description = "Size of the node root volume in GB."
-  default     = "100"
+  default     = null
 }
 
 variable "kubernetes_cluster_tags" {

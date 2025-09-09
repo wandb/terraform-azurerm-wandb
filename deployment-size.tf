@@ -7,7 +7,7 @@ locals {
       max_node_count   = 4,
       node_instance    = "Standard_E8s_v5"
       cache            = "3"
-      root_volume_size = 100
+      root_volume_size = 128
     },
     medium = {
       db               = "MO_Standard_E4ds_v4",
@@ -15,7 +15,7 @@ locals {
       max_node_count   = 4,
       node_instance    = "Standard_E16s_v5"
       cache            = "3"
-      root_volume_size = 100
+      root_volume_size = 128
     },
     large = {
       db               = "MO_Standard_E8ds_v4",
