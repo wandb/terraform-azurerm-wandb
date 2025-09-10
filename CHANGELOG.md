@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [7.8.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.7.0...v7.8.0) (2025-09-10)
+
+
+### Features
+
+* Add adjustable root volumes sizes and defaults by deployment size ([#153](https://github.com/wandb/terraform-azurerm-wandb/issues/153)) ([5e65182](https://github.com/wandb/terraform-azurerm-wandb/commit/5e65182d11ed6e4817a44311cda6046e3b49933e))
+
 ## [7.7.0](https://github.com/wandb/terraform-azurerm-wandb/compare/v7.6.1...v7.7.0) (2025-09-04)
 
 
