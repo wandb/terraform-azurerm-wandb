@@ -32,7 +32,7 @@ resource "azurerm_subnet" "kubernetes" {
 
   service_endpoints = concat(
     ["Microsoft.Sql", "Microsoft.KeyVault"],
-      var.private_link ? ["Microsoft.Storage.Global"] : ["Microsoft.Storage"]
+    var.private_link ? ["Microsoft.Storage.Global"] : ["Microsoft.Storage"]
   )
 }
 

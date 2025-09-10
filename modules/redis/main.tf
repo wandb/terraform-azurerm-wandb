@@ -7,7 +7,7 @@ resource "azurerm_redis_cache" "default" {
   sku_name            = var.sku_name
 
   access_keys_authentication_enabled = true
-  non_ssl_port_enabled = true
+  non_ssl_port_enabled               = true
 
   tags = var.tags
 

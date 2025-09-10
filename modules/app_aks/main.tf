@@ -24,6 +24,7 @@ resource "azurerm_kubernetes_cluster" "default" {
     max_pods                    = var.max_pods
     name                        = "default"
     node_count                  = var.node_pool_min_vm_per_az
+    os_disk_size_gb             = var.node_pool_disk_size
     max_count                   = var.node_pool_max_vm_per_az
     min_count                   = var.node_pool_min_vm_per_az
     temporary_name_for_rotation = "rotating"
@@ -66,6 +67,7 @@ resource "azurerm_kubernetes_cluster_node_pool" "additional" {
   max_pods              = var.max_pods
   name                  = "zone${local.additonal_zones[count.index]}"
   node_count            = var.node_pool_min_vm_per_az
+  os_disk_size_gb       = var.node_pool_disk_size
   max_count             = var.node_pool_max_vm_per_az
   min_count             = var.node_pool_min_vm_per_az
   vm_size               = var.node_pool_vm_size

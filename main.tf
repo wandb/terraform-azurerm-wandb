@@ -3,11 +3,12 @@ locals {
   url_prefix = var.ssl ? "https" : "http"
   url        = "${local.url_prefix}://${local.fqdn}"
 
-  redis_capacity             = coalesce(var.redis_capacity, local.deployment_size[var.size].cache)
-  database_sku_name          = coalesce(var.database_sku_name, local.deployment_size[var.size].db)
-  kubernetes_instance_type   = coalesce(var.kubernetes_instance_type, local.deployment_size[var.size].node_instance)
-  kubernetes_min_node_per_az = coalesce(var.kubernetes_min_node_per_az, local.deployment_size[var.size].min_node_count)
-  kubernetes_max_node_per_az = coalesce(var.kubernetes_max_node_per_az, local.deployment_size[var.size].max_node_count)
+  redis_capacity               = coalesce(var.redis_capacity, local.deployment_size[var.size].cache)
+  database_sku_name            = coalesce(var.database_sku_name, local.deployment_size[var.size].db)
+  kubernetes_instance_type     = coalesce(var.kubernetes_instance_type, local.deployment_size[var.size].node_instance)
+  kubernetes_min_node_per_az   = coalesce(var.kubernetes_min_node_per_az, local.deployment_size[var.size].min_node_count)
+  kubernetes_max_node_per_az   = coalesce(var.kubernetes_max_node_per_az, local.deployment_size[var.size].max_node_count)
+  kubernetes_node_disk_size_gb = coalesce(var.kubernetes_node_disk_size_gb, local.deployment_size[var.size].root_volume_size)
 }
 
 resource "azurerm_resource_group" "default" {
@@ -155,6 +156,7 @@ module "app_aks" {
   node_pool_min_vm_per_az = local.kubernetes_min_node_per_az
   node_pool_max_vm_per_az = local.kubernetes_max_node_per_az
   node_pool_vm_size       = local.kubernetes_instance_type
+  node_pool_disk_size     = local.kubernetes_node_disk_size_gb
   node_pool_zones         = local.node_pool_zones
   public_subnet           = module.networking.public_subnet
   resource_group          = azurerm_resource_group.default

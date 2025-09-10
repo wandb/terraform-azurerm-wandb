@@ -283,6 +283,12 @@ variable "kubernetes_max_node_per_az" {
   default     = null
 }
 
+variable "kubernetes_node_disk_size_gb" {
+  type        = number
+  description = "Size of the node root volume in GB."
+  default     = null
+}
+
 variable "kubernetes_cluster_tags" {
   description = "A map of tags to apply to all resources managed by the AKS cluster"
   type        = map(string)
