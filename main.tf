@@ -85,6 +85,8 @@ module "vault" {
   enable_database_vault_key = var.enable_database_vault_key
   enable_storage_vault_key  = var.enable_storage_vault_key
 
+  wandb_namespace = var.wandb_namespace
+
   tags = var.tags
 }
 

@@ -404,3 +404,9 @@ variable "clickhouse_region" {
   description = "ClickHouse region (eastus2, westus3, etc)."
   default     = ""
 }
+
+variable "wandb_namespace" {
+  type        = string
+  description = "The Kubernetes namespace where the W&B Helm chart will be installed"
+  default     = "default"
+}
