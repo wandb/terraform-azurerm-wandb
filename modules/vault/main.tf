@@ -99,6 +99,8 @@ resource "azurerm_key_vault_secret" "weave_worker_auth" {
   name         = "weave-worker-auth"
   value        = random_password.weave_worker_auth.result
   key_vault_id = azurerm_key_vault.default.id
+
+  depends_on = [azurerm_key_vault_access_policy.parent, azurerm_key_vault_access_policy.identity]
 }
 
 resource "kubernetes_secret" "weave_worker_auth" {
