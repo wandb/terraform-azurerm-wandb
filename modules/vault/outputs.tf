@@ -17,3 +17,8 @@ output "vault_internal_keys" {
 output "vault_key_map" {
   value = local.vault_key_map
 }
+
+output "weave_worker_auth_secret_name" {
+  value       = azurerm_key_vault_secret.weave_worker_auth.name
+  description = "The name of the weave worker authentication secret in Azure Key Vault"
+}
