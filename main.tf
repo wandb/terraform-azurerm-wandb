@@ -107,6 +107,16 @@ module "storage" {
   tags = var.tags
 }
 
+module "bufstream" {
+  source = "./modules/bufstream"
+
+  namespace           = var.namespace
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+
+  tags = var.tags
+}
+
 module "app_lb" {
   source = "./modules/app_lb"
 

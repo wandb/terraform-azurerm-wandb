@@ -73,3 +73,18 @@ output "wandb_spec" {
   value     = local.spec
   sensitive = true
 }
+
+output "bufstream_storage_account_name" {
+  value       = module.bufstream.storage_account_name
+  description = "Bufstream Azure Storage Account name"
+}
+
+output "bufstream_container_name" {
+  value       = module.bufstream.container_name
+  description = "Bufstream Azure Storage Container name"
+}
+
+output "bufstream_storage_account_key" {
+  value       = module.bufstream.storage_account_key
+  description = "Bufstream Azure Storage Account primary access key"
+}
