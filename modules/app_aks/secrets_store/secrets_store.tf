@@ -20,6 +20,12 @@ resource "helm_release" "secrets_store_csi_driver" {
     name  = "rotationPollInterval"
     value = "120s"
   }
+
+  # Enable token requests for workload identity
+  set {
+    name  = "tokenRequests[0].audience"
+    value = "api://AzureADTokenExchange"
+  }
 }
 
 # Install Azure Key Vault Provider for Secrets Store CSI Driver
