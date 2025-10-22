@@ -8,9 +8,5 @@ terraform {
       source  = "hashicorp/helm"
       version = ">= 2.10"
     }
-    http = {
-      source  = "hashicorp/http"
-      version = ">= 3.0"
-    }
   }
 }

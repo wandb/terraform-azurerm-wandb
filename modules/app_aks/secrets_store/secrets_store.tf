@@ -23,14 +23,10 @@ resource "helm_release" "secrets_store_csi_driver" {
 }
 
 # Install Azure Key Vault Provider for Secrets Store CSI Driver
-# NOTE: Using kubectl provider to deploy raw manifest, similar to GCP pattern
-data "http" "azure_provider_manifest" {
-  url = "https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/v1.7.187/deployment/provider-azure-installer.yaml"
-}
-
+# NOTE: Manifest is fetched at parent level to ensure early evaluation in Terraform Cloud
 locals {
   azure_provider_manifests = [
-    for manifest in split("---", data.http.azure_provider_manifest.response_body) :
+    for manifest in split("---", var.azure_provider_manifest_body) :
     manifest
     if trimspace(manifest) != "" && can(yamldecode(manifest))
   ]
