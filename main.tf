@@ -151,6 +151,8 @@ module "app_aks" {
   etcd_key_vault_key_id   = module.vault.etcd_key_id
   gateway                 = module.app_lb.gateway
   identity                = module.identity.identity
+  k8s_namespace           = var.wandb_namespace
+  key_vault_id            = module.vault.vault_id
   location                = azurerm_resource_group.default.location
   namespace               = var.namespace
   node_pool_min_vm_per_az = local.kubernetes_min_node_per_az
@@ -306,6 +308,10 @@ locals {
 
   bucket_config                    = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
   weave_trace_service_account_name = "wandb-weave-trace"
+
+  weave_worker_workload_identity_annotations = {
+    "azure.workload.identity/client-id" = module.app_aks.weave_worker_identity_client_id
+  }
 
   ctrlplane_redis_host = "redis.redis.svc.cluster.local"
   ctrlplane_redis_port = "26379"
@@ -556,6 +562,37 @@ locals {
         }
         podLabels = { "azure.workload.identity/use" = "true" }
         extraEnv  = var.parquet_wandb_env
+      }
+
+      weave-trace-worker = {
+        serviceAccount = {
+          annotations = local.weave_worker_workload_identity_annotations
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+        pod = {
+          labels = { "azure.workload.identity/use" = "true" }
+        }
+        podLabels = { "azure.workload.identity/use" = "true" }
+        secretsStore = {
+          enabled = true
+        }
+      }
+
+      secretsStore = {
+        enabled  = true
+        provider = "azure"
+        azure = {
+          keyVaultName = module.vault.vault.name
+          tenantId     = module.app_aks.tenant_id
+        }
+        secrets = [
+          {
+            name            = "weave-worker-auth"
+            cloudSecretName = module.vault.weave_worker_auth_secret_name
+            k8sSecretName   = "weave-worker-auth"
+            k8sSecretKey    = "key"
+          }
+        ]
       }
 
       executor = {
