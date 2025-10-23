@@ -410,3 +410,111 @@ variable "wandb_namespace" {
   description = "The Kubernetes namespace where the W&B Helm chart will be installed"
   default     = "default"
 }
+
+###########################################
+# ClickHouse Storage                      #
+###########################################
+variable "clickhouse_storage_replication_type" {
+  type        = string
+  description = "Replication type for the ClickHouse storage account (LRS, GRS, RAGRS, ZRS, GZRS, RAGZRS)."
+  default     = "ZRS"
+}
+
+variable "clickhouse_storage_container_name" {
+  type        = string
+  description = "Name of the storage container for ClickHouse data."
+  default     = "clickhouse-data"
+}
+
+variable "clickhouse_k8s_namespace" {
+  type        = string
+  description = "The Kubernetes namespace where ClickHouse will be deployed."
+  default     = "clickhouse"
+}
+
+variable "clickhouse_k8s_service_account_name" {
+  type        = string
+  description = "The Kubernetes service account name for ClickHouse workload identity."
+  default     = "clickhouse"
+}
+
+###########################################
+# ClickHouse Application Deployment       #
+###########################################
+variable "clickhouse_replicas" {
+  type        = number
+  description = "Number of ClickHouse replicas for high availability."
+  default     = 3
+}
+
+variable "clickhouse_image" {
+  type        = string
+  description = "ClickHouse server Docker image."
+  default     = "clickhouse/clickhouse-server:25.3.5.42"
+}
+
+variable "clickhouse_keeper_image" {
+  type        = string
+  description = "ClickHouse Keeper Docker image."
+  default     = "clickhouse/clickhouse-keeper:25.3.5.42"
+}
+
+variable "clickhouse_memory_request" {
+  type        = string
+  description = "Memory request for ClickHouse pods."
+  default     = "2Gi"
+}
+
+variable "clickhouse_memory_limit" {
+  type        = string
+  description = "Memory limit for ClickHouse pods."
+  default     = "16Gi"
+}
+
+variable "clickhouse_cpu_request" {
+  type        = string
+  description = "CPU request for ClickHouse pods."
+  default     = "1"
+}
+
+variable "clickhouse_cpu_limit" {
+  type        = string
+  description = "CPU limit for ClickHouse pods."
+  default     = "2"
+}
+
+variable "clickhouse_keeper_memory_request" {
+  type        = string
+  description = "Memory request for ClickHouse Keeper pods."
+  default     = "256M"
+}
+
+variable "clickhouse_keeper_memory_limit" {
+  type        = string
+  description = "Memory limit for ClickHouse Keeper pods."
+  default     = "4Gi"
+}
+
+variable "clickhouse_keeper_cpu_request" {
+  type        = string
+  description = "CPU request for ClickHouse Keeper pods."
+  default     = "1"
+}
+
+variable "clickhouse_keeper_cpu_limit" {
+  type        = string
+  description = "CPU limit for ClickHouse Keeper pods."
+  default     = "2"
+}
+
+variable "clickhouse_operator_chart_version" {
+  type        = string
+  description = "Version of the Altinity ClickHouse operator Helm chart."
+  default     = "0.25.4"
+}
+
+variable "deploy_clickhouse_objects" {
+  type        = bool
+  description = "Deploy ClickHouse and Keeper CRD objects (installations). Set to false for first apply (installs operator and CRDs only), then true to deploy the actual ClickHouse clusters."
+  default     = true
+}

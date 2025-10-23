@@ -73,3 +73,74 @@ output "wandb_spec" {
   value     = local.spec
   sensitive = true
 }
+
+###########################################
+# ClickHouse Storage Outputs              #
+###########################################
+output "clickhouse_storage_account_name" {
+  value       = module.clickhouse_storage.storage_account_name
+  description = "The name of the ClickHouse storage account"
+}
+
+output "clickhouse_container_name" {
+  value       = module.clickhouse_storage.container_name
+  description = "The name of the ClickHouse storage container"
+}
+
+output "clickhouse_storage_primary_blob_endpoint" {
+  value       = module.clickhouse_storage.primary_blob_endpoint
+  description = "The primary blob endpoint for the ClickHouse storage account"
+}
+
+output "clickhouse_identity_client_id" {
+  value       = module.clickhouse_identity.client_id
+  description = "The client ID of the ClickHouse managed identity"
+}
+
+output "clickhouse_identity_tenant_id" {
+  value       = module.clickhouse_identity.tenant_id
+  description = "The tenant ID of the ClickHouse managed identity"
+}
+
+output "clickhouse_k8s_namespace" {
+  value       = var.clickhouse_k8s_namespace
+  description = "The Kubernetes namespace for ClickHouse deployment"
+}
+
+output "clickhouse_k8s_service_account" {
+  value       = var.clickhouse_k8s_service_account_name
+  description = "The Kubernetes service account name for ClickHouse"
+}
+
+###########################################
+# ClickHouse Application Outputs          #
+###########################################
+output "clickhouse_endpoint" {
+  value       = module.clickhouse_app.clickhouse_endpoint
+  description = "ClickHouse native protocol endpoint"
+}
+
+output "clickhouse_http_endpoint" {
+  value       = module.clickhouse_app.clickhouse_http_endpoint
+  description = "ClickHouse HTTP endpoint"
+}
+
+output "clickhouse_service" {
+  value       = module.clickhouse_app.clickhouse_service
+  description = "ClickHouse service name"
+}
+
+output "clickhouse_username" {
+  value       = module.clickhouse_app.clickhouse_username
+  description = "ClickHouse username"
+}
+
+output "clickhouse_cluster_name" {
+  value       = module.clickhouse_app.cluster_name
+  description = "ClickHouse cluster name"
+}
+
+output "clickhouse_remote_cluster_name" {
+  value       = module.clickhouse_app.remote_cluster_name
+  description = "ClickHouse remote cluster name for distributed queries"
+}
