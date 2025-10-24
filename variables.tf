@@ -411,6 +411,12 @@ variable "wandb_namespace" {
   default     = "default"
 }
 
+variable "clickhouse_data_bucket" {
+  type        = string
+  description = "ClickHouse data bucket resource ID. Optional field for buckets created outside of terraform. If provided, the clickhouse_storage module will not create a new storage account. Format: /subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Storage/storageAccounts/{accountName}"
+  default     = ""
+}
+
 ###########################################
 # ClickHouse Storage                      #
 ###########################################

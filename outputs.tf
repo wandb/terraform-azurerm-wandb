@@ -78,17 +78,17 @@ output "wandb_spec" {
 # ClickHouse Storage Outputs              #
 ###########################################
 output "clickhouse_storage_account_name" {
-  value       = module.clickhouse_storage.storage_account_name
+  value       = local.clickhouse_storage_account_name
   description = "The name of the ClickHouse storage account"
 }
 
 output "clickhouse_container_name" {
-  value       = module.clickhouse_storage.container_name
+  value       = local.clickhouse_container_name
   description = "The name of the ClickHouse storage container"
 }
 
 output "clickhouse_storage_primary_blob_endpoint" {
-  value       = module.clickhouse_storage.primary_blob_endpoint
+  value       = local.clickhouse_use_external_bucket ? null : module.clickhouse_storage[0].primary_blob_endpoint
   description = "The primary blob endpoint for the ClickHouse storage account"
 }
 

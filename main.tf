@@ -294,6 +294,8 @@ module "clickhouse" {
 }
 
 module "clickhouse_storage" {
+  count = var.clickhouse_data_bucket == "" ? 1 : 0
+
   source              = "./modules/clickhouse_storage"
   namespace           = var.namespace
   resource_group_name = azurerm_resource_group.default.name
@@ -304,6 +306,13 @@ module "clickhouse_storage" {
   tags                = var.tags
 }
 
+locals {
+  clickhouse_use_external_bucket  = var.clickhouse_data_bucket != ""
+  clickhouse_storage_account_name = local.clickhouse_use_external_bucket ? element(split("/", var.clickhouse_data_bucket), length(split("/", var.clickhouse_data_bucket)) - 1) : module.clickhouse_storage[0].storage_account_name
+  clickhouse_container_name       = local.clickhouse_use_external_bucket ? var.clickhouse_storage_container_name : module.clickhouse_storage[0].container_name
+  clickhouse_storage_account_id   = local.clickhouse_use_external_bucket ? var.clickhouse_data_bucket : module.clickhouse_storage[0].storage_account.id
+}
+
 module "clickhouse_identity" {
   source                     = "./modules/clickhouse_identity"
   namespace                  = var.namespace
@@ -312,7 +321,7 @@ module "clickhouse_identity" {
   oidc_issuer_url            = module.app_aks.oidc_issuer_url
   k8s_namespace              = var.clickhouse_k8s_namespace
   k8s_service_account_name   = var.clickhouse_k8s_service_account_name
-  storage_account_id         = module.clickhouse_storage.storage_account.id
+  storage_account_id         = local.clickhouse_storage_account_id
 
   depends_on = [module.clickhouse_storage, module.app_aks]
 }
@@ -331,8 +340,8 @@ module "clickhouse_app" {
   keeper_memory_limit           = var.clickhouse_keeper_memory_limit
   keeper_cpu_request            = var.clickhouse_keeper_cpu_request
   keeper_cpu_limit              = var.clickhouse_keeper_cpu_limit
-  storage_account_name          = module.clickhouse_storage.storage_account_name
-  storage_container_name        = module.clickhouse_storage.container_name
+  storage_account_name          = local.clickhouse_storage_account_name
+  storage_container_name        = local.clickhouse_container_name
   clickhouse_identity_client_id = module.clickhouse_identity.client_id
   service_account_name          = var.clickhouse_k8s_service_account_name
   operator_chart_version        = var.clickhouse_operator_chart_version
