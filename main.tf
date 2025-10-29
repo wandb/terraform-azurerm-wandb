@@ -591,7 +591,7 @@ locals {
         azure = {
           keyVaultName = module.vault.vault.name
           tenantId     = module.app_aks.tenant_id
-          clientID     = module.app_aks.weave_worker_identity_client_id
+          # clientID is NOT included - workload identity uses the pod's service account token
         }
         secrets = [
           {
