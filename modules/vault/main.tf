@@ -2,9 +2,7 @@
 data "azurerm_client_config" "current" {}
 
 locals {
-  # TODO(aravind): Remove the -v2 suffix after purging the old soft-deleted vault
-  namespace_truncated  = substr(var.namespace, 0, min(length(var.namespace), 13))
-  vault_name           = "${local.namespace_truncated}-vault-v2"
+  vault_name           = "${var.namespace}-vault"
   vault_truncated_name = substr(local.vault_name, 0, min(length(local.vault_name), 24))
   max_key_length       = 127
   vault_key_map = {
