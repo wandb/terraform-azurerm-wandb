@@ -143,27 +143,34 @@ locals {
   node_pool_zones  = var.node_pool_zones != null ? var.node_pool_zones : slice(sort(local.valid_zones), 0, local.num_zones)
 }
 
+# Fetch Azure provider manifest at root level to ensure early evaluation in Terraform Cloud
+data "http" "azure_provider_manifest" {
+  url = "https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/v${var.secrets_store_csi_driver_provider_azure_version}/deployment/provider-azure-installer.yaml"
+}
+
 module "app_aks" {
   source     = "./modules/app_aks"
   depends_on = [module.app_lb]
 
-  cluster_subnet_id       = module.networking.kubernetes_subnet.id
-  etcd_key_vault_key_id   = module.vault.etcd_key_id
-  gateway                 = module.app_lb.gateway
-  identity                = module.identity.identity
-  k8s_namespace           = var.k8s_namespace
-  key_vault_id            = module.vault.vault_id
-  location                = azurerm_resource_group.default.location
-  namespace               = var.namespace
-  node_pool_min_vm_per_az = local.kubernetes_min_node_per_az
-  node_pool_max_vm_per_az = local.kubernetes_max_node_per_az
-  node_pool_vm_size       = local.kubernetes_instance_type
-  node_pool_disk_size     = local.kubernetes_node_disk_size_gb
-  node_pool_zones         = local.node_pool_zones
-  public_subnet           = module.networking.public_subnet
-  resource_group          = azurerm_resource_group.default
-  sku_tier                = var.cluster_sku_tier
-  tags                    = merge(var.tags, var.kubernetes_cluster_tags)
+  cluster_subnet_id                               = module.networking.kubernetes_subnet.id
+  etcd_key_vault_key_id                           = module.vault.etcd_key_id
+  gateway                                         = module.app_lb.gateway
+  identity                                        = module.identity.identity
+  k8s_namespace                                   = var.k8s_namespace
+  key_vault_id                                    = module.vault.vault_id
+  location                                        = azurerm_resource_group.default.location
+  namespace                                       = var.namespace
+  node_pool_min_vm_per_az                         = local.kubernetes_min_node_per_az
+  node_pool_max_vm_per_az                         = local.kubernetes_max_node_per_az
+  node_pool_vm_size                               = local.kubernetes_instance_type
+  node_pool_disk_size                             = local.kubernetes_node_disk_size_gb
+  node_pool_zones                                 = local.node_pool_zones
+  public_subnet                                   = module.networking.public_subnet
+  resource_group                                  = azurerm_resource_group.default
+  sku_tier                                        = var.cluster_sku_tier
+  tags                                            = merge(var.tags, var.kubernetes_cluster_tags)
+  secrets_store_csi_driver_version                = var.secrets_store_csi_driver_version
+  azure_provider_manifest_body                    = data.http.azure_provider_manifest.response_body
 }
 locals {
   service_account_name         = "wandb-app"

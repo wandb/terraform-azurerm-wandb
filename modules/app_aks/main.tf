@@ -107,17 +107,13 @@ resource "azurerm_role_assignment" "public_subnet" {
   principal_id         = local.ingress_gateway_principal_id
 }
 
-# Fetch Azure provider manifest early to avoid for_each issues in Terraform Cloud
-data "http" "azure_provider_manifest" {
-  url = "https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/v${var.secrets_store_csi_driver_provider_azure_version}/deployment/provider-azure-installer.yaml"
-}
-
 # Install Secrets Store CSI Driver and Azure Key Vault Provider
+# Note: azure_provider_manifest_body is fetched at root module level
 module "secrets_store" {
   source = "./secrets_store"
 
   secrets_store_csi_driver_version = var.secrets_store_csi_driver_version
-  azure_provider_manifest_body     = data.http.azure_provider_manifest.response_body
+  azure_provider_manifest_body     = var.azure_provider_manifest_body
 
   depends_on = [
     azurerm_kubernetes_cluster.default,
