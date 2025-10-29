@@ -404,3 +404,9 @@ variable "clickhouse_region" {
   description = "ClickHouse region (eastus2, westus3, etc)."
   default     = ""
 }
+
+variable "k8s_namespace" {
+  type        = string
+  description = "The Kubernetes namespace where W&B resources will be deployed"
+  default     = "default"
+}

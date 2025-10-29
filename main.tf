@@ -151,7 +151,7 @@ module "app_aks" {
   etcd_key_vault_key_id   = module.vault.etcd_key_id
   gateway                 = module.app_lb.gateway
   identity                = module.identity.identity
-  k8s_namespace           = var.wandb_namespace
+  k8s_namespace           = var.k8s_namespace
   key_vault_id            = module.vault.vault_id
   location                = azurerm_resource_group.default.location
   namespace               = var.namespace
