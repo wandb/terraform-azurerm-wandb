@@ -95,12 +95,6 @@ variable "secrets_store_csi_driver_version" {
   default     = "1.4.7"
 }
 
-variable "secrets_store_csi_driver_provider_azure_version" {
-  type        = string
-  description = "The version of the Azure Key Vault Provider for Secrets Store CSI Driver to install"
-  default     = "1.7.1"
-}
-
 variable "azure_provider_manifest_body" {
   type        = string
   description = "The raw YAML content of the Azure Key Vault Provider manifest, fetched at root module level"
