@@ -73,3 +73,15 @@ output "wandb_spec" {
   value     = local.spec
   sensitive = true
 }
+
+# TODO(aravind): Remove - for testing bufstream
+output "storage_account_name" {
+  value       = module.storage[0].account.name
+  description = "Name of the storage account"
+}
+
+output "storage_account_primary_access_key" {
+  value       = module.storage[0].primary_access_key
+  sensitive   = true
+  description = "Primary access key for storage account"
+}
