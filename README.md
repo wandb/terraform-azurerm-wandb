@@ -52,6 +52,7 @@ resources that lack official modules.
 | <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) | ~> 1.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.26 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | ~> 2.6 |
+| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | ~> 1.19 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | ~> 2.23 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | ~> 3.0 |
 
@@ -119,6 +120,7 @@ resources that lack official modules.
 | <a name="input_external_redis_host"></a> [external\_redis\_host](#input\_external\_redis\_host) | host for the redis instance created externally | `string` | `null` | no |
 | <a name="input_external_redis_params"></a> [external\_redis\_params](#input\_external\_redis\_params) | queryVar params for redis instance created externally | `object({})` | `null` | no |
 | <a name="input_external_redis_port"></a> [external\_redis\_port](#input\_external\_redis\_port) | port for the redis instance created externally | `string` | `null` | no |
+| <a name="input_k8s_namespace"></a> [k8s\_namespace](#input\_k8s\_namespace) | The Kubernetes namespace where W&B resources will be deployed | `string` | `"default"` | no |
 | <a name="input_kubernetes_cluster_tags"></a> [kubernetes\_cluster\_tags](#input\_kubernetes\_cluster\_tags) | A map of tags to apply to all resources managed by the AKS cluster | `map(string)` | `{}` | no |
 | <a name="input_kubernetes_instance_type"></a> [kubernetes\_instance\_type](#input\_kubernetes\_instance\_type) | Instance type for primary node group. Defaults to null and value from deployment-size.tf is used | `string` | `null` | no |
 | <a name="input_kubernetes_max_node_per_az"></a> [kubernetes\_max\_node\_per\_az](#input\_kubernetes\_max\_node\_per\_az) | Maximum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
@@ -138,6 +140,8 @@ resources that lack official modules.
 | <a name="input_other_wandb_env"></a> [other\_wandb\_env](#input\_other\_wandb\_env) | Extra environment variables for W&B | `map(any)` | `{}` | no |
 | <a name="input_parquet_wandb_env"></a> [parquet\_wandb\_env](#input\_parquet\_wandb\_env) | Extra environment variables for W&B | `map(string)` | `{}` | no |
 | <a name="input_redis_capacity"></a> [redis\_capacity](#input\_redis\_capacity) | Number indicating size of an redis instance. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
+| <a name="input_secrets_store_csi_driver_provider_azure_version"></a> [secrets\_store\_csi\_driver\_provider\_azure\_version](#input\_secrets\_store\_csi\_driver\_provider\_azure\_version) | The version of the Azure Key Vault Provider for Secrets Store CSI Driver to install | `string` | `"1.7.1"` | no |
+| <a name="input_secrets_store_csi_driver_version"></a> [secrets\_store\_csi\_driver\_version](#input\_secrets\_store\_csi\_driver\_version) | The version of the Secrets Store CSI Driver Helm chart to install | `string` | `"1.4.7"` | no |
 | <a name="input_size"></a> [size](#input\_size) | Deployment size | `string` | `"small"` | no |
 | <a name="input_ssl"></a> [ssl](#input\_ssl) | Enable SSL certificate | `bool` | `true` | no |
 | <a name="input_storage_account"></a> [storage\_account](#input\_storage\_account) | Azure storage account name | `string` | `""` | no |
@@ -172,6 +176,7 @@ resources that lack official modules.
 | <a name="output_private_link_resource_id"></a> [private\_link\_resource\_id](#output\_private\_link\_resource\_id) | n/a |
 | <a name="output_private_link_sub_resource_name"></a> [private\_link\_sub\_resource\_name](#output\_private\_link\_sub\_resource\_name) | n/a |
 | <a name="output_standardized_size"></a> [standardized\_size](#output\_standardized\_size) | n/a |
+| <a name="output_storage_account_name"></a> [storage\_account\_name](#output\_storage\_account\_name) | Name of the storage account |
 | <a name="output_tenant_id"></a> [tenant\_id](#output\_tenant\_id) | n/a |
 | <a name="output_url"></a> [url](#output\_url) | The URL to the W&B application |
 | <a name="output_wandb_spec"></a> [wandb\_spec](#output\_wandb\_spec) | n/a |
