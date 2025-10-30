@@ -143,9 +143,10 @@ locals {
   node_pool_zones  = var.node_pool_zones != null ? var.node_pool_zones : slice(sort(local.valid_zones), 0, local.num_zones)
 }
 
-# Fetch Azure provider manifest at root level to ensure early evaluation in Terraform Cloud
-data "http" "azure_provider_manifest" {
-  url = "https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/v${var.secrets_store_csi_driver_provider_azure_version}/deployment/provider-azure-installer.yaml"
+# Use vendored Azure provider manifest for reliability and consistency
+locals {
+  azure_provider_manifest_path = "${path.module}/modules/app_aks/secrets_store/manifests/azure-provider-installer-v${var.secrets_store_csi_driver_provider_azure_version}.yaml"
+  azure_provider_manifest_body = file(local.azure_provider_manifest_path)
 }
 
 module "app_aks" {
@@ -170,7 +171,7 @@ module "app_aks" {
   sku_tier                                        = var.cluster_sku_tier
   tags                                            = merge(var.tags, var.kubernetes_cluster_tags)
   secrets_store_csi_driver_version                = var.secrets_store_csi_driver_version
-  azure_provider_manifest_body                    = data.http.azure_provider_manifest.response_body
+  azure_provider_manifest_body                    = local.azure_provider_manifest_body
 }
 locals {
   service_account_name         = "wandb-app"
