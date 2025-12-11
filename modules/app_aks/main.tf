@@ -81,31 +81,33 @@ resource "azurerm_kubernetes_cluster_node_pool" "additional" {
   }
 }
 
-locals {
-  ingress_gateway_principal_id = azurerm_kubernetes_cluster.default.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
-
-}
-
-resource "azurerm_role_assignment" "gateway" {
-  depends_on           = [local.ingress_gateway_principal_id]
-  scope                = var.gateway.id
-  role_definition_name = "Contributor"
-  principal_id         = local.ingress_gateway_principal_id
-}
-
-resource "azurerm_role_assignment" "resource_group" {
-  depends_on           = [local.ingress_gateway_principal_id]
-  scope                = var.resource_group.id
-  role_definition_name = "Reader"
-  principal_id         = local.ingress_gateway_principal_id
-}
-
-resource "azurerm_role_assignment" "public_subnet" {
-  depends_on           = [local.ingress_gateway_principal_id]
-  scope                = var.public_subnet.id
-  role_definition_name = "Contributor"
-  principal_id         = local.ingress_gateway_principal_id
-}
+# locals {
+#   ingress_gateway_principal_id = try(azurerm_kubernetes_cluster.default.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id, null)
+#
+# }
+#
+# resource "azurerm_role_assignment" "gateway" {
+#   count                = local.ingress_gateway_principal_id != null ? 1 : 0
+#   depends_on           = [local.ingress_gateway_principal_id]
+#   scope                = var.gateway.id
+#   role_definition_name = "Contributor"
+#   principal_id         = local.ingress_gateway_principal_id
+# }
+#
+# resource "azurerm_role_assignment" "resource_group" {
+#   count                = local.ingress_gateway_principal_id != null ? 1 : 0
+#   depends_on           = [local.ingress_gateway_principal_id]
+#   scope                = var.resource_group.id
+#   role_definition_name = "Reader"
+#   principal_id         = local.ingress_gateway_principal_id
+# }
+#
+# resource "azurerm_role_assignment" "public_subnet" {
+#   depends_on           = [local.ingress_gateway_principal_id]
+#   scope                = var.public_subnet.id
+#   role_definition_name = "Contributor"
+#   principal_id         = local.ingress_gateway_principal_id
+# }
 
 # Fetch Azure provider manifest early to avoid for_each issues in Terraform Cloud
 data "http" "azure_provider_manifest" {
