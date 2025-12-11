@@ -52,6 +52,8 @@ resources that lack official modules.
 | <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) | ~> 1.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.26 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | ~> 2.6 |
+| <a name="requirement_http"></a> [http](#requirement\_http) | ~> 3.0 |
+| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | ~> 1.19 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | ~> 2.23 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | ~> 3.0 |
 
@@ -69,6 +71,7 @@ resources that lack official modules.
 |------|--------|---------|
 | <a name="module_app_aks"></a> [app\_aks](#module\_app\_aks) | ./modules/app_aks | n/a |
 | <a name="module_app_lb"></a> [app\_lb](#module\_app\_lb) | ./modules/app_lb | n/a |
+| <a name="module_bufstream"></a> [bufstream](#module\_bufstream) | ./modules/bufstream | n/a |
 | <a name="module_cert_manager"></a> [cert\_manager](#module\_cert\_manager) | ./modules/cert_manager | n/a |
 | <a name="module_clickhouse"></a> [clickhouse](#module\_clickhouse) | ./modules/clickhouse | n/a |
 | <a name="module_cron_job"></a> [cron\_job](#module\_cron\_job) | ./modules/cron_job | n/a |
@@ -150,6 +153,7 @@ resources that lack official modules.
 | <a name="input_use_external_redis"></a> [use\_external\_redis](#input\_use\_external\_redis) | Boolean indicating whether to use the redis instance created externally | `bool` | `false` | no |
 | <a name="input_use_internal_queue"></a> [use\_internal\_queue](#input\_use\_internal\_queue) | Uses an internal redis queue instead of using azure queue. | `bool` | `false` | no |
 | <a name="input_wandb_image"></a> [wandb\_image](#input\_wandb\_image) | Docker repository of to pull the wandb image from. | `string` | `"wandb/local"` | no |
+| <a name="input_wandb_namespace"></a> [wandb\_namespace](#input\_wandb\_namespace) | The Kubernetes namespace where the W&B Helm chart will be installed | `string` | `"default"` | no |
 | <a name="input_wandb_version"></a> [wandb\_version](#input\_wandb\_version) | The version of Weights & Biases local to deploy. | `string` | `"latest"` | no |
 | <a name="input_weave_wandb_env"></a> [weave\_wandb\_env](#input\_weave\_wandb\_env) | Extra environment variables for W&B | `map(string)` | `{}` | no |
 
@@ -161,6 +165,9 @@ resources that lack official modules.
 | <a name="output_aks_max_node_count"></a> [aks\_max\_node\_count](#output\_aks\_max\_node\_count) | n/a |
 | <a name="output_aks_min_node_count"></a> [aks\_min\_node\_count](#output\_aks\_min\_node\_count) | n/a |
 | <a name="output_aks_node_instance_type"></a> [aks\_node\_instance\_type](#output\_aks\_node\_instance\_type) | n/a |
+| <a name="output_bufstream_container_name"></a> [bufstream\_container\_name](#output\_bufstream\_container\_name) | Bufstream Azure Storage Container name |
+| <a name="output_bufstream_storage_account_key"></a> [bufstream\_storage\_account\_key](#output\_bufstream\_storage\_account\_key) | Bufstream Azure Storage Account primary access key |
+| <a name="output_bufstream_storage_account_name"></a> [bufstream\_storage\_account\_name](#output\_bufstream\_storage\_account\_name) | Bufstream Azure Storage Account name |
 | <a name="output_client_id"></a> [client\_id](#output\_client\_id) | n/a |
 | <a name="output_cluster_ca_certificate"></a> [cluster\_ca\_certificate](#output\_cluster\_ca\_certificate) | n/a |
 | <a name="output_cluster_client_certificate"></a> [cluster\_client\_certificate](#output\_cluster\_client\_certificate) | n/a |
@@ -168,6 +175,7 @@ resources that lack official modules.
 | <a name="output_cluster_host"></a> [cluster\_host](#output\_cluster\_host) | n/a |
 | <a name="output_database_instance_type"></a> [database\_instance\_type](#output\_database\_instance\_type) | n/a |
 | <a name="output_fqdn"></a> [fqdn](#output\_fqdn) | The FQDN to the W&B application |
+| <a name="output_key_vault_name"></a> [key\_vault\_name](#output\_key\_vault\_name) | The name of the Azure Key Vault |
 | <a name="output_oidc_issuer_url"></a> [oidc\_issuer\_url](#output\_oidc\_issuer\_url) | n/a |
 | <a name="output_private_link_resource_id"></a> [private\_link\_resource\_id](#output\_private\_link\_resource\_id) | n/a |
 | <a name="output_private_link_sub_resource_name"></a> [private\_link\_sub\_resource\_name](#output\_private\_link\_sub\_resource\_name) | n/a |
@@ -175,6 +183,9 @@ resources that lack official modules.
 | <a name="output_tenant_id"></a> [tenant\_id](#output\_tenant\_id) | n/a |
 | <a name="output_url"></a> [url](#output\_url) | The URL to the W&B application |
 | <a name="output_wandb_spec"></a> [wandb\_spec](#output\_wandb\_spec) | n/a |
+| <a name="output_weave_worker_auth_secret_name"></a> [weave\_worker\_auth\_secret\_name](#output\_weave\_worker\_auth\_secret\_name) | The name of the weave worker authentication secret in Azure Key Vault (cloudSecretName) |
+| <a name="output_weave_worker_identity_client_id"></a> [weave\_worker\_identity\_client\_id](#output\_weave\_worker\_identity\_client\_id) | The client ID of the managed identity used by weave workers for Key Vault access |
+| <a name="output_weave_worker_identity_principal_id"></a> [weave\_worker\_identity\_principal\_id](#output\_weave\_worker\_identity\_principal\_id) | The principal ID (object ID) of the managed identity used by weave workers |
 <!-- END_TF_DOCS -->
 
 ## Upgrading from 3.x to 4.x
