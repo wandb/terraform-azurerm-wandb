@@ -283,7 +283,7 @@ module "clickhouse" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   network_id          = module.networking.network.id
-  private_subnet_id   = module.networking.private_subnet.id
+  private_subnet_id   = module.networking.kubernetes_subnet.id
 
   clickhouse_private_endpoint_service_name = var.clickhouse_private_endpoint_service_name
   clickhouse_region                        = var.clickhouse_region
