@@ -18,6 +18,22 @@ locals {
   master_password = random_string.master_password.result
 
   master_instance_name = "${var.namespace}-${random_pet.mysql.id}"
+
+  default_flags = {
+    "binlog_row_image"           = "minimal"
+    "max_binlog_size"            = "1073741824"
+    "innodb_autoinc_lock_mode"   = "2"
+    "innodb_lru_scan_depth"      = "100"
+    "innodb_print_all_deadlocks" = "off"
+    "local_infile"               = "on"
+    "long_query_time"            = "1"
+    "max_prepared_stmt_count"    = "1048576"
+    "max_execution_time"         = "60000"
+    "slow_query_log"             = "on"
+    "sort_buffer_size"           = tostring(var.sort_buffer_size)
+    "skip_show_database"         = "on"
+  }
+  database_flags = merge(local.default_flags, var.database_flags)
 }
 
 resource "azurerm_mysql_flexible_server" "default" {
@@ -83,4 +99,13 @@ resource "azurerm_mysql_flexible_database" "default" {
   server_name         = azurerm_mysql_flexible_server.default.name
   charset             = "utf8mb4"
   collation           = "utf8mb4_general_ci"
+}
+
+resource "azurerm_mysql_flexible_server_configuration" "default" {
+  for_each = local.database_flags
+
+  name                = each.key
+  resource_group_name = var.resource_group_name
+  server_name         = azurerm_mysql_flexible_server.default.name
+  value               = each.value
 }

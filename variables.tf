@@ -169,6 +169,18 @@ variable "database_sku_name" {
   description = "Specifies the SKU Name for this MySQL Server. Defaults to null and value from deployment-size.tf is used"
 }
 
+variable "database_flags" {
+  description = "MySQL server parameters to set on the Azure Database for MySQL flexible server. Merged with W&B defaults."
+  type        = map(string)
+  default     = {}
+}
+
+variable "database_sort_buffer_size" {
+  description = "Specifies the sort_buffer_size value to set for the database"
+  type        = number
+  default     = 67108864
+}
+
 ##########################################
 # Redis                                  #
 ##########################################
