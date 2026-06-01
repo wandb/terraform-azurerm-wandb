@@ -45,6 +45,7 @@ module "database" {
 
   database_availability_mode   = var.database_availability_mode
   database_version             = var.database_version
+  recreate_on_version_change   = var.database_recreate_on_version_change
   database_private_dns_zone_id = module.networking.database_private_dns_zone.id
   database_subnet_id           = module.networking.database_subnet.id
   sku_name                     = local.database_sku_name

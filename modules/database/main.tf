@@ -6,9 +6,14 @@ resource "random_string" "master_password" {
 
 resource "random_pet" "mysql" {
   length = 2
-  keepers = {
+  # Regenerating this random_pet changes the master_instance_name, which forces
+  # the MySQL server to be recreated. The azurerm_mysql_flexible_server resource
+  # now handles version changes directly, so by default the name is frozen and
+  # does not change on a database_version change. Set
+  # recreate_on_version_change = true to restore the previous behavior.
+  keepers = var.recreate_on_version_change ? {
     version = var.database_version
-  }
+  } : {}
 }
 
 locals {

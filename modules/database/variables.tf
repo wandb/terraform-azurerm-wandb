@@ -35,6 +35,12 @@ variable "database_version" {
   default     = "5.7"
 }
 
+variable "recreate_on_version_change" {
+  description = "When true, the MySQL server name (and thus the server) is regenerated whenever database_version changes. Defaults to false because the azurerm_mysql_flexible_server resource now handles version changes directly. Existing deployments created with a previous module version should set this to true to preserve their current server name and avoid a one-time recreation."
+  type        = bool
+  default     = false
+}
+
 variable "database_availability_mode" {
   description = ""
   type        = string
