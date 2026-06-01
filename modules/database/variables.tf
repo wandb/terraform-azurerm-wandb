@@ -66,3 +66,15 @@ variable "identity_ids" {
   type        = string
   description = "The identity ids to assign to the database when database_key_id is passed."
 }
+
+variable "database_flags" {
+  description = "MySQL server parameters to set on the Azure Database for MySQL flexible server. Merged with W&B defaults."
+  type        = map(string)
+  default     = {}
+}
+
+variable "sort_buffer_size" {
+  description = "Specifies the sort_buffer_size value to set for the database"
+  type        = number
+  default     = 524288
+}

@@ -49,6 +49,8 @@ module "database" {
   database_subnet_id           = module.networking.database_subnet.id
   sku_name                     = local.database_sku_name
   deletion_protection          = var.deletion_protection
+  database_flags               = var.database_flags
+  sort_buffer_size             = var.database_sort_buffer_size
 
   database_key_id = try(module.vault.vault_internal_keys[module.vault.vault_key_map.database].id, null)
   identity_ids    = module.identity.identity.id
