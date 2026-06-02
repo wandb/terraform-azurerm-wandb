@@ -6,21 +6,27 @@ resource "random_string" "master_password" {
 
 resource "random_pet" "mysql" {
   length = 2
-  # Regenerating this random_pet changes the master_instance_name, which forces
-  # the MySQL server to be recreated. By default the keeper is pinned so the name
-  # stays stable when database_version changes. Set recreate_on_version_change = true
-  # to tie the keeper to database_version and restore the previous behavior.
+
   keepers = {
-    version = local.mysql_pet_keeper_version
+    version = var.database_version
   }
+
   lifecycle {
-    ignore_changes = [keepers.version]
+    # The MySQL server name (${namespace}-${random_pet.mysql.id}) must stay stable
+    # for the life of the install; version upgrades are applied in place by
+    # azurerm_mysql_flexible_server. Ignoring the whole keepers map means a legacy
+    # keeper already in state (e.g. {version = "5.7"}) never forces a rebuild, and
+    # future database_version changes never regenerate the name.
+    #
+    # IMPORTANT: this must stay. Removing it would make every existing install's
+    # random_pet regenerate to match config, recreating the server. To rebuild a
+    # server intentionally, run:
+    #   terraform apply -replace='module.wandb.module.database.random_pet.mysql'
+    ignore_changes = [keepers]
   }
 }
 
 locals {
-  mysql_pet_keeper_version = var.recreate_on_version_change ? var.database_version : coalesce(var.database_version_keeper, var.database_version)
-
   database_name = "wandb_local"
 
   master_username = "wandb"

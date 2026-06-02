@@ -35,19 +35,6 @@ variable "database_version" {
   default     = "5.7"
 }
 
-variable "database_version_keeper" {
-  description = "When recreate_on_version_change is false, pins the random_pet keeper so the MySQL server name does not change when database_version is upgraded. Defaults to database_version (no-op on module upgrade when version is unchanged). Before changing database_version, set this explicitly to the version currently deployed and leave it unchanged."
-  type        = string
-  default     = null
-  nullable    = true
-}
-
-variable "recreate_on_version_change" {
-  description = "When true, the MySQL server name (and thus the server) is regenerated whenever database_version changes. Defaults to false; use database_version_keeper to pin the name instead."
-  type        = bool
-  default     = false
-}
-
 variable "database_availability_mode" {
   description = ""
   type        = string
