@@ -13,6 +13,9 @@ resource "random_pet" "mysql" {
   keepers = {
     version = local.mysql_pet_keeper_version
   }
+  lifecycle {
+    ignore_changes = [keepers.version]
+  }
 }
 
 locals {
