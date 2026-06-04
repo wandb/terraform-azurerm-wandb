@@ -106,3 +106,42 @@ resource "azurerm_role_assignment" "public_subnet" {
   role_definition_name = "Contributor"
   principal_id         = local.ingress_gateway_principal_id
 }
+
+locals {
+  # Create a workspace only when audit logging is on and the caller did not
+  # supply an existing workspace to reuse.
+  create_kube_audit_workspace = var.enable_kube_audit_logs && var.kube_audit_log_analytics_workspace_id == null
+
+  kube_audit_workspace_id = var.enable_kube_audit_logs ? coalesce(
+    var.kube_audit_log_analytics_workspace_id,
+    try(azurerm_log_analytics_workspace.aks[0].id, null),
+  ) : null
+}
+
+resource "azurerm_log_analytics_workspace" "aks" {
+  count = local.create_kube_audit_workspace ? 1 : 0
+
+  name                = "${var.namespace}-aks-logs"
+  location            = var.location
+  resource_group_name = var.resource_group.name
+  sku                 = "PerGB2018"
+  retention_in_days   = var.kube_audit_retention_in_days
+  tags                = var.tags
+}
+
+# Exports the AKS control-plane audit trail
+resource "azurerm_monitor_diagnostic_setting" "aks_audit" {
+  count = var.enable_kube_audit_logs ? 1 : 0
+
+  name                       = "${var.namespace}-aks-control-plane"
+  target_resource_id         = azurerm_kubernetes_cluster.default.id
+  log_analytics_workspace_id = local.kube_audit_workspace_id
+
+  enabled_log {
+    category = "kube-audit"
+  }
+
+  enabled_log {
+    category = "guard"
+  }
+}

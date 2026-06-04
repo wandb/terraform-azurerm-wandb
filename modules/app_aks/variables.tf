@@ -77,3 +77,21 @@ variable "node_pool_zones" {
   description = "Availability zones for the node pool"
   default     = ["1", "2"]
 }
+
+variable "enable_kube_audit_logs" {
+  type        = bool
+  description = "Enable AKS control-plane audit logging (kube-audit + guard) to a Log Analytics workspace. Provides a forensic trail (identity + source IP) for the Kubernetes API server."
+  default     = true
+}
+
+variable "kube_audit_log_analytics_workspace_id" {
+  type        = string
+  description = "Optional ID of an existing Log Analytics workspace to send AKS audit logs to. When null, a workspace is created in the cluster's resource group."
+  default     = null
+}
+
+variable "kube_audit_retention_in_days" {
+  type        = number
+  description = "Retention in days for the AKS audit Log Analytics workspace when one is created by this module."
+  default     = 90
+}

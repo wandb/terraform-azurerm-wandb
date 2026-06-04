@@ -164,6 +164,10 @@ module "app_aks" {
   resource_group          = azurerm_resource_group.default
   sku_tier                = var.cluster_sku_tier
   tags                    = merge(var.tags, var.kubernetes_cluster_tags)
+
+  enable_kube_audit_logs                = var.enable_kube_audit_logs
+  kube_audit_log_analytics_workspace_id = var.kube_audit_log_analytics_workspace_id
+  kube_audit_retention_in_days          = var.kube_audit_retention_in_days
 }
 locals {
   service_account_name         = "wandb-app"
