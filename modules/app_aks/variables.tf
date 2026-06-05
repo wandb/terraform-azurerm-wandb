@@ -93,5 +93,5 @@ variable "kube_audit_log_analytics_workspace_id" {
 variable "kube_audit_retention_in_days" {
   type        = number
   description = "Retention in days for the AKS audit Log Analytics workspace when one is created by this module."
-  default     = 30
+  default     = 1095
 }
