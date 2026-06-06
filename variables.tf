@@ -178,7 +178,7 @@ variable "database_flags" {
 variable "database_sort_buffer_size" {
   description = "Specifies the sort_buffer_size value to set for the database"
   type        = number
-  default     = 67108864
+  default     = 524288
 }
 
 ##########################################
