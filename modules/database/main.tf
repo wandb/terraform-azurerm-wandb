@@ -6,8 +6,23 @@ resource "random_string" "master_password" {
 
 resource "random_pet" "mysql" {
   length = 2
+
   keepers = {
     version = var.database_version
+  }
+
+  lifecycle {
+    # The MySQL server name (${namespace}-${random_pet.mysql.id}) must stay stable
+    # for the life of the install; version upgrades are applied in place by
+    # azurerm_mysql_flexible_server. Ignoring the whole keepers map means a legacy
+    # keeper already in state (e.g. {version = "5.7"}) never forces a rebuild, and
+    # future database_version changes never regenerate the name.
+    #
+    # IMPORTANT: this must stay. Removing it would make every existing install's
+    # random_pet regenerate to match config, recreating the server. To rebuild a
+    # server intentionally, run:
+    #   terraform apply -replace='module.wandb.module.database.random_pet.mysql'
+    ignore_changes = [keepers]
   }
 }
 
