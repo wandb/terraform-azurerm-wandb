@@ -38,7 +38,6 @@ locals {
     "binlog_row_image"           = "minimal"
     "max_binlog_size"            = "1073741824"
     "long_query_time"            = "4"
-    "max_prepared_stmt_count"    = "65528"
     "max_execution_time"         = "600000"
     "slow_query_log"             = "on"
     "sort_buffer_size"           = tostring(var.sort_buffer_size)
