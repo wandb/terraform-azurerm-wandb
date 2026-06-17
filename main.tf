@@ -306,8 +306,9 @@ locals {
     accessKey = var.storage_key
   }
 
-  bucket_config                    = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
-  weave_trace_service_account_name = "wandb-weave-trace"
+  bucket_config                           = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
+  weave_trace_service_account_name        = "wandb-weave-trace"
+  weave_trace_worker_service_account_name = "wandb-weave-trace-worker"
 
   ctrlplane_redis_host = "redis.redis.svc.cluster.local"
   ctrlplane_redis_port = "26379"
@@ -406,7 +407,11 @@ locals {
           {
             subject = "system:serviceaccount:default:${local.weave_trace_service_account_name}",
             issuer  = module.app_aks.oidc_issuer_url
-          }
+          },
+          {
+            subject = "system:serviceaccount:default:${local.weave_trace_worker_service_account_name}",
+            issuer  = module.app_aks.oidc_issuer_url
+          },
         ]
       }
 
