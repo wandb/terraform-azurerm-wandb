@@ -52,8 +52,10 @@ resources that lack official modules.
 | <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) | ~> 1.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.26 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | ~> 2.6 |
+| <a name="requirement_kubectl"></a> [kubectl](#requirement\_kubectl) | ~> 1.14 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | ~> 2.23 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | ~> 3.0 |
+| <a name="requirement_time"></a> [time](#requirement\_time) | ~> 0.9 |
 
 ## Providers
 
@@ -71,6 +73,9 @@ resources that lack official modules.
 | <a name="module_app_lb"></a> [app\_lb](#module\_app\_lb) | ./modules/app_lb | n/a |
 | <a name="module_cert_manager"></a> [cert\_manager](#module\_cert\_manager) | ./modules/cert_manager | n/a |
 | <a name="module_clickhouse"></a> [clickhouse](#module\_clickhouse) | ./modules/clickhouse | n/a |
+| <a name="module_clickhouse_app"></a> [clickhouse\_app](#module\_clickhouse\_app) | ./modules/clickhouse_app | n/a |
+| <a name="module_clickhouse_identity"></a> [clickhouse\_identity](#module\_clickhouse\_identity) | ./modules/clickhouse_identity | n/a |
+| <a name="module_clickhouse_storage"></a> [clickhouse\_storage](#module\_clickhouse\_storage) | ./modules/clickhouse_storage | n/a |
 | <a name="module_cron_job"></a> [cron\_job](#module\_cron\_job) | ./modules/cron_job | n/a |
 | <a name="module_database"></a> [database](#module\_database) | ./modules/database | n/a |
 | <a name="module_identity"></a> [identity](#module\_identity) | ./modules/identity | n/a |
@@ -99,8 +104,24 @@ resources that lack official modules.
 | <a name="input_azuremonitor"></a> [azuremonitor](#input\_azuremonitor) | # To support otel azure monitor sql and redis metrics need operator-wandb chart minimum version 0.14.0 | `bool` | `false` | no |
 | <a name="input_blob_container"></a> [blob\_container](#input\_blob\_container) | Use an existing bucket. | `string` | `""` | no |
 | <a name="input_bucket_path"></a> [bucket\_path](#input\_bucket\_path) | path of where to store data for the instance-level bucket | `string` | `""` | no |
+| <a name="input_clickhouse_cpu_limit"></a> [clickhouse\_cpu\_limit](#input\_clickhouse\_cpu\_limit) | CPU limit for ClickHouse pods. | `string` | `"2"` | no |
+| <a name="input_clickhouse_cpu_request"></a> [clickhouse\_cpu\_request](#input\_clickhouse\_cpu\_request) | CPU request for ClickHouse pods. | `string` | `"1"` | no |
+| <a name="input_clickhouse_image"></a> [clickhouse\_image](#input\_clickhouse\_image) | ClickHouse server Docker image. | `string` | `"clickhouse/clickhouse-server:25.3.5.42"` | no |
+| <a name="input_clickhouse_k8s_namespace"></a> [clickhouse\_k8s\_namespace](#input\_clickhouse\_k8s\_namespace) | The Kubernetes namespace where ClickHouse will be deployed. | `string` | `"clickhouse"` | no |
+| <a name="input_clickhouse_k8s_service_account_name"></a> [clickhouse\_k8s\_service\_account\_name](#input\_clickhouse\_k8s\_service\_account\_name) | The Kubernetes service account name for ClickHouse workload identity. | `string` | `"clickhouse"` | no |
+| <a name="input_clickhouse_keeper_cpu_limit"></a> [clickhouse\_keeper\_cpu\_limit](#input\_clickhouse\_keeper\_cpu\_limit) | CPU limit for ClickHouse Keeper pods. | `string` | `"2"` | no |
+| <a name="input_clickhouse_keeper_cpu_request"></a> [clickhouse\_keeper\_cpu\_request](#input\_clickhouse\_keeper\_cpu\_request) | CPU request for ClickHouse Keeper pods. | `string` | `"1"` | no |
+| <a name="input_clickhouse_keeper_image"></a> [clickhouse\_keeper\_image](#input\_clickhouse\_keeper\_image) | ClickHouse Keeper Docker image. | `string` | `"clickhouse/clickhouse-keeper:25.3.5.42"` | no |
+| <a name="input_clickhouse_keeper_memory_limit"></a> [clickhouse\_keeper\_memory\_limit](#input\_clickhouse\_keeper\_memory\_limit) | Memory limit for ClickHouse Keeper pods. | `string` | `"4Gi"` | no |
+| <a name="input_clickhouse_keeper_memory_request"></a> [clickhouse\_keeper\_memory\_request](#input\_clickhouse\_keeper\_memory\_request) | Memory request for ClickHouse Keeper pods. | `string` | `"256M"` | no |
+| <a name="input_clickhouse_memory_limit"></a> [clickhouse\_memory\_limit](#input\_clickhouse\_memory\_limit) | Memory limit for ClickHouse pods. | `string` | `"16Gi"` | no |
+| <a name="input_clickhouse_memory_request"></a> [clickhouse\_memory\_request](#input\_clickhouse\_memory\_request) | Memory request for ClickHouse pods. | `string` | `"2Gi"` | no |
+| <a name="input_clickhouse_operator_chart_version"></a> [clickhouse\_operator\_chart\_version](#input\_clickhouse\_operator\_chart\_version) | Version of the Altinity ClickHouse operator Helm chart. | `string` | `"0.25.4"` | no |
 | <a name="input_clickhouse_private_endpoint_service_name"></a> [clickhouse\_private\_endpoint\_service\_name](#input\_clickhouse\_private\_endpoint\_service\_name) | ClickHouse private endpoint 'Service name' (ends in .azure.privatelinkservice). | `string` | `""` | no |
 | <a name="input_clickhouse_region"></a> [clickhouse\_region](#input\_clickhouse\_region) | ClickHouse region (eastus2, westus3, etc). | `string` | `""` | no |
+| <a name="input_clickhouse_replicas"></a> [clickhouse\_replicas](#input\_clickhouse\_replicas) | Number of ClickHouse replicas for high availability. | `number` | `3` | no |
+| <a name="input_clickhouse_storage_container_name"></a> [clickhouse\_storage\_container\_name](#input\_clickhouse\_storage\_container\_name) | Name of the storage container for ClickHouse data. | `string` | `"clickhouse-data"` | no |
+| <a name="input_clickhouse_storage_replication_type"></a> [clickhouse\_storage\_replication\_type](#input\_clickhouse\_storage\_replication\_type) | Replication type for the ClickHouse storage account (LRS, GRS, RAGRS, ZRS, GZRS, RAGZRS). | `string` | `"ZRS"` | no |
 | <a name="input_cluster_sku_tier"></a> [cluster\_sku\_tier](#input\_cluster\_sku\_tier) | The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers) | `string` | `"Free"` | no |
 | <a name="input_controller_image_tag"></a> [controller\_image\_tag](#input\_controller\_image\_tag) | Tag of the controller image to deploy | `string` | `"1.20.0"` | no |
 | <a name="input_create_private_link"></a> [create\_private\_link](#input\_create\_private\_link) | Use for the azure private link. | `bool` | `false` | no |
@@ -111,6 +132,7 @@ resources that lack official modules.
 | <a name="input_database_sort_buffer_size"></a> [database\_sort\_buffer\_size](#input\_database\_sort\_buffer\_size) | Specifies the sort\_buffer\_size value to set for the database | `number` | `524288` | no |
 | <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version for MySQL | `string` | `"5.7"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | If the instance should have deletion protection enabled. The database / Bucket can't be deleted when this value is set to `true`. | `bool` | `true` | no |
+| <a name="input_deploy_clickhouse_objects"></a> [deploy\_clickhouse\_objects](#input\_deploy\_clickhouse\_objects) | Deploy ClickHouse and Keeper CRD objects (installations). Set to false for first apply (installs operator and CRDs only), then true to deploy the actual ClickHouse clusters. | `bool` | `true` | no |
 | <a name="input_disable_storage_vault_key_id"></a> [disable\_storage\_vault\_key\_id](#input\_disable\_storage\_vault\_key\_id) | Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation. | `bool` | `false` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain for accessing the Weights & Biases UI. | `string` | `null` | no |
 | <a name="input_enable_database_vault_key"></a> [enable\_database\_vault\_key](#input\_enable\_database\_vault\_key) | Flag to enable managed key encryption for the database. Once enabled, cannot be disabled. | `bool` | `false` | no |
@@ -152,6 +174,7 @@ resources that lack official modules.
 | <a name="input_use_external_redis"></a> [use\_external\_redis](#input\_use\_external\_redis) | Boolean indicating whether to use the redis instance created externally | `bool` | `false` | no |
 | <a name="input_use_internal_queue"></a> [use\_internal\_queue](#input\_use\_internal\_queue) | Uses an internal redis queue instead of using azure queue. | `bool` | `false` | no |
 | <a name="input_wandb_image"></a> [wandb\_image](#input\_wandb\_image) | Docker repository of to pull the wandb image from. | `string` | `"wandb/local"` | no |
+| <a name="input_wandb_namespace"></a> [wandb\_namespace](#input\_wandb\_namespace) | The Kubernetes namespace where the W&B Helm chart will be installed | `string` | `"default"` | no |
 | <a name="input_wandb_version"></a> [wandb\_version](#input\_wandb\_version) | The version of Weights & Biases local to deploy. | `string` | `"latest"` | no |
 | <a name="input_weave_wandb_env"></a> [weave\_wandb\_env](#input\_weave\_wandb\_env) | Extra environment variables for W&B | `map(string)` | `{}` | no |
 
@@ -163,6 +186,19 @@ resources that lack official modules.
 | <a name="output_aks_max_node_count"></a> [aks\_max\_node\_count](#output\_aks\_max\_node\_count) | n/a |
 | <a name="output_aks_min_node_count"></a> [aks\_min\_node\_count](#output\_aks\_min\_node\_count) | n/a |
 | <a name="output_aks_node_instance_type"></a> [aks\_node\_instance\_type](#output\_aks\_node\_instance\_type) | n/a |
+| <a name="output_clickhouse_cluster_name"></a> [clickhouse\_cluster\_name](#output\_clickhouse\_cluster\_name) | ClickHouse cluster name |
+| <a name="output_clickhouse_container_name"></a> [clickhouse\_container\_name](#output\_clickhouse\_container\_name) | The name of the ClickHouse storage container |
+| <a name="output_clickhouse_endpoint"></a> [clickhouse\_endpoint](#output\_clickhouse\_endpoint) | ClickHouse native protocol endpoint |
+| <a name="output_clickhouse_http_endpoint"></a> [clickhouse\_http\_endpoint](#output\_clickhouse\_http\_endpoint) | ClickHouse HTTP endpoint |
+| <a name="output_clickhouse_identity_client_id"></a> [clickhouse\_identity\_client\_id](#output\_clickhouse\_identity\_client\_id) | The client ID of the ClickHouse managed identity |
+| <a name="output_clickhouse_identity_tenant_id"></a> [clickhouse\_identity\_tenant\_id](#output\_clickhouse\_identity\_tenant\_id) | The tenant ID of the ClickHouse managed identity |
+| <a name="output_clickhouse_k8s_namespace"></a> [clickhouse\_k8s\_namespace](#output\_clickhouse\_k8s\_namespace) | The Kubernetes namespace for ClickHouse deployment |
+| <a name="output_clickhouse_k8s_service_account"></a> [clickhouse\_k8s\_service\_account](#output\_clickhouse\_k8s\_service\_account) | The Kubernetes service account name for ClickHouse |
+| <a name="output_clickhouse_remote_cluster_name"></a> [clickhouse\_remote\_cluster\_name](#output\_clickhouse\_remote\_cluster\_name) | ClickHouse remote cluster name for distributed queries |
+| <a name="output_clickhouse_service"></a> [clickhouse\_service](#output\_clickhouse\_service) | ClickHouse service name |
+| <a name="output_clickhouse_storage_account_name"></a> [clickhouse\_storage\_account\_name](#output\_clickhouse\_storage\_account\_name) | The name of the ClickHouse storage account |
+| <a name="output_clickhouse_storage_primary_blob_endpoint"></a> [clickhouse\_storage\_primary\_blob\_endpoint](#output\_clickhouse\_storage\_primary\_blob\_endpoint) | The primary blob endpoint for the ClickHouse storage account |
+| <a name="output_clickhouse_username"></a> [clickhouse\_username](#output\_clickhouse\_username) | ClickHouse username |
 | <a name="output_client_id"></a> [client\_id](#output\_client\_id) | n/a |
 | <a name="output_cluster_ca_certificate"></a> [cluster\_ca\_certificate](#output\_cluster\_ca\_certificate) | n/a |
 | <a name="output_cluster_client_certificate"></a> [cluster\_client\_certificate](#output\_cluster\_client\_certificate) | n/a |
