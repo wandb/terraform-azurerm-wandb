@@ -77,3 +77,25 @@ variable "node_pool_zones" {
   description = "Availability zones for the node pool"
   default     = ["1", "2"]
 }
+
+variable "key_vault_id" {
+  type        = string
+  description = "The ID of the Azure Key Vault to grant CSI driver access to"
+}
+
+variable "k8s_namespace" {
+  type        = string
+  description = "The Kubernetes namespace where W&B resources will be deployed"
+  default     = "default"
+}
+
+variable "secrets_store_csi_driver_version" {
+  type        = string
+  description = "The version of the Secrets Store CSI Driver Helm chart to install"
+  default     = "1.4.7"
+}
+
+variable "azure_provider_manifest_body" {
+  type        = string
+  description = "The raw YAML content of the Azure Key Vault Provider manifest, fetched at root module level"
+}

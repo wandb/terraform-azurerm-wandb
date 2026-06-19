@@ -73,3 +73,8 @@ output "wandb_spec" {
   value     = local.spec
   sensitive = true
 }
+
+output "storage_account_name" {
+  value       = module.storage[0].account.name
+  description = "Name of the storage account"
+}

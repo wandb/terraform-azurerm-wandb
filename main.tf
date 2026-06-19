@@ -145,25 +145,35 @@ locals {
   node_pool_zones  = var.node_pool_zones != null ? var.node_pool_zones : slice(sort(local.valid_zones), 0, local.num_zones)
 }
 
+# Use vendored Azure provider manifest for reliability and consistency
+locals {
+  azure_provider_manifest_path = "${path.module}/modules/app_aks/secrets_store/manifests/azure-provider-installer-v${var.secrets_store_csi_driver_provider_azure_version}.yaml"
+  azure_provider_manifest_body = file(local.azure_provider_manifest_path)
+}
+
 module "app_aks" {
   source     = "./modules/app_aks"
   depends_on = [module.app_lb]
 
-  cluster_subnet_id       = module.networking.kubernetes_subnet.id
-  etcd_key_vault_key_id   = module.vault.etcd_key_id
-  gateway                 = module.app_lb.gateway
-  identity                = module.identity.identity
-  location                = azurerm_resource_group.default.location
-  namespace               = var.namespace
-  node_pool_min_vm_per_az = local.kubernetes_min_node_per_az
-  node_pool_max_vm_per_az = local.kubernetes_max_node_per_az
-  node_pool_vm_size       = local.kubernetes_instance_type
-  node_pool_disk_size     = local.kubernetes_node_disk_size_gb
-  node_pool_zones         = local.node_pool_zones
-  public_subnet           = module.networking.public_subnet
-  resource_group          = azurerm_resource_group.default
-  sku_tier                = var.cluster_sku_tier
-  tags                    = merge(var.tags, var.kubernetes_cluster_tags)
+  cluster_subnet_id                               = module.networking.kubernetes_subnet.id
+  etcd_key_vault_key_id                           = module.vault.etcd_key_id
+  gateway                                         = module.app_lb.gateway
+  identity                                        = module.identity.identity
+  k8s_namespace                                   = var.k8s_namespace
+  key_vault_id                                    = module.vault.vault_id
+  location                                        = azurerm_resource_group.default.location
+  namespace                                       = var.namespace
+  node_pool_min_vm_per_az                         = local.kubernetes_min_node_per_az
+  node_pool_max_vm_per_az                         = local.kubernetes_max_node_per_az
+  node_pool_vm_size                               = local.kubernetes_instance_type
+  node_pool_disk_size                             = local.kubernetes_node_disk_size_gb
+  node_pool_zones                                 = local.node_pool_zones
+  public_subnet                                   = module.networking.public_subnet
+  resource_group                                  = azurerm_resource_group.default
+  sku_tier                                        = var.cluster_sku_tier
+  tags                                            = merge(var.tags, var.kubernetes_cluster_tags)
+  secrets_store_csi_driver_version                = var.secrets_store_csi_driver_version
+  azure_provider_manifest_body                    = local.azure_provider_manifest_body
 }
 locals {
   service_account_name         = "wandb-app"
@@ -309,6 +319,10 @@ locals {
   bucket_config                           = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
   weave_trace_service_account_name        = "wandb-weave-trace"
   weave_trace_worker_service_account_name = "wandb-weave-trace-worker"
+
+  weave_worker_workload_identity_annotations = {
+    "azure.workload.identity/client-id" = module.app_aks.weave_worker_identity_client_id
+  }
 
   ctrlplane_redis_host = "redis.redis.svc.cluster.local"
   ctrlplane_redis_port = "26379"
@@ -563,6 +577,38 @@ locals {
         }
         podLabels = { "azure.workload.identity/use" = "true" }
         extraEnv  = var.parquet_wandb_env
+      }
+
+      weave-trace-worker = {
+        serviceAccount = {
+          annotations = local.weave_worker_workload_identity_annotations
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+        pod = {
+          labels = { "azure.workload.identity/use" = "true" }
+        }
+        podLabels = { "azure.workload.identity/use" = "true" }
+        secretsStore = {
+          enabled = true
+        }
+      }
+
+      secretsStore = {
+        enabled  = true
+        provider = "azure"
+        azure = {
+          keyVaultName = module.vault.vault.name
+          tenantId     = module.app_aks.tenant_id
+          # clientID is NOT included - workload identity uses the pod's service account token
+        }
+        secrets = [
+          {
+            name            = "weave-worker-auth"
+            cloudSecretName = module.vault.weave_worker_auth_secret_name
+            k8sSecretName   = "weave-worker-auth"
+            k8sSecretKey    = "key"
+          }
+        ]
       }
 
       executor = {

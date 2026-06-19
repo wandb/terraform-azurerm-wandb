@@ -416,3 +416,24 @@ variable "clickhouse_region" {
   description = "ClickHouse region (eastus2, westus3, etc)."
   default     = ""
 }
+
+variable "k8s_namespace" {
+  type        = string
+  description = "The Kubernetes namespace where W&B resources will be deployed"
+  default     = "default"
+}
+
+###########################################
+# Secrets Store CSI Driver                #
+###########################################
+variable "secrets_store_csi_driver_version" {
+  type        = string
+  description = "The version of the Secrets Store CSI Driver Helm chart to install"
+  default     = "1.4.7"
+}
+
+variable "secrets_store_csi_driver_provider_azure_version" {
+  type        = string
+  description = "The version of the Azure Key Vault Provider for Secrets Store CSI Driver to install"
+  default     = "1.7.1"
+}

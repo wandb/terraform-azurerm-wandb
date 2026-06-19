@@ -87,16 +87,11 @@ resource "azurerm_key_vault_secret" "weave_worker_auth" {
   name         = "weave-worker-auth"
   value        = random_password.weave_worker_auth.result
   key_vault_id = azurerm_key_vault.default.id
+
+  depends_on = [azurerm_key_vault_access_policy.parent, azurerm_key_vault_access_policy.identity]
 }
 
-resource "kubernetes_secret" "weave_worker_auth" {
-  metadata {
-    name = "weave-worker-auth"
-  }
-
-  data = {
-    key = random_password.weave_worker_auth.result
-  }
-
-  type = "Opaque"
-}
+# NOTE: The Kubernetes secrets are now created by the Secrets Store CSI Driver
+# via the SecretProviderClass defined in the operator-wandb Helm chart.
+# This eliminates the need to manage secrets in both Terraform and Kubernetes,
+# and provides automatic secret rotation capabilities.

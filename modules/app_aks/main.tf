@@ -106,3 +106,55 @@ resource "azurerm_role_assignment" "public_subnet" {
   role_definition_name = "Contributor"
   principal_id         = local.ingress_gateway_principal_id
 }
+
+# Install Secrets Store CSI Driver and Azure Key Vault Provider
+# Note: azure_provider_manifest_body is fetched at root module level
+module "secrets_store" {
+  source = "./secrets_store"
+
+  secrets_store_csi_driver_version = var.secrets_store_csi_driver_version
+  azure_provider_manifest_body     = var.azure_provider_manifest_body
+
+  depends_on = [
+    azurerm_kubernetes_cluster.default,
+    azurerm_kubernetes_cluster_node_pool.additional
+  ]
+}
+
+# Get current Azure client configuration
+data "azurerm_client_config" "current" {}
+
+# Create Azure Managed Identity for weave workers to access Key Vault
+resource "azurerm_user_assigned_identity" "weave_worker" {
+  name                = "${var.namespace}-weave-wkr"
+  location            = var.location
+  resource_group_name = var.resource_group.name
+
+  tags = var.tags
+}
+
+# Grant the weave worker managed identity access to read secrets from Key Vault
+resource "azurerm_key_vault_access_policy" "weave_worker" {
+  key_vault_id = var.key_vault_id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = azurerm_user_assigned_identity.weave_worker.principal_id
+
+  secret_permissions = ["Get"]
+
+  depends_on = [
+    azurerm_user_assigned_identity.weave_worker
+  ]
+}
+
+# Workload Identity binding - allows weave-trace-worker K8s service account to impersonate Azure managed identity
+resource "azurerm_federated_identity_credential" "weave_trace_worker" {
+  name                = "${var.namespace}-weave-trace-worker-federated"
+  resource_group_name = var.resource_group.name
+  parent_id           = azurerm_user_assigned_identity.weave_worker.id
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = azurerm_kubernetes_cluster.default.oidc_issuer_url
+  subject             = "system:serviceaccount:${var.k8s_namespace}:wandb-weave-trace-worker"
+}
+
+# NOTE: The Kubernetes secrets are now created by the Secrets Store CSI Driver
+# via the SecretProviderClass defined in the operator-wandb Helm chart.
