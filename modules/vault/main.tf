@@ -91,12 +91,11 @@ resource "azurerm_key_vault_secret" "weave_worker_auth" {
 
 resource "kubernetes_secret" "weave_worker_auth" {
   metadata {
-    name = "weave-worker-auth"
+    name      = "weave-worker-auth"
+    namespace = var.wandb_namespace
   }
 
   data = {
     key = random_password.weave_worker_auth.result
   }
-
-  type = "Opaque"
 }

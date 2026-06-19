@@ -87,6 +87,8 @@ module "vault" {
   enable_database_vault_key = var.enable_database_vault_key
   enable_storage_vault_key  = var.enable_storage_vault_key
 
+  wandb_namespace = var.wandb_namespace
+
   tags = var.tags
 }
 
@@ -291,6 +293,58 @@ module "clickhouse" {
 
   clickhouse_private_endpoint_service_name = var.clickhouse_private_endpoint_service_name
   clickhouse_region                        = var.clickhouse_region
+}
+
+module "clickhouse_storage" {
+  source              = "./modules/clickhouse_storage"
+  namespace           = var.namespace
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+  container_name      = var.clickhouse_storage_container_name
+  replication_type    = var.clickhouse_storage_replication_type
+  deletion_protection = var.deletion_protection
+  tags                = var.tags
+}
+
+module "clickhouse_identity" {
+  source                     = "./modules/clickhouse_identity"
+  namespace                  = var.namespace
+  resource_group_name        = azurerm_resource_group.default.name
+  location                   = azurerm_resource_group.default.location
+  oidc_issuer_url            = module.app_aks.oidc_issuer_url
+  k8s_namespace              = var.clickhouse_k8s_namespace
+  k8s_service_account_name   = var.clickhouse_k8s_service_account_name
+  storage_account_id         = module.clickhouse_storage.storage_account.id
+
+  depends_on = [module.clickhouse_storage, module.app_aks]
+}
+
+module "clickhouse_app" {
+  source                        = "./modules/clickhouse_app"
+  namespace                     = var.clickhouse_k8s_namespace
+  clickhouse_replicas           = var.clickhouse_replicas
+  clickhouse_image              = var.clickhouse_image
+  keeper_image                  = var.clickhouse_keeper_image
+  clickhouse_memory_request     = var.clickhouse_memory_request
+  clickhouse_memory_limit       = var.clickhouse_memory_limit
+  clickhouse_cpu_request        = var.clickhouse_cpu_request
+  clickhouse_cpu_limit          = var.clickhouse_cpu_limit
+  keeper_memory_request         = var.clickhouse_keeper_memory_request
+  keeper_memory_limit           = var.clickhouse_keeper_memory_limit
+  keeper_cpu_request            = var.clickhouse_keeper_cpu_request
+  keeper_cpu_limit              = var.clickhouse_keeper_cpu_limit
+  storage_account_name          = module.clickhouse_storage.storage_account_name
+  storage_container_name        = module.clickhouse_storage.container_name
+  clickhouse_identity_client_id = module.clickhouse_identity.client_id
+  service_account_name          = var.clickhouse_k8s_service_account_name
+  operator_chart_version        = var.clickhouse_operator_chart_version
+  deploy_clickhouse_objects     = var.deploy_clickhouse_objects
+
+  depends_on = [
+    module.app_aks,
+    module.clickhouse_storage,
+    module.clickhouse_identity
+  ]
 }
 
 locals {
