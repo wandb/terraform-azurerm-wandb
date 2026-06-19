@@ -33,6 +33,26 @@ output "oidc_issuer_url" {
   value = module.app_aks.oidc_issuer_url
 }
 
+output "weave_worker_identity_client_id" {
+  value       = module.app_aks.weave_worker_identity_client_id
+  description = "The client ID of the managed identity used by weave workers for Key Vault access"
+}
+
+output "weave_worker_identity_principal_id" {
+  value       = module.app_aks.weave_worker_identity_principal_id
+  description = "The principal ID (object ID) of the managed identity used by weave workers"
+}
+
+output "key_vault_name" {
+  value       = module.vault.vault.name
+  description = "The name of the Azure Key Vault"
+}
+
+output "weave_worker_auth_secret_name" {
+  value       = module.vault.weave_worker_auth_secret_name
+  description = "The name of the weave worker authentication secret in Azure Key Vault (cloudSecretName)"
+}
+
 output "private_link_resource_id" {
   value = module.app_lb.gateway_id
 }
@@ -72,4 +92,19 @@ output "tenant_id" {
 output "wandb_spec" {
   value     = local.spec
   sensitive = true
+}
+
+output "bufstream_storage_account_name" {
+  value       = module.bufstream.storage_account_name
+  description = "Bufstream Azure Storage Account name"
+}
+
+output "bufstream_container_name" {
+  value       = module.bufstream.container_name
+  description = "Bufstream Azure Storage Container name"
+}
+
+output "bufstream_storage_account_key" {
+  value       = module.bufstream.storage_account_key
+  description = "Bufstream Azure Storage Account primary access key"
 }

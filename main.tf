@@ -87,6 +87,8 @@ module "vault" {
   enable_database_vault_key = var.enable_database_vault_key
   enable_storage_vault_key  = var.enable_storage_vault_key
 
+  wandb_namespace = var.wandb_namespace
+
   tags = var.tags
 }
 
@@ -103,6 +105,16 @@ module "storage" {
 
   storage_key_id               = try(module.vault.vault_internal_keys[module.vault.vault_key_map.storage].id, null)
   disable_storage_vault_key_id = var.disable_storage_vault_key_id
+
+  tags = var.tags
+}
+
+module "bufstream" {
+  source = "./modules/bufstream"
+
+  namespace           = var.namespace
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
 
   tags = var.tags
 }
@@ -153,6 +165,8 @@ module "app_aks" {
   etcd_key_vault_key_id   = module.vault.etcd_key_id
   gateway                 = module.app_lb.gateway
   identity                = module.identity.identity
+  k8s_namespace           = var.wandb_namespace
+  key_vault_id            = module.vault.vault_id
   location                = azurerm_resource_group.default.location
   namespace               = var.namespace
   node_pool_min_vm_per_az = local.kubernetes_min_node_per_az
@@ -309,6 +323,10 @@ locals {
   bucket_config                           = var.external_bucket != null ? var.external_bucket : (local.use_customer_bucket ? local.default_bucket_config : null)
   weave_trace_service_account_name        = "wandb-weave-trace"
   weave_trace_worker_service_account_name = "wandb-weave-trace-worker"
+
+  weave_worker_workload_identity_annotations = {
+    "azure.workload.identity/client-id" = module.app_aks.weave_worker_identity_client_id
+  }
 
   ctrlplane_redis_host = "redis.redis.svc.cluster.local"
   ctrlplane_redis_port = "26379"
@@ -547,7 +565,51 @@ locals {
         podLabels = { "azure.workload.identity/use" = "true" }
       }
 
+      weave-trace-worker = {
+        serviceAccount = {
+          annotations = local.weave_worker_workload_identity_annotations
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+        pod = {
+          labels = { "azure.workload.identity/use" = "true" }
+        }
+        podLabels = { "azure.workload.identity/use" = "true" }
+        secretsStore = {
+          enabled = true
+        }
+      }
 
+      weave-evaluate-model-worker = {
+        serviceAccount = {
+          annotations = local.weave_worker_workload_identity_annotations
+          labels      = { "azure.workload.identity/use" = "true" }
+        }
+        pod = {
+          labels = { "azure.workload.identity/use" = "true" }
+        }
+        podLabels = { "azure.workload.identity/use" = "true" }
+        secretsStore = {
+          enabled = true
+        }
+      }
+
+      secretsStore = {
+        enabled  = true
+        provider = "azure"
+        azure = {
+          keyVaultName = module.vault.vault.name
+          tenantId     = module.identity.identity.tenant_id
+          clientID     = module.app_aks.weave_worker_identity_client_id
+        }
+        secrets = [
+          {
+            name            = "weave-worker-auth"
+            cloudSecretName = module.vault.weave_worker_auth_secret_name
+            k8sSecretName   = "weave-worker-auth"
+            k8sSecretKey    = "key"
+          }
+        ]
+      }
 
       mysql = { install = false }
       redis = { install = false }

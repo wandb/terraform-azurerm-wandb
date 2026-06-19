@@ -33,3 +33,9 @@ variable "enable_database_vault_key" {
   default     = false
   description = "Flag to enable managed key encryption for the database. Once enabled, cannot be disabled or you will loose access to the database."
 }
+
+variable "wandb_namespace" {
+  type        = string
+  description = "The Kubernetes namespace where the W&B Helm chart will be installed"
+  default     = "default"
+}

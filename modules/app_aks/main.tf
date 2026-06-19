@@ -81,28 +81,96 @@ resource "azurerm_kubernetes_cluster_node_pool" "additional" {
   }
 }
 
-locals {
-  ingress_gateway_principal_id = azurerm_kubernetes_cluster.default.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id
+# locals {
+#   ingress_gateway_principal_id = try(azurerm_kubernetes_cluster.default.ingress_application_gateway.0.ingress_application_gateway_identity.0.object_id, null)
+#
+# }
+#
+# resource "azurerm_role_assignment" "gateway" {
+#   count                = local.ingress_gateway_principal_id != null ? 1 : 0
+#   depends_on           = [local.ingress_gateway_principal_id]
+#   scope                = var.gateway.id
+#   role_definition_name = "Contributor"
+#   principal_id         = local.ingress_gateway_principal_id
+# }
+#
+# resource "azurerm_role_assignment" "resource_group" {
+#   count                = local.ingress_gateway_principal_id != null ? 1 : 0
+#   depends_on           = [local.ingress_gateway_principal_id]
+#   scope                = var.resource_group.id
+#   role_definition_name = "Reader"
+#   principal_id         = local.ingress_gateway_principal_id
+# }
+#
+# resource "azurerm_role_assignment" "public_subnet" {
+#   depends_on           = [local.ingress_gateway_principal_id]
+#   scope                = var.public_subnet.id
+#   role_definition_name = "Contributor"
+#   principal_id         = local.ingress_gateway_principal_id
+# }
 
+# Fetch Azure provider manifest early to avoid for_each issues in Terraform Cloud
+data "http" "azure_provider_manifest" {
+  url = "https://raw.githubusercontent.com/Azure/secrets-store-csi-driver-provider-azure/v${var.secrets_store_csi_driver_provider_azure_version}/deployment/provider-azure-installer.yaml"
 }
 
-resource "azurerm_role_assignment" "gateway" {
-  depends_on           = [local.ingress_gateway_principal_id]
-  scope                = var.gateway.id
-  role_definition_name = "Contributor"
-  principal_id         = local.ingress_gateway_principal_id
+# Install Secrets Store CSI Driver and Azure Key Vault Provider
+module "secrets_store" {
+  source = "./secrets_store"
+
+  secrets_store_csi_driver_version = var.secrets_store_csi_driver_version
+  azure_provider_manifest_body     = data.http.azure_provider_manifest.response_body
+
+  depends_on = [
+    azurerm_kubernetes_cluster.default,
+    azurerm_kubernetes_cluster_node_pool.additional
+  ]
 }
 
-resource "azurerm_role_assignment" "resource_group" {
-  depends_on           = [local.ingress_gateway_principal_id]
-  scope                = var.resource_group.id
-  role_definition_name = "Reader"
-  principal_id         = local.ingress_gateway_principal_id
+# Get current Azure client configuration
+data "azurerm_client_config" "current" {}
+
+# Create Azure Managed Identity for weave workers to access Key Vault
+resource "azurerm_user_assigned_identity" "weave_worker" {
+  name                = "${var.namespace}-weave-wkr"
+  location            = var.location
+  resource_group_name = var.resource_group.name
+
+  tags = var.tags
 }
 
-resource "azurerm_role_assignment" "public_subnet" {
-  depends_on           = [local.ingress_gateway_principal_id]
-  scope                = var.public_subnet.id
-  role_definition_name = "Contributor"
-  principal_id         = local.ingress_gateway_principal_id
+# Grant the weave worker managed identity access to read secrets from Key Vault
+resource "azurerm_key_vault_access_policy" "weave_worker" {
+  key_vault_id = var.key_vault_id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = azurerm_user_assigned_identity.weave_worker.principal_id
+
+  secret_permissions = ["Get"]
+
+  depends_on = [
+    azurerm_user_assigned_identity.weave_worker
+  ]
 }
+
+# Workload Identity binding - allows weave-trace-worker K8s service account to impersonate Azure managed identity
+resource "azurerm_federated_identity_credential" "weave_trace_worker" {
+  name                = "${var.namespace}-weave-trace-worker-federated"
+  resource_group_name = var.resource_group.name
+  parent_id           = azurerm_user_assigned_identity.weave_worker.id
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = azurerm_kubernetes_cluster.default.oidc_issuer_url
+  subject             = "system:serviceaccount:${var.k8s_namespace}:wandb-weave-trace-worker"
+}
+
+# Workload Identity binding - allows weave-evaluate-model-worker K8s service account to impersonate Azure managed identity
+resource "azurerm_federated_identity_credential" "weave_evaluate_worker" {
+  name                = "${var.namespace}-weave-evaluate-worker-federated"
+  resource_group_name = var.resource_group.name
+  parent_id           = azurerm_user_assigned_identity.weave_worker.id
+  audience            = ["api://AzureADTokenExchange"]
+  issuer              = azurerm_kubernetes_cluster.default.oidc_issuer_url
+  subject             = "system:serviceaccount:${var.k8s_namespace}:wandb-weave-evaluate-model-worker"
+}
+
+# NOTE: The Kubernetes secrets are now created by the Secrets Store CSI Driver
+# via the SecretProviderClass defined in the operator-wandb Helm chart.

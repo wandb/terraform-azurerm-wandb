@@ -1,8 +1,20 @@
 
 data "azurerm_client_config" "current" {}
 
+# TODO(aravind): undo this.
+# Generate a unique suffix for globally unique Key Vault name
+resource "random_id" "vault_suffix" {
+  byte_length = 3
+  keepers = {
+    namespace = var.namespace
+  }
+}
+
 locals {
-  vault_name           = "${var.namespace}-vault"
+  # Azure Key Vault names must be globally unique and max 24 chars
+  # Format: {namespace}-{random-suffix} (truncated to 24 chars)
+  vault_suffix         = lower(random_id.vault_suffix.hex)
+  vault_name           = "${var.namespace}-${local.vault_suffix}"
   vault_truncated_name = substr(local.vault_name, 0, min(length(local.vault_name), 24))
   max_key_length       = 127
   vault_key_map = {
@@ -12,7 +24,7 @@ locals {
 }
 
 resource "azurerm_key_vault" "default" {
-  name                     = trim(local.vault_truncated_name, "-")
+  name                     = "jabanga-aravind-00"
   location                 = var.location
   resource_group_name      = var.resource_group.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
@@ -87,16 +99,17 @@ resource "azurerm_key_vault_secret" "weave_worker_auth" {
   name         = "weave-worker-auth"
   value        = random_password.weave_worker_auth.result
   key_vault_id = azurerm_key_vault.default.id
+
+  depends_on = [azurerm_key_vault_access_policy.parent, azurerm_key_vault_access_policy.identity]
 }
 
 resource "kubernetes_secret" "weave_worker_auth" {
   metadata {
-    name = "weave-worker-auth"
+    name      = "weave-worker-auth"
+    namespace = var.wandb_namespace
   }
 
   data = {
     key = random_password.weave_worker_auth.result
   }
-
-  type = "Opaque"
 }
