@@ -383,6 +383,13 @@ locals {
           external = false
         }
 
+        lumen = {
+          dataRoot = var.lumen_data_root
+          gcpWorkloadIdentity = {
+            audience = var.lumen_agent_wif_audience
+          }
+        }
+
         extraEnv = merge({
           "GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI" = module.vault.vault.vault_uri,
           "GORILLA_CUSTOMER_SECRET_STORE_SOURCE"              = "az-secretmanager://wandb",

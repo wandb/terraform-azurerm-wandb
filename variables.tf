@@ -416,3 +416,19 @@ variable "clickhouse_region" {
   description = "ClickHouse region (eastus2, westus3, etc)."
   default     = ""
 }
+
+#########
+# Lumen #
+#########
+
+variable "lumen_agent_wif_audience" {
+  description = "the audience for a dedicated customer's WIF pool for a lumen agent"
+  type        = string
+  default     = ""
+}
+
+variable "lumen_data_root" {
+  description = "object storage to which config data is written"
+  type        = string
+  default     = ""
+}

@@ -128,6 +128,8 @@ resources that lack official modules.
 | <a name="input_kubernetes_node_disk_size_gb"></a> [kubernetes\_node\_disk\_size\_gb](#input\_kubernetes\_node\_disk\_size\_gb) | Size of the node root volume in GB. | `number` | `null` | no |
 | <a name="input_license"></a> [license](#input\_license) | Your wandb/local license | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
+| <a name="input_lumen_agent_wif_audience"></a> [lumen\_agent\_wif\_audience](#input\_lumen\_agent\_wif\_audience) | the audience for a dedicated customer's WIF pool for a lumen agent | `string` | `""` | no |
+| <a name="input_lumen_data_root"></a> [lumen\_data\_root](#input\_lumen\_data\_root) | object storage to which config data is written | `string` | `""` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | String used for prefix resources. | `string` | n/a | yes |
 | <a name="input_node_max_pods"></a> [node\_max\_pods](#input\_node\_max\_pods) | Maximum number of pods per node | `number` | `30` | no |
 | <a name="input_node_pool_num_zones"></a> [node\_pool\_num\_zones](#input\_node\_pool\_num\_zones) | Number of availability zones to use for the node pool when node\_pool\_zones is not set. If neither are set, 3 zones will be used | `number` | `2` | no |
