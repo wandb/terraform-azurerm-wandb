@@ -50,7 +50,7 @@ resources that lack official modules.
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.9 |
 | <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) | ~> 1.0 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.26 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.55 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | ~> 2.6 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | ~> 2.23 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | ~> 3.0 |
@@ -60,7 +60,7 @@ resources that lack official modules.
 | Name | Version |
 |------|---------|
 | <a name="provider_azapi"></a> [azapi](#provider\_azapi) | ~> 1.0 |
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 4.26 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 4.55 |
 | <a name="provider_null"></a> [null](#provider\_null) | ~> 3.0 |
 
 ## Modules
@@ -109,7 +109,7 @@ resources that lack official modules.
 | <a name="input_database_flags"></a> [database\_flags](#input\_database\_flags) | MySQL server parameters to set on the Azure Database for MySQL flexible server. Merged with W&B defaults. | `map(string)` | `{}` | no |
 | <a name="input_database_sku_name"></a> [database\_sku\_name](#input\_database\_sku\_name) | Specifies the SKU Name for this MySQL Server. Defaults to null and value from deployment-size.tf is used | `string` | `null` | no |
 | <a name="input_database_sort_buffer_size"></a> [database\_sort\_buffer\_size](#input\_database\_sort\_buffer\_size) | Specifies the sort\_buffer\_size value to set for the database | `number` | `524288` | no |
-| <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version for MySQL | `string` | `"5.7"` | no |
+| <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version for MySQL | `string` | `"8.0.21"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | If the instance should have deletion protection enabled. The database / Bucket can't be deleted when this value is set to `true`. | `bool` | `true` | no |
 | <a name="input_disable_storage_vault_key_id"></a> [disable\_storage\_vault\_key\_id](#input\_disable\_storage\_vault\_key\_id) | Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation. | `bool` | `false` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain for accessing the Weights & Biases UI. | `string` | `null` | no |
@@ -180,6 +180,76 @@ resources that lack official modules.
 | <a name="output_url"></a> [url](#output\_url) | The URL to the W&B application |
 | <a name="output_wandb_spec"></a> [wandb\_spec](#output\_wandb\_spec) | n/a |
 <!-- END_TF_DOCS -->
+
+## MySQL version and in-place upgrades
+
+### Supported versions and default
+
+`database_version` controls the MySQL version of the `azurerm_mysql_flexible_server`.
+The default is **`8.0.21`** (new installs are created on 8.0.21).
+
+The azurerm provider accepts exactly these values — note the precise strings:
+
+| Value      | Notes                                                        |
+| ---------- | ----------------------------------------------------------- |
+| `5.7`      | Legacy. End-of-life upstream; upgrade to `8.0.21`.          |
+| `8.0.21`   | Current default. **Not** `8.0` — that string is invalid.    |
+| `8.4`      | Supported by the provider for in-place upgrade from 8.0.21. |
+
+Using a value outside this set (e.g. `8.0`) fails provider validation at plan time.
+
+### In-place upgrades are supported (provider `~> 4.55`)
+
+This module now requires the azurerm provider `~> 4.55`. In that range,
+`azurerm_mysql_flexible_server.version` is **no longer `ForceNew`**: the provider's
+update path performs an **in-place major version upgrade** via the Azure server
+update API (`UpdateThenPoll`), rather than destroying and recreating the server.
+
+What this means in practice:
+
+- Changing `database_version` (e.g. `5.7` → `8.0.21`, or `8.0.21` → `8.4`) and
+  running `terraform apply` upgrades the existing server **in place**. The server,
+  its name, and its data are preserved. (As with any major version upgrade, expect
+  a brief restart/downtime — this is an Azure operation, not a Terraform recreate.)
+- Upgrades are **forward-only**. MySQL / Azure do not support major-version
+  downgrade; setting a lower version than the live server will error.
+- Earlier provider versions (pre-`4.55`) treated `version` as `ForceNew`, where the
+  same change would have planned a **destroy-and-recreate** (data loss). The
+  provider bump is what makes the in-place path safe — do not relax the
+  `~> 4.55` constraint.
+
+### Why the server name stays stable across upgrades
+
+`modules/database/main.tf` derives the server name from `random_pet.mysql`
+(`${namespace}-${random_pet.mysql.id}`). That `random_pet` carries a `version`
+keeper, and its lifecycle sets `ignore_changes = [keepers]`. This is deliberate:
+
+- It prevents a legacy keeper already in state (e.g. `{version = "5.7"}`) from
+  regenerating the pet — and therefore the server name — when the version changes.
+- Without it, a `database_version` change would regenerate the name and force a
+  **rebuild** of the server, defeating the in-place upgrade.
+
+**Do not remove the `ignore_changes = [keepers]` block.** To rebuild a server
+intentionally, target the pet:
+
+```sh
+terraform apply -replace='module.wandb.module.database.random_pet.mysql'
+```
+
+### Bumping the default affects existing installs
+
+Raising the module default from `5.7` to `8.0.21` means any consumer that does
+**not** set `database_version` explicitly, and whose server is still on `5.7`, will
+get an **in-place upgrade to 8.0.21 on the next apply**. With provider `~> 4.55`
+this is a safe in-place operation (no recreate), but it is still a real major
+version upgrade with a maintenance restart. To stay on a specific version, pin it:
+
+```hcl
+module "wandb" {
+  # ...
+  database_version = "5.7" # or "8.0.21" / "8.4"
+}
+```
 
 ## Upgrading from 3.x to 4.x
 
