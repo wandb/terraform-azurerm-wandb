@@ -107,6 +107,29 @@ module "storage" {
   tags = var.tags
 }
 
+locals {
+  managed_storage_access_key = var.storage_access_key_slot == "primary" ? module.storage[0].account.primary_access_key : module.storage[0].account.secondary_access_key
+}
+
+resource "azapi_resource_action" "rotate_inactive_storage_access_key" {
+  count = var.storage_access_key_rotation_target == null ? 0 : 1
+
+  type        = "Microsoft.Storage/storageAccounts@2023-01-01"
+  resource_id = module.storage[0].account.id
+  action      = "regenerateKey"
+  method      = "POST"
+  body = jsonencode({
+    keyName = var.storage_access_key_rotation_target == "primary" ? "key1" : "key2"
+  })
+
+  lifecycle {
+    precondition {
+      condition     = var.storage_access_key_rotation_target != var.storage_access_key_slot
+      error_message = "storage_access_key_rotation_target must differ from storage_access_key_slot."
+    }
+  }
+}
+
 module "app_lb" {
   source = "./modules/app_lb"
 
@@ -384,7 +407,7 @@ locals {
           provider  = "az"
           name      = module.storage[0].account.name
           path      = "${module.storage[0].container.name}/${var.bucket_path}"
-          accessKey = module.storage[0].account.primary_access_key
+          accessKey = local.managed_storage_access_key
         }
         azureIdentityForBucket = {
           clientID = module.identity.identity.client_id

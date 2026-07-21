@@ -256,6 +256,28 @@ variable "storage_key" {
   default     = ""
 }
 
+variable "storage_access_key_slot" {
+  type        = string
+  description = "Storage access key slot used by the Terraform-managed default bucket."
+  default     = "primary"
+
+  validation {
+    condition     = contains(["primary", "secondary"], var.storage_access_key_slot)
+    error_message = "storage_access_key_slot must be either \"primary\" or \"secondary\"."
+  }
+}
+
+variable "storage_access_key_rotation_target" {
+  type        = string
+  description = "Storage access key slot to regenerate. Set to null to disable rotation."
+  default     = null
+
+  validation {
+    condition     = var.storage_access_key_rotation_target == null ? true : contains(["primary", "secondary"], var.storage_access_key_rotation_target)
+    error_message = "storage_access_key_rotation_target must be null, \"primary\", or \"secondary\"."
+  }
+}
+
 variable "external_bucket" {
   description = "config an external bucket"
   type        = any
