@@ -410,6 +410,8 @@ locals {
           annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
           labels      = { "azure.workload.identity/use" = "true" }
         }
+        # Keep legacy Weave subjects during the shared-ServiceAccount rollout.
+        # Remove them only after every installation uses wandb-weave.
         internalJWTMap = [
           {
             subject = "system:serviceaccount:default:${local.weave_trace_service_account_name}",
@@ -417,6 +419,10 @@ locals {
           },
           {
             subject = "system:serviceaccount:default:${local.weave_trace_worker_service_account_name}",
+            issuer  = module.app_aks.oidc_issuer_url
+          },
+          {
+            subject = "system:serviceaccount:default:${local.k8s_sa_map.weave}",
             issuer  = module.app_aks.oidc_issuer_url
           },
         ]
