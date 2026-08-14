@@ -22,6 +22,29 @@ variable "tags" {
   description = "Map of tags for resource"
 }
 
+variable "network_access" {
+  type        = string
+  description = "Key Vault data-plane network mode: Public or Private."
+  default     = "Public"
+
+  validation {
+    condition     = contains(["Private", "Public"], var.network_access)
+    error_message = "network_access must be either \"Private\" or \"Public\"."
+  }
+}
+
+variable "private_endpoint_subnet_id" {
+  type        = string
+  description = "Subnet ID in which to create the Key Vault private endpoint. Required in Private mode."
+  default     = null
+}
+
+variable "private_dns_zone_id" {
+  type        = string
+  description = "ID of the privatelink.vaultcore.azure.net private DNS zone. Required in Private mode."
+  default     = null
+}
+
 variable "enable_storage_vault_key" {
   type        = bool
   default     = false

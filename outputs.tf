@@ -13,15 +13,18 @@ output "url" {
 }
 
 output "cluster_host" {
-  value = module.app_aks.cluster_host
+  value     = module.app_aks.cluster_host
+  sensitive = true
 }
 
 output "cluster_client_certificate" {
-  value = module.app_aks.cluster_client_certificate
+  value     = module.app_aks.cluster_client_certificate
+  sensitive = true
 }
 
 output "cluster_client_key" {
-  value = module.app_aks.cluster_client_key
+  value     = module.app_aks.cluster_client_key
+  sensitive = true
 }
 
 output "cluster_ca_certificate" {

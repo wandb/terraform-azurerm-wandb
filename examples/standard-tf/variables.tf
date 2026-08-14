@@ -29,7 +29,7 @@ variable "domain_name" {
 variable "subdomain" {
   type        = string
   default     = ""
-  description = "Subdomain for accessing the Weights & Biases UI. Default creates record at Route53 Route."
+  description = "Optional subdomain for accessing the Weights & Biases UI. DNS records are managed outside the module."
 }
 
 variable "wandb_version" {
@@ -92,17 +92,17 @@ variable "other_wandb_env" {
 variable "ssl" {
   type        = bool
   default     = true
-  description = "Enable SSL certificate"
+  description = "Use HTTPS for the W&B application URL and ingress configuration."
 }
 
 variable "database_version" {
-  description = "Version for MySQL"
+  description = "Azure Database for MySQL Flexible Server version."
   type        = string
-  default     = "5.7"
+  default     = "8.4"
 }
 
 variable "database_availability_mode" {
-  description = ""
+  description = "High-availability mode for Azure Database for MySQL Flexible Server."
   type        = string
   default     = "SameZone"
 
@@ -120,7 +120,7 @@ variable "database_sku_name" {
 
 variable "create_redis" {
   type        = bool
-  description = "Boolean indicating whether to provision an redis instance (true) or not (false)."
+  description = "Whether to provision an Azure Managed Redis instance."
   default     = false
 }
 

@@ -3,7 +3,9 @@ locals {
   url_prefix = var.ssl ? "https" : "http"
   url        = "${local.url_prefix}://${local.fqdn}"
 
-  redis_capacity               = coalesce(var.redis_capacity, local.deployment_size[var.size].cache)
+  redis_sku_name               = coalesce(var.redis_sku_name, local.deployment_size[var.size].cache)
+  redis_private_endpoint       = var.create_redis && var.create_redis_private_endpoint
+  key_vault_private_endpoint   = var.key_vault_network_access == "Private"
   database_sku_name            = coalesce(var.database_sku_name, local.deployment_size[var.size].db)
   kubernetes_instance_type     = coalesce(var.kubernetes_instance_type, local.deployment_size[var.size].node_instance)
   kubernetes_min_node_per_az   = coalesce(var.kubernetes_min_node_per_az, local.deployment_size[var.size].min_node_count)
@@ -27,13 +29,15 @@ module "identity" {
 }
 
 module "networking" {
-  source              = "./modules/networking"
-  namespace           = var.namespace
-  resource_group_name = azurerm_resource_group.default.name
-  location            = azurerm_resource_group.default.location
-  private_link        = var.create_private_link
-  allowed_ip_ranges   = var.allowed_ip_ranges
-  tags                = var.tags
+  source                            = "./modules/networking"
+  namespace                         = var.namespace
+  resource_group_name               = azurerm_resource_group.default.name
+  location                          = azurerm_resource_group.default.location
+  private_link                      = var.create_private_link
+  create_redis_private_endpoint     = local.redis_private_endpoint
+  create_key_vault_private_endpoint = local.key_vault_private_endpoint
+  allowed_ip_ranges                 = var.allowed_ip_ranges
+  tags                              = var.tags
 }
 
 module "database" {
@@ -59,19 +63,17 @@ module "database" {
   depends_on = [module.networking]
 }
 
-moved {
-  from = module.redis.azurerm_redis_cache.default
-  to   = module.redis[0].azurerm_redis_cache.default
-}
-
 module "redis" {
-  source              = "./modules/redis"
-  count               = var.create_redis ? 1 : 0
-  namespace           = var.namespace
-  resource_group_name = azurerm_resource_group.default.name
-  location            = azurerm_resource_group.default.location
-  capacity            = local.redis_capacity
-  depends_on          = [module.networking]
+  source                     = "./modules/redis"
+  count                      = var.create_redis ? 1 : 0
+  namespace                  = var.namespace
+  resource_group_name        = azurerm_resource_group.default.name
+  location                   = azurerm_resource_group.default.location
+  sku_name                   = local.redis_sku_name
+  private_endpoint_enabled   = local.redis_private_endpoint
+  private_endpoint_subnet_id = module.networking.redis_subnet.id
+  private_dns_zone_id        = module.networking.redis_private_dns_zone_id
+  depends_on                 = [module.networking]
 
   tags = var.tags
 }
@@ -84,8 +86,11 @@ module "vault" {
   namespace          = var.namespace
   resource_group     = azurerm_resource_group.default
 
-  enable_database_vault_key = var.enable_database_vault_key
-  enable_storage_vault_key  = var.enable_storage_vault_key
+  enable_database_vault_key  = var.enable_database_vault_key
+  enable_storage_vault_key   = var.enable_storage_vault_key
+  network_access             = var.key_vault_network_access
+  private_endpoint_subnet_id = module.networking.key_vault_subnet_id
+  private_dns_zone_id        = module.networking.key_vault_private_dns_zone_id
 
   tags = var.tags
 }
@@ -149,21 +154,22 @@ module "app_aks" {
   source     = "./modules/app_aks"
   depends_on = [module.app_lb]
 
-  cluster_subnet_id       = module.networking.kubernetes_subnet.id
-  etcd_key_vault_key_id   = module.vault.etcd_key_id
-  gateway                 = module.app_lb.gateway
-  identity                = module.identity.identity
-  location                = azurerm_resource_group.default.location
-  namespace               = var.namespace
-  node_pool_min_vm_per_az = local.kubernetes_min_node_per_az
-  node_pool_max_vm_per_az = local.kubernetes_max_node_per_az
-  node_pool_vm_size       = local.kubernetes_instance_type
-  node_pool_disk_size     = local.kubernetes_node_disk_size_gb
-  node_pool_zones         = local.node_pool_zones
-  public_subnet           = module.networking.public_subnet
-  resource_group          = azurerm_resource_group.default
-  sku_tier                = var.cluster_sku_tier
-  tags                    = merge(var.tags, var.kubernetes_cluster_tags)
+  cluster_subnet_id        = module.networking.kubernetes_subnet.id
+  etcd_key_vault_key_id    = module.vault.etcd_key_id
+  key_vault_network_access = var.key_vault_network_access
+  gateway                  = module.app_lb.gateway
+  identity                 = module.identity.identity
+  location                 = azurerm_resource_group.default.location
+  namespace                = var.namespace
+  node_pool_min_vm_per_az  = local.kubernetes_min_node_per_az
+  node_pool_max_vm_per_az  = local.kubernetes_max_node_per_az
+  node_pool_vm_size        = local.kubernetes_instance_type
+  node_pool_disk_size      = local.kubernetes_node_disk_size_gb
+  node_pool_zones          = local.node_pool_zones
+  public_subnet            = module.networking.public_subnet
+  resource_group           = azurerm_resource_group.default
+  sku_tier                 = var.cluster_sku_tier
+  tags                     = merge(var.tags, var.kubernetes_cluster_tags)
 }
 locals {
   service_account_name         = "wandb-app"
@@ -261,7 +267,8 @@ resource "azurerm_federated_identity_credential" "otel_app" {
 }
 
 module "cert_manager" {
-  # if use_dns_resolver is set then disable our default install of cert_manager
+  # DNS-01 deployments supply their own certificate-management integration.
+  # Public deployments install cert-manager and use HTTP-01 through AGIC.
   count = var.use_dns_resolver ? 0 : 1
 
   source    = "./modules/cert_manager"
@@ -269,7 +276,7 @@ module "cert_manager" {
 
   ingress_class              = "azure/application-gateway"
   cert_manager_email         = "sysadmin@wandb.com"
-  cert_manager_chart_version = "v1.9.1"
+  cert_manager_chart_version = "v1.21.0"
   tags                       = var.tags
 
   depends_on = [module.app_aks]
@@ -371,6 +378,7 @@ locals {
           port     = module.redis[0].instance.port
           params = {
             master = ""
+            tls    = true
           }
           external = false
           } : {
@@ -494,7 +502,7 @@ locals {
                 tenant_id            = "$${env:AZURE_TENANT_ID}"
                 client_id            = "$${env:AZURE_CLIENT_ID}"
                 federated_token_file = "$${env:AZURE_FEDERATED_TOKEN_FILE}"
-                services             = ["Microsoft.DBforMySQL/flexibleServers", "Microsoft.Cache/Redis"]
+                services             = ["Microsoft.DBforMySQL/flexibleServers", "Microsoft.Cache/redisEnterprise"]
               }
             }
             service = {

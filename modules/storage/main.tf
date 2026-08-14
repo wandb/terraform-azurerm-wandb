@@ -21,16 +21,6 @@ resource "azurerm_storage_account" "default" {
     }
   }
 
-  queue_properties {
-    logging {
-      delete                = true
-      read                  = true
-      write                 = true
-      version               = "1.0"
-      retention_policy_days = 10
-    }
-  }
-
   dynamic "identity" {
     for_each = var.storage_key_id != null ? [1] : []
     content {
@@ -46,6 +36,20 @@ resource "azurerm_storage_account" "default" {
     }
   }
   tags = var.tags
+}
+
+resource "azurerm_storage_account_queue_properties" "default" {
+  # Queue service properties are managed separately because the AzureRM
+  # provider deprecated the inline storage-account queue_properties block.
+  storage_account_id = azurerm_storage_account.default.id
+
+  logging {
+    delete                = true
+    read                  = true
+    write                 = true
+    version               = "1.0"
+    retention_policy_days = 10
+  }
 }
 
 resource "azurerm_storage_container" "default" {
