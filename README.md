@@ -333,6 +333,13 @@ resources that lack official modules.
 | <a name="output_wandb_spec"></a> [wandb\_spec](#output\_wandb\_spec) | n/a |
 <!-- END_TF_DOCS -->
 
+## Upgrading existing 7.x deployments
+
+The Azure Managed Redis, networking, database, and cert-manager changes planned
+for 8.x are not an automatic in-place upgrade. Follow the
+[existing-customer migration guide](MIGRATION.md) before changing the module
+version or applying a plan to existing infrastructure.
+
 ## Upgrading from 3.x to 4.x
 
 3.0.0 introduced autoscaling to the AKS cluster and made the `size` variable the preferred way to set the cluster size.
