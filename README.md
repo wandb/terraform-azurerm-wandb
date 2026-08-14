@@ -298,7 +298,6 @@ resources that lack official modules.
 | <a name="input_storage_account"></a> [storage\_account](#input\_storage\_account) | Azure storage account name | `string` | `""` | no |
 | <a name="input_storage_key"></a> [storage\_key](#input\_storage\_key) | Azure primary storage access key | `string` | `""` | no |
 | <a name="input_subdomain"></a> [subdomain](#input\_subdomain) | Optional subdomain for accessing the Weights & Biases UI. DNS records are managed outside this module. | `string` | `null` | no |
-| <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id) | Azure subscription ID | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Map of tags for resource | `map(string)` | `{}` | no |
 | <a name="input_use_chainguard_redis"></a> [use\_chainguard\_redis](#input\_use\_chainguard\_redis) | Whether CHAINGUARD redis is deployed in the cluster | `bool` | `false` | no |
 | <a name="input_use_ctrlplane_redis"></a> [use\_ctrlplane\_redis](#input\_use\_ctrlplane\_redis) | Whether redis is deployed in the cluster via ctrlplane | `bool` | `false` | no |
