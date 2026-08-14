@@ -16,7 +16,7 @@ resource "azurerm_key_vault" "default" {
   location                 = var.location
   resource_group_name      = var.resource_group.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
-  purge_protection_enabled = false
+  purge_protection_enabled = true
   # Azure Database for MySQL customer-managed keys require a 90-day soft-delete
   # retention period.
   soft_delete_retention_days  = 90
