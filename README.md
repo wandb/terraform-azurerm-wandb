@@ -271,12 +271,12 @@ resources that lack official modules.
 | <a name="input_external_redis_host"></a> [external\_redis\_host](#input\_external\_redis\_host) | Hostname of the externally managed Redis instance. | `string` | `null` | no |
 | <a name="input_external_redis_params"></a> [external\_redis\_params](#input\_external\_redis\_params) | Connection parameters passed to the W&B chart for an externally managed Redis instance. | `object({})` | `null` | no |
 | <a name="input_external_redis_port"></a> [external\_redis\_port](#input\_external\_redis\_port) | Port of the externally managed Redis instance. | `string` | `null` | no |
+| <a name="input_key_vault_network_access"></a> [key\_vault\_network\_access](#input\_key\_vault\_network\_access) | Key Vault data-plane network mode. Public permits access from an external Terraform runner; Private disables public access and creates a private endpoint, subnet, private DNS zone, and VNet link. | `string` | `"Public"` | no |
 | <a name="input_kubernetes_cluster_tags"></a> [kubernetes\_cluster\_tags](#input\_kubernetes\_cluster\_tags) | A map of tags to apply to all resources managed by the AKS cluster | `map(string)` | `{}` | no |
 | <a name="input_kubernetes_instance_type"></a> [kubernetes\_instance\_type](#input\_kubernetes\_instance\_type) | Instance type for primary node group. Defaults to null and value from deployment-size.tf is used | `string` | `null` | no |
 | <a name="input_kubernetes_max_node_per_az"></a> [kubernetes\_max\_node\_per\_az](#input\_kubernetes\_max\_node\_per\_az) | Maximum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
 | <a name="input_kubernetes_min_node_per_az"></a> [kubernetes\_min\_node\_per\_az](#input\_kubernetes\_min\_node\_per\_az) | Minimum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
 | <a name="input_kubernetes_node_disk_size_gb"></a> [kubernetes\_node\_disk\_size\_gb](#input\_kubernetes\_node\_disk\_size\_gb) | Size of the node root volume in GB. | `number` | `null` | no |
-| <a name="input_key_vault_network_access"></a> [key\_vault\_network\_access](#input\_key_vault\_network\_access) | Key Vault data-plane network mode. Public permits access from an external Terraform runner; Private disables public access and creates a private endpoint, subnet, private DNS zone, and VNet link. | `string` | `"Public"` | no |
 | <a name="input_license"></a> [license](#input\_license) | Your wandb/local license | `string` | n/a | yes |
 | <a name="input_location"></a> [location](#input\_location) | n/a | `string` | n/a | yes |
 | <a name="input_lumen_agent_wif_audience"></a> [lumen\_agent\_wif\_audience](#input\_lumen\_agent\_wif\_audience) | the audience for a dedicated customer's WIF pool for a lumen agent | `string` | `""` | no |
@@ -298,6 +298,7 @@ resources that lack official modules.
 | <a name="input_storage_account"></a> [storage\_account](#input\_storage\_account) | Azure storage account name | `string` | `""` | no |
 | <a name="input_storage_key"></a> [storage\_key](#input\_storage\_key) | Azure primary storage access key | `string` | `""` | no |
 | <a name="input_subdomain"></a> [subdomain](#input\_subdomain) | Optional subdomain for accessing the Weights & Biases UI. DNS records are managed outside this module. | `string` | `null` | no |
+| <a name="input_subscription_id"></a> [subscription\_id](#input\_subscription\_id) | Azure subscription ID | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | Map of tags for resource | `map(string)` | `{}` | no |
 | <a name="input_use_chainguard_redis"></a> [use\_chainguard\_redis](#input\_use\_chainguard\_redis) | Whether CHAINGUARD redis is deployed in the cluster | `bool` | `false` | no |
 | <a name="input_use_ctrlplane_redis"></a> [use\_ctrlplane\_redis](#input\_use\_ctrlplane\_redis) | Whether redis is deployed in the cluster via ctrlplane | `bool` | `false` | no |
