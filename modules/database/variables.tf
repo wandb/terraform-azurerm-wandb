@@ -30,13 +30,13 @@ variable "database_private_dns_zone_id" {
 }
 
 variable "database_version" {
-  description = "Version for MYSQL"
+  description = "Azure Database for MySQL Flexible Server version."
   type        = string
-  default     = "5.7"
+  default     = "8.4"
 }
 
 variable "database_availability_mode" {
-  description = ""
+  description = "High-availability mode for Azure Database for MySQL Flexible Server."
   type        = string
   default     = "SameZone"
 

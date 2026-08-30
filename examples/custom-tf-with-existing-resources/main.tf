@@ -58,7 +58,7 @@ locals {
   bucket          = "az://${local.storage_account}/${local.blob_container}"
   queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == null) ? "internal://" : "az://${local.account_name}/${local.queue_name}"
 
-  redis_connection_string = "redis://:${var.redis_env.primary_access_key}@${var.redis_env.hostname}:${var.redis_env.port}"
+  redis_connection_string = "redis://:${var.redis_env.primary_access_key}@${var.redis_env.hostname}:${var.redis_env.port}?tls=${var.redis_tls_enabled}"
 }
 
 locals {
@@ -80,7 +80,7 @@ module "cert_manager" {
 
   ingress_class              = "azure/application-gateway"
   cert_manager_email         = "sysadmin@wandb.com"
-  cert_manager_chart_version = "v1.9.1"
+  cert_manager_chart_version = "v1.21.0"
   tags                       = var.tags
 
   depends_on = [data.azurerm_kubernetes_cluster.cluster]
@@ -123,6 +123,9 @@ module "wandb" {
           host     = var.redis_env.hostname
           password = var.redis_env.primary_access_key
           port     = var.redis_env.port
+          params = {
+            tls = var.redis_tls_enabled
+          }
         }
 
         extraEnv = var.other_wandb_env

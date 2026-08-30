@@ -20,7 +20,22 @@ output "public_subnet" {
 
 output "redis_subnet" {
   value       = azurerm_subnet.redis
-  description = "The subnetwork used the frontend."
+  description = "The subnet used for the Azure Managed Redis private endpoint."
+}
+
+output "redis_private_dns_zone_id" {
+  value       = try(azurerm_private_dns_zone.redis[0].id, null)
+  description = "The ID of the Azure Managed Redis private DNS zone."
+}
+
+output "key_vault_subnet_id" {
+  value       = try(azurerm_subnet.key_vault[0].id, null)
+  description = "The subnet ID used for the Key Vault private endpoint."
+}
+
+output "key_vault_private_dns_zone_id" {
+  value       = try(azurerm_private_dns_zone.key_vault[0].id, null)
+  description = "The ID of the Key Vault private DNS zone."
 }
 
 output "database_subnet" {

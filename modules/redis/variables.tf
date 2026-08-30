@@ -15,8 +15,8 @@ variable "location" {
 
 variable "sku_name" {
   type        = string
-  default     = "Standard"
-  description = "Specifies the SKU Name for this Redis instance"
+  default     = "Balanced_B10"
+  description = "Azure Managed Redis SKU name, for example Balanced_B10."
 }
 
 variable "tags" {
@@ -25,12 +25,20 @@ variable "tags" {
   description = "Map of tags for resource"
 }
 
-variable "family" {
-  type    = string
-  default = "C"
+variable "private_endpoint_enabled" {
+  type        = bool
+  default     = false
+  description = "Whether to disable public access and create a private endpoint for Azure Managed Redis."
 }
 
-variable "capacity" {
-  type    = number
-  default = 2
+variable "private_endpoint_subnet_id" {
+  type        = string
+  default     = null
+  description = "Subnet ID in which to create the Azure Managed Redis private endpoint. Required when private_endpoint_enabled is true."
+}
+
+variable "private_dns_zone_id" {
+  type        = string
+  default     = null
+  description = "ID of the privatelink.redis.azure.net private DNS zone. Required when private_endpoint_enabled is true."
 }

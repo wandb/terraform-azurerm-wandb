@@ -52,7 +52,8 @@ resource "azurerm_kubernetes_cluster" "default" {
   }
 
   key_management_service {
-    key_vault_key_id = var.etcd_key_vault_key_id
+    key_vault_key_id         = var.etcd_key_vault_key_id
+    key_vault_network_access = var.key_vault_network_access
   }
 }
 

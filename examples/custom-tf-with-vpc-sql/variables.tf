@@ -31,7 +31,7 @@ variable "domain_name" {
 variable "subdomain" {
   type        = string
   default     = ""
-  description = "Subdomain for accessing the Weights & Biases UI. Default creates record at Route53 Route."
+  description = "Optional subdomain for accessing the Weights & Biases UI. DNS records are managed outside this example."
 }
 
 variable "wandb_version" {
@@ -56,6 +56,12 @@ variable "database_sku_name" {
   type        = string
   default     = "GP_Standard_D4ds_v4"
   description = "Specifies the SKU Name for this MySQL Server"
+}
+
+variable "redis_sku_name" {
+  type        = string
+  default     = "Balanced_B10"
+  description = "Azure Managed Redis SKU name, for example Balanced_B10."
 }
 
 variable "ssl" {

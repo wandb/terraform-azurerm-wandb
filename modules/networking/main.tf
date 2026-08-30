@@ -51,7 +51,62 @@ resource "azurerm_subnet" "redis" {
   address_prefixes     = [var.network_redis_subnet_cidr]
   virtual_network_name = azurerm_virtual_network.default.name
 
-  private_endpoint_network_policies = "Enabled"
+  private_endpoint_network_policies = var.create_redis_private_endpoint ? "Disabled" : "Enabled"
+}
+
+# Created only for private Redis mode. The normal Managed Redis hostname is
+# retained and resolves to the endpoint IP through this private DNS zone.
+resource "azurerm_private_dns_zone" "redis" {
+  count = var.create_redis_private_endpoint ? 1 : 0
+
+  name                = "privatelink.redis.azure.net"
+  resource_group_name = var.resource_group_name
+
+  tags = var.tags
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "redis" {
+  count = var.create_redis_private_endpoint ? 1 : 0
+
+  name                  = "${var.namespace}-redis"
+  resource_group_name   = var.resource_group_name
+  private_dns_zone_name = azurerm_private_dns_zone.redis[0].name
+  virtual_network_id    = azurerm_virtual_network.default.id
+
+  tags = var.tags
+}
+
+resource "azurerm_subnet" "key_vault" {
+  count = var.create_key_vault_private_endpoint ? 1 : 0
+
+  name                 = "${var.namespace}-key-vault"
+  resource_group_name  = var.resource_group_name
+  address_prefixes     = [var.network_key_vault_subnet_cidr]
+  virtual_network_name = azurerm_virtual_network.default.name
+
+  private_endpoint_network_policies = "Disabled"
+}
+
+# Key Vault private networking is fully conditional so public mode does not
+# consume a subnet or create private DNS resources.
+resource "azurerm_private_dns_zone" "key_vault" {
+  count = var.create_key_vault_private_endpoint ? 1 : 0
+
+  name                = "privatelink.vaultcore.azure.net"
+  resource_group_name = var.resource_group_name
+
+  tags = var.tags
+}
+
+resource "azurerm_private_dns_zone_virtual_network_link" "key_vault" {
+  count = var.create_key_vault_private_endpoint ? 1 : 0
+
+  name                  = "${var.namespace}-key-vault"
+  resource_group_name   = var.resource_group_name
+  private_dns_zone_name = azurerm_private_dns_zone.key_vault[0].name
+  virtual_network_id    = azurerm_virtual_network.default.id
+
+  tags = var.tags
 }
 
 resource "azurerm_network_security_group" "default" {

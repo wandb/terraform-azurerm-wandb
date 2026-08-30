@@ -8,16 +8,89 @@ audit logging and single sign-on.
 
 ## About This Module
 
+This module provisions the Azure infrastructure and Kubernetes integrations
+required for a W&B Server deployment. The default architecture includes:
+
+- An Azure Virtual Network and dedicated AKS, MySQL, Redis, and ingress subnets.
+- Azure Kubernetes Service with OIDC and Azure Workload Identity enabled.
+- Azure Application Gateway with the AKS Application Gateway Ingress Controller.
+- Azure Database for MySQL Flexible Server on a delegated private subnet.
+- Azure Managed Redis with TLS and a private endpoint by default.
+- Azure Storage, Key Vault, managed identities, and optional customer-managed keys.
+- cert-manager, a Let's Encrypt ClusterIssuer, and the W&B operator/CR charts.
+
+The request path for a public deployment is:
+
+```text
+Client -> Azure Application Gateway -> Kubernetes Ingress -> W&B services
+```
+
+The deployment uses the Kubernetes Ingress API with the
+`azure/application-gateway` ingress class. It does not use Kubernetes Gateway
+API resources such as `Gateway` or `HTTPRoute`.
+
 ## Pre-requisites
 
 This module is intended to run in an Azure account with minimal
 preparation, however it does have the following pre-requisites:
 
-### Terraform version >= 1.9
+- Terraform `~> 1.9`.
+- Azure CLI authentication for the target subscription.
+- Permissions to create Azure resources, role assignments, federated identity
+  credentials, and resource locks when deletion protection is enabled.
+- Control of the public DNS zone used by the W&B hostname.
+- A W&B Server license.
 
-### Credentials / Permissions
+The module does not create the public DNS record. After Application Gateway is
+created, point the W&B hostname at the `address` output. Public HTTPS issuance
+uses an ACME HTTP-01 challenge, so the hostname must resolve to Application
+Gateway and accept public traffic on port 80.
 
 ## How to Use This Module
+
+The module supports two deployment workflows. Choose one owner for the W&B
+operator and custom resource; do not manage the same release both through
+Terraform and a manual `kubectl apply`.
+
+### Terraform-managed application
+
+The default values of `enable_helm_operator = true` and
+`enable_helm_wandb = true` install the operator and W&B custom resource after
+the infrastructure is available.
+
+```bash
+terraform init
+terraform plan -out=tfplan
+terraform apply tfplan
+```
+
+Terraform plan files and state can contain credentials. Store state in a secure
+remote backend and do not commit saved plans or `.tfvars` files.
+
+### Staged infrastructure and manual CR
+
+For a staged rollout, set both Helm switches to `false`, apply the
+infrastructure, configure DNS, and install the W&B operator separately. Copy
+[`CR.template.yaml`](CR.template.yaml) to an environment-specific `CR.yaml`,
+replace every `REPLACE_ME_*` value, and create the three secrets documented at
+the top of the template:
+
+- `wandb-license`, with key `license`.
+- `wandb-mysql`, with key `password`.
+- `wandb-redis`, with key `password`.
+
+The rendered CR contains a live Azure Storage access key because the current
+application image set cannot yet be assumed to use Workload Identity for every
+storage operation. The repository ignores environment-specific `*CR.yaml`
+files; never commit a rendered CR.
+
+Validate the CR against the installed operator before applying it:
+
+```bash
+kubectl apply --dry-run=server -f CR.yaml
+kubectl apply -f CR.yaml
+kubectl get weightsandbiases,pods,ingress,certificate -n <namespace>
+```
 
 ## Cluster Sizing
 
@@ -29,11 +102,82 @@ Available sizes are, `small`, `medium`, `large`, `xlarge`, and `xxlarge`.  Defau
 
 All the values set via `deployment-size.tf` can be overridden by setting the appropriate input variables.
 
-- `kubernetes_instance_type` - The instance type for the EKS nodes
-- `kubernetes_min_node_per_az` - The minimum number of nodes in the EKS cluster
-- `kubernetes_max_node_per_az` - The maximum number of nodes in the EKS cluster
-- `redis_capacity` - The instance type for the redis cluster
-- `database_sku_name` - The instance type for the database
+- `kubernetes_instance_type` - The VM size for the AKS nodes
+- `kubernetes_min_node_per_az` - The minimum number of AKS nodes per zone
+- `kubernetes_max_node_per_az` - The maximum number of AKS nodes per zone
+- `redis_sku_name` - The Azure Managed Redis SKU
+- `database_sku_name` - The Azure Database for MySQL SKU
+
+Azure Managed Redis capacity is region-dependent. If Azure reports insufficient
+capacity, select another supported `redis_sku_name` or deploy to another region.
+
+## Azure Managed Redis
+
+The module uses Azure Managed Redis rather than the retiring Azure Cache for
+Redis resource. The managed database is configured with:
+
+- Encrypted client protocol only; W&B connects with `tls = true`.
+- Access-key authentication for compatibility with the current application images.
+- `NoCluster` policy for standard Redis semantics across W&B components.
+- High availability enabled.
+- A private endpoint and disabled public access by default.
+
+With `create_redis_private_endpoint = true`, the module creates the private
+endpoint, the `privatelink.redis.azure.net` private DNS zone, and a VNet link.
+W&B continues to use the normal Azure Redis hostname, which resolves to the
+private IP inside the VNet. Set the option to `false` only when public Redis
+network access is explicitly required.
+
+Microsoft Entra authentication and clustered Redis are not enabled because the
+current W&B image set expects a static Redis password and has not been validated
+for token refresh or clustered routing across all components.
+
+## Key Vault Network Access
+
+`key_vault_network_access` supports `Public` and `Private`:
+
+- `Public` is the default and allows Terraform to manage Key Vault keys and
+  secrets from a laptop or hosted runner without VNet connectivity.
+- `Private` disables public access and conditionally creates a dedicated subnet,
+  private endpoint, `privatelink.vaultcore.azure.net` private DNS zone, and VNet
+  link. The Terraform runner must have VNet, peered-network, or VPN connectivity
+  to the private endpoint.
+
+Private-endpoint networking resources are not created in Public mode. AKS KMS
+receives the same network-access value so etcd encryption can reach Key Vault.
+
+## TLS Certificates and Ingress
+
+The module installs cert-manager `v1.21.0` with CRDs enabled through the current
+`crds.enabled` chart value. The `cert-issuer` ClusterIssuer uses Let's Encrypt
+and an HTTP-01 challenge through Azure Application Gateway.
+
+Certificate issuance follows this flow:
+
+```text
+W&B Ingress -> cert-manager Certificate -> ACME Order and Challenge
+             -> Application Gateway HTTP-01 route -> Let's Encrypt
+             -> kubernetes.io/tls Secret -> Application Gateway HTTPS listener
+```
+
+Let's Encrypt is free and does not require a paid subscription. cert-manager
+automatically renews the certificate and updates the Kubernetes TLS secret.
+
+## Application Authentication Compatibility
+
+The current deployment intentionally retains credential-based connections for
+services that do not yet have a validated token-refresh flow across all W&B
+containers:
+
+- The staged CR template uses the `wandb-redis` Kubernetes Secret and TLS.
+- The staged CR template uses the `wandb-mysql` Kubernetes Secret.
+- The staged CR template uses the `wandb-license` Kubernetes Secret.
+- Azure Storage uses an access key in the W&B specification while Workload
+  Identity remains configured for components that support it.
+
+External Secrets Operator or the Azure Key Vault Secrets Store CSI driver can
+later automate population and rotation of the Kubernetes secrets without
+changing their names or keys.
 
 ## Examples
 
@@ -41,7 +185,12 @@ We have included documentation and reference examples for additional common
 installation scenarios for Weights & Biases, as well as examples for supporting
 resources that lack official modules.
 
-- Route
+- [`examples/standard-tf`](examples/standard-tf) - Standard module deployment.
+- [`examples/custom-tf-with-existing-resources`](examples/custom-tf-with-existing-resources) - Existing AKS and backing resources.
+- [`examples/custom-tf-with-vpc-sql`](examples/custom-tf-with-vpc-sql) - Custom networking and SQL resources.
+- [`examples/private-link`](examples/private-link) - Private Link integration.
+- [`examples/public-dns`](examples/public-dns) - Public DNS integration.
+- [`examples/secure-storage-connector`](examples/secure-storage-connector) - Workload Identity storage access.
 
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
@@ -50,7 +199,7 @@ resources that lack official modules.
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.9 |
 | <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) | ~> 1.0 |
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.26 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.67 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | ~> 2.6 |
 | <a name="requirement_kubernetes"></a> [kubernetes](#requirement\_kubernetes) | ~> 2.23 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | ~> 3.0 |
@@ -60,7 +209,7 @@ resources that lack official modules.
 | Name | Version |
 |------|---------|
 | <a name="provider_azapi"></a> [azapi](#provider\_azapi) | ~> 1.0 |
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 4.26 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 4.67 |
 | <a name="provider_null"></a> [null](#provider\_null) | ~> 3.0 |
 
 ## Modules
@@ -104,12 +253,13 @@ resources that lack official modules.
 | <a name="input_cluster_sku_tier"></a> [cluster\_sku\_tier](#input\_cluster\_sku\_tier) | The Azure AKS SKU Tier to use for this cluster (https://learn.microsoft.com/en-us/azure/aks/free-standard-pricing-tiers) | `string` | `"Free"` | no |
 | <a name="input_controller_image_tag"></a> [controller\_image\_tag](#input\_controller\_image\_tag) | Tag of the controller image to deploy | `string` | `"1.20.0"` | no |
 | <a name="input_create_private_link"></a> [create\_private\_link](#input\_create\_private\_link) | Use for the azure private link. | `bool` | `false` | no |
-| <a name="input_create_redis"></a> [create\_redis](#input\_create\_redis) | Boolean indicating whether to provision an redis instance (true) or not (false). | `bool` | `true` | no |
-| <a name="input_database_availability_mode"></a> [database\_availability\_mode](#input\_database\_availability\_mode) | n/a | `string` | `"SameZone"` | no |
+| <a name="input_create_redis"></a> [create\_redis](#input\_create\_redis) | Whether to provision an Azure Managed Redis instance. | `bool` | `true` | no |
+| <a name="input_create_redis_private_endpoint"></a> [create\_redis\_private\_endpoint](#input\_create\_redis\_private\_endpoint) | Whether to disable Redis public access and create a private endpoint plus private DNS integration in the module VNet. | `bool` | `true` | no |
+| <a name="input_database_availability_mode"></a> [database\_availability\_mode](#input\_database\_availability\_mode) | High-availability mode for Azure Database for MySQL Flexible Server. | `string` | `"SameZone"` | no |
 | <a name="input_database_flags"></a> [database\_flags](#input\_database\_flags) | MySQL server parameters to set on the Azure Database for MySQL flexible server. Merged with W&B defaults. | `map(string)` | `{}` | no |
 | <a name="input_database_sku_name"></a> [database\_sku\_name](#input\_database\_sku\_name) | Specifies the SKU Name for this MySQL Server. Defaults to null and value from deployment-size.tf is used | `string` | `null` | no |
 | <a name="input_database_sort_buffer_size"></a> [database\_sort\_buffer\_size](#input\_database\_sort\_buffer\_size) | Specifies the sort\_buffer\_size value to set for the database | `number` | `524288` | no |
-| <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Version for MySQL | `string` | `"5.7"` | no |
+| <a name="input_database_version"></a> [database\_version](#input\_database\_version) | Azure Database for MySQL Flexible Server version. | `string` | `"8.4"` | no |
 | <a name="input_deletion_protection"></a> [deletion\_protection](#input\_deletion\_protection) | If the instance should have deletion protection enabled. The database / Bucket can't be deleted when this value is set to `true`. | `bool` | `true` | no |
 | <a name="input_disable_storage_vault_key_id"></a> [disable\_storage\_vault\_key\_id](#input\_disable\_storage\_vault\_key\_id) | Flag to disable the `customer_managed_key` block, the properties 'encryption.identity, encryption.keyvaultproperties' cannot be updated in a single operation. | `bool` | `false` | no |
 | <a name="input_domain_name"></a> [domain\_name](#input\_domain\_name) | Domain for accessing the Weights & Biases UI. | `string` | `null` | no |
@@ -118,9 +268,10 @@ resources that lack official modules.
 | <a name="input_enable_helm_wandb"></a> [enable\_helm\_wandb](#input\_enable\_helm\_wandb) | Enable or disable applying and releasing CR chart | `bool` | `true` | no |
 | <a name="input_enable_storage_vault_key"></a> [enable\_storage\_vault\_key](#input\_enable\_storage\_vault\_key) | Flag to enable managed key encryption for the storage account. | `bool` | `false` | no |
 | <a name="input_external_bucket"></a> [external\_bucket](#input\_external\_bucket) | config an external bucket | `any` | `null` | no |
-| <a name="input_external_redis_host"></a> [external\_redis\_host](#input\_external\_redis\_host) | host for the redis instance created externally | `string` | `null` | no |
-| <a name="input_external_redis_params"></a> [external\_redis\_params](#input\_external\_redis\_params) | queryVar params for redis instance created externally | `object({})` | `null` | no |
-| <a name="input_external_redis_port"></a> [external\_redis\_port](#input\_external\_redis\_port) | port for the redis instance created externally | `string` | `null` | no |
+| <a name="input_external_redis_host"></a> [external\_redis\_host](#input\_external\_redis\_host) | Hostname of the externally managed Redis instance. | `string` | `null` | no |
+| <a name="input_external_redis_params"></a> [external\_redis\_params](#input\_external\_redis\_params) | Connection parameters passed to the W&B chart for an externally managed Redis instance. | `object({})` | `null` | no |
+| <a name="input_external_redis_port"></a> [external\_redis\_port](#input\_external\_redis\_port) | Port of the externally managed Redis instance. | `string` | `null` | no |
+| <a name="input_key_vault_network_access"></a> [key\_vault\_network\_access](#input\_key\_vault\_network\_access) | Key Vault data-plane network mode. Public permits access from an external Terraform runner; Private disables public access and creates a private endpoint, subnet, private DNS zone, and VNet link. | `string` | `"Public"` | no |
 | <a name="input_kubernetes_cluster_tags"></a> [kubernetes\_cluster\_tags](#input\_kubernetes\_cluster\_tags) | A map of tags to apply to all resources managed by the AKS cluster | `map(string)` | `{}` | no |
 | <a name="input_kubernetes_instance_type"></a> [kubernetes\_instance\_type](#input\_kubernetes\_instance\_type) | Instance type for primary node group. Defaults to null and value from deployment-size.tf is used | `string` | `null` | no |
 | <a name="input_kubernetes_max_node_per_az"></a> [kubernetes\_max\_node\_per\_az](#input\_kubernetes\_max\_node\_per\_az) | Maximum number of nodes for the AKS cluster. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
@@ -141,18 +292,18 @@ resources that lack official modules.
 | <a name="input_operator_chart_version"></a> [operator\_chart\_version](#input\_operator\_chart\_version) | Version of the operator chart to deploy | `string` | `"1.4.2"` | no |
 | <a name="input_other_wandb_env"></a> [other\_wandb\_env](#input\_other\_wandb\_env) | Extra environment variables for W&B | `map(any)` | `{}` | no |
 | <a name="input_parquet_wandb_env"></a> [parquet\_wandb\_env](#input\_parquet\_wandb\_env) | Extra environment variables for W&B | `map(string)` | `{}` | no |
-| <a name="input_redis_capacity"></a> [redis\_capacity](#input\_redis\_capacity) | Number indicating size of an redis instance. Defaults to null and value from deployment-size.tf is used | `number` | `null` | no |
+| <a name="input_redis_sku_name"></a> [redis\_sku\_name](#input\_redis\_sku\_name) | Azure Managed Redis SKU. When null, the selected deployment size determines the SKU. | `string` | `null` | no |
 | <a name="input_size"></a> [size](#input\_size) | Deployment size | `string` | `"small"` | no |
-| <a name="input_ssl"></a> [ssl](#input\_ssl) | Enable SSL certificate | `bool` | `true` | no |
+| <a name="input_ssl"></a> [ssl](#input\_ssl) | Use HTTPS for the W&B application URL and ingress configuration. | `bool` | `true` | no |
 | <a name="input_storage_account"></a> [storage\_account](#input\_storage\_account) | Azure storage account name | `string` | `""` | no |
 | <a name="input_storage_key"></a> [storage\_key](#input\_storage\_key) | Azure primary storage access key | `string` | `""` | no |
-| <a name="input_subdomain"></a> [subdomain](#input\_subdomain) | Subdomain for accessing the Weights & Biases UI. Default creates record at Route53 Route. | `string` | `null` | no |
+| <a name="input_subdomain"></a> [subdomain](#input\_subdomain) | Optional subdomain for accessing the Weights & Biases UI. DNS records are managed outside this module. | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Map of tags for resource | `map(string)` | `{}` | no |
 | <a name="input_use_chainguard_redis"></a> [use\_chainguard\_redis](#input\_use\_chainguard\_redis) | Whether CHAINGUARD redis is deployed in the cluster | `bool` | `false` | no |
 | <a name="input_use_ctrlplane_redis"></a> [use\_ctrlplane\_redis](#input\_use\_ctrlplane\_redis) | Whether redis is deployed in the cluster via ctrlplane | `bool` | `false` | no |
-| <a name="input_use_dns_resolver"></a> [use\_dns\_resolver](#input\_use\_dns\_resolver) | [Internal Use Only] Use the dns01 solver disabling the auto setup of cert-manager | `bool` | `false` | no |
-| <a name="input_use_external_redis"></a> [use\_external\_redis](#input\_use\_external\_redis) | Boolean indicating whether to use the redis instance created externally | `bool` | `false` | no |
-| <a name="input_use_internal_queue"></a> [use\_internal\_queue](#input\_use\_internal\_queue) | Uses an internal redis queue instead of using azure queue. | `bool` | `false` | no |
+| <a name="input_use_dns_resolver"></a> [use\_dns\_resolver](#input\_use\_dns\_resolver) | [Internal Use Only] Skip the default cert-manager installation when an external DNS-01 certificate flow is provided. | `bool` | `false` | no |
+| <a name="input_use_external_redis"></a> [use\_external\_redis](#input\_use\_external\_redis) | Use an externally managed Redis instance instead of the module-managed instance. | `bool` | `false` | no |
+| <a name="input_use_internal_queue"></a> [use\_internal\_queue](#input\_use\_internal\_queue) | Use Redis for the internal queue instead of Azure Queue Storage. | `bool` | `false` | no |
 | <a name="input_wandb_image"></a> [wandb\_image](#input\_wandb\_image) | Docker repository of to pull the wandb image from. | `string` | `"wandb/local"` | no |
 | <a name="input_wandb_version"></a> [wandb\_version](#input\_wandb\_version) | The version of Weights & Biases local to deploy. | `string` | `"latest"` | no |
 | <a name="input_weave_wandb_env"></a> [weave\_wandb\_env](#input\_weave\_wandb\_env) | Extra environment variables for W&B | `map(string)` | `{}` | no |
@@ -181,13 +332,20 @@ resources that lack official modules.
 | <a name="output_wandb_spec"></a> [wandb\_spec](#output\_wandb\_spec) | n/a |
 <!-- END_TF_DOCS -->
 
+## Upgrading existing 7.x deployments
+
+The Azure Managed Redis, networking, database, and cert-manager changes planned
+for 8.x are not an automatic in-place upgrade. Follow the
+[existing-customer migration guide](MIGRATION.md) before changing the module
+version or applying a plan to existing infrastructure.
+
 ## Upgrading from 3.x to 4.x
 
 3.0.0 introduced autoscaling to the AKS cluster and made the `size` variable the preferred way to set the cluster size.
 Previously, unless the `size` variable was set explicitly, there were default values for the following variables:
 - `kubernetes_instance_type`
 - `kubernetes_node_count`
-- `redis_capacity`
+- `redis_sku_name`
 - `database_sku_name`
 
 The `size` variable is now defaulted to `small`, and the following values to can be used to partially override the values
@@ -195,7 +353,7 @@ set by the `size` variable:
 - `kubernetes_instance_type`
 - `kubernetes_min_node_per_az`
 - `kubernetes_max_node_per_az`
-- `redis_capacity`
+- `redis_sku_name`
 - `database_sku_name`
 
 For more information on the available sizes, see the [Cluster Sizing](#cluster-sizing) section.
@@ -227,4 +385,3 @@ provider "azapi" {
     # azapi provider configuration should be the same as azurerm provider configuration
 }
 ```
-

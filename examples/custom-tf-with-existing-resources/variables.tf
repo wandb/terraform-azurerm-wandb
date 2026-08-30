@@ -31,7 +31,7 @@ variable "domain_name" {
 variable "subdomain" {
   type        = string
   default     = "**"
-  description = "Subdomain for accessing the Weights & Biases UI. Default creates record at Route53 Route."
+  description = "Optional subdomain for accessing the Weights & Biases UI. DNS records are managed outside this example."
 }
 
 variable "wandb_version" {
@@ -188,6 +188,12 @@ variable "redis_env" {
     primary_access_key = "**"
     port               = "6379"
   }
+}
+
+variable "redis_tls_enabled" {
+  type        = bool
+  description = "Whether the external Redis endpoint requires TLS. Keep enabled for Azure Managed Redis."
+  default     = true
 }
 
 variable "aks_cluster_name" {

@@ -34,7 +34,13 @@ variable "network_private_subnet_cidr" {
 variable "network_redis_subnet_cidr" {
   default     = "10.10.2.0/24"
   type        = string
-  description = "(Optional) Subnet CIDR range for Redis"
+  description = "Subnet CIDR range used by the Azure Managed Redis private endpoint."
+}
+
+variable "network_key_vault_subnet_cidr" {
+  default     = "10.10.4.0/24"
+  type        = string
+  description = "Subnet CIDR range used by the Key Vault private endpoint."
 }
 
 variable "network_database_subnet_cidr" {
@@ -52,7 +58,7 @@ variable "network_kubernetes_subnet_cidr" {
 variable "network_allow_range" {
   default     = "*"
   type        = string
-  description = "(Optional) Network range to allow access to TFE"
+  description = "Network range allowed to access the deployment."
 }
 
 variable "tags" {
@@ -66,7 +72,19 @@ variable "private_link" {
   description = "Private link flag for multi region storage endpoint access"
 }
 
+variable "create_redis_private_endpoint" {
+  type        = bool
+  description = "Whether to prepare the Redis subnet and create the Managed Redis private DNS zone and VNet link."
+  default     = false
+}
+
+variable "create_key_vault_private_endpoint" {
+  type        = bool
+  description = "Whether to create the Key Vault private-endpoint subnet, private DNS zone, and VNet link."
+  default     = false
+}
+
 variable "allowed_ip_ranges" {
-  description = "allowed public IP addresses or CIDR ranges."
+  description = "Public IP addresses or CIDR ranges allowed by the deployment network security group."
   type        = list(string)
 }

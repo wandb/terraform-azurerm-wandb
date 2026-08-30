@@ -17,15 +17,43 @@ resource "azurerm_key_vault" "default" {
   resource_group_name      = var.resource_group.name
   tenant_id                = data.azurerm_client_config.current.tenant_id
   purge_protection_enabled = true
-  # https://learn.microsoft.com/en-us/azure/mysql/flexible-server/concepts-customer-managed-key#requirements-for-configuring-data-encryption-for-azure-database-for-mysql-flexible-server
-  soft_delete_retention_days  = 90 # This must be 90 for azure msyql flex server encryption. 
+  # Azure Database for MySQL customer-managed keys require a 90-day soft-delete
+  # retention period.
+  soft_delete_retention_days  = 90
   enabled_for_disk_encryption = true
+  # Public mode supports Terraform runs from laptops and hosted runners without
+  # VNet connectivity. Private mode disables public access and relies on the
+  # conditionally created private endpoint and vaultcore private DNS zone.
+  public_network_access_enabled = var.network_access == "Public"
 
   sku_name = "standard"
 
   network_acls {
     bypass         = "AzureServices"
-    default_action = "Allow"
+    default_action = var.network_access == "Private" ? "Deny" : "Allow"
+  }
+
+  tags = var.tags
+}
+
+resource "azurerm_private_endpoint" "default" {
+  count = var.network_access == "Private" ? 1 : 0
+
+  name                = "${var.namespace}-key-vault"
+  location            = var.location
+  resource_group_name = var.resource_group.name
+  subnet_id           = var.private_endpoint_subnet_id
+
+  private_service_connection {
+    name                           = "${var.namespace}-key-vault"
+    private_connection_resource_id = azurerm_key_vault.default.id
+    subresource_names              = ["vault"]
+    is_manual_connection           = false
+  }
+
+  private_dns_zone_group {
+    name                 = "key-vault"
+    private_dns_zone_ids = [var.private_dns_zone_id]
   }
 
   tags = var.tags
@@ -63,7 +91,7 @@ resource "azurerm_key_vault_key" "etcd" {
 
   key_opts = ["decrypt", "encrypt", "sign", "unwrapKey", "verify", "wrapKey", ]
 
-  depends_on = [azurerm_key_vault_access_policy.parent, azurerm_key_vault_access_policy.identity]
+  depends_on = [azurerm_key_vault_access_policy.parent, azurerm_key_vault_access_policy.identity, azurerm_private_endpoint.default]
 }
 
 resource "azurerm_key_vault_key" "intenral_encryption_keys" {
@@ -75,7 +103,7 @@ resource "azurerm_key_vault_key" "intenral_encryption_keys" {
 
   key_opts = ["decrypt", "encrypt", "sign", "unwrapKey", "verify", "wrapKey"]
 
-  depends_on = [azurerm_key_vault_access_policy.parent, azurerm_key_vault_access_policy.identity]
+  depends_on = [azurerm_key_vault_access_policy.parent, azurerm_key_vault_access_policy.identity, azurerm_private_endpoint.default]
 }
 
 resource "random_password" "weave_worker_auth" {
@@ -87,6 +115,8 @@ resource "azurerm_key_vault_secret" "weave_worker_auth" {
   name         = "weave-worker-auth"
   value        = random_password.weave_worker_auth.result
   key_vault_id = azurerm_key_vault.default.id
+
+  depends_on = [azurerm_key_vault_access_policy.parent, azurerm_private_endpoint.default]
 }
 
 resource "kubernetes_secret" "weave_worker_auth" {

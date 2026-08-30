@@ -24,7 +24,7 @@ variable "deletion_protection" {
 
 variable "use_internal_queue" {
   type        = bool
-  description = "Uses an internal redis queue instead of using azure queue."
+  description = "Use Redis for the internal queue instead of Azure Queue Storage."
   default     = false
 }
 
@@ -126,34 +126,49 @@ variable "domain_name" {
 variable "subdomain" {
   type        = string
   default     = null
-  description = "Subdomain for accessing the Weights & Biases UI. Default creates record at Route53 Route."
+  description = "Optional subdomain for accessing the Weights & Biases UI. DNS records are managed outside this module."
 }
 
 variable "ssl" {
   type        = bool
   default     = true
-  description = "Enable SSL certificate"
+  description = "Use HTTPS for the W&B application URL and ingress configuration."
 }
 
-# Passthroughs for the cert_manager/issuer modules
-# To handle possible use of a dns01 solver
+# Passthrough for deployments that provide their own DNS-01 solver. The default
+# public deployment installs cert-manager and uses an HTTP-01 challenge through
+# Azure Application Gateway.
 variable "use_dns_resolver" {
   type        = bool
   default     = false
-  description = "[Internal Use Only] Use the dns01 solver disabling the auto setup of cert-manager"
+  description = "[Internal Use Only] Skip the default cert-manager installation when an external DNS-01 certificate flow is provided."
+}
+
+##########################################
+# Key Vault                              #
+##########################################
+variable "key_vault_network_access" {
+  type        = string
+  description = "Key Vault data-plane network mode. Public permits access from an external Terraform runner; Private disables public access and creates a private endpoint, subnet, private DNS zone, and VNet link."
+  default     = "Public"
+
+  validation {
+    condition     = contains(["Private", "Public"], var.key_vault_network_access)
+    error_message = "key_vault_network_access must be either \"Private\" or \"Public\"."
+  }
 }
 
 ##########################################
 # Database                               #
 ##########################################
 variable "database_version" {
-  description = "Version for MySQL"
+  description = "Azure Database for MySQL Flexible Server version."
   type        = string
-  default     = "5.7"
+  default     = "8.4"
 }
 
 variable "database_availability_mode" {
-  description = ""
+  description = "High-availability mode for Azure Database for MySQL Flexible Server."
   type        = string
   default     = "SameZone"
 
@@ -186,37 +201,43 @@ variable "database_sort_buffer_size" {
 ##########################################
 variable "create_redis" {
   type        = bool
-  description = "Boolean indicating whether to provision an redis instance (true) or not (false)."
+  description = "Whether to provision an Azure Managed Redis instance."
   default     = true
 }
 
-variable "redis_capacity" {
-  type        = number
-  description = "Number indicating size of an redis instance. Defaults to null and value from deployment-size.tf is used"
+variable "redis_sku_name" {
+  type        = string
+  description = "Azure Managed Redis SKU. When null, the selected deployment size determines the SKU."
   default     = null
+}
+
+variable "create_redis_private_endpoint" {
+  type        = bool
+  description = "Whether to disable Redis public access and create a private endpoint plus private DNS integration in the module VNet."
+  default     = true
 }
 
 variable "use_external_redis" {
   type        = bool
-  description = "Boolean indicating whether to use the redis instance created externally"
+  description = "Use an externally managed Redis instance instead of the module-managed instance."
   default     = false
 }
 
 variable "external_redis_host" {
   type        = string
-  description = "host for the redis instance created externally"
+  description = "Hostname of the externally managed Redis instance."
   default     = null
 }
 
 variable "external_redis_port" {
   type        = string
-  description = "port for the redis instance created externally"
+  description = "Port of the externally managed Redis instance."
   default     = null
 }
 
 variable "external_redis_params" {
   type        = object({})
-  description = "queryVar params for redis instance created externally"
+  description = "Connection parameters passed to the W&B chart for an externally managed Redis instance."
   default     = null
 }
 
