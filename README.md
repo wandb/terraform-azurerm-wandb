@@ -47,7 +47,7 @@ resources that lack official modules.
 ## Requirements
 
 | Name | Version |
-| ---- | ------- |
+|------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 1.9 |
 | <a name="requirement_azapi"></a> [azapi](#requirement\_azapi) | ~> 1.0 |
 | <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | ~> 4.26 |
@@ -58,7 +58,7 @@ resources that lack official modules.
 ## Providers
 
 | Name | Version |
-| ---- | ------- |
+|------|---------|
 | <a name="provider_azapi"></a> [azapi](#provider\_azapi) | ~> 1.0 |
 | <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | ~> 4.26 |
 | <a name="provider_null"></a> [null](#provider\_null) | ~> 3.0 |
@@ -66,7 +66,7 @@ resources that lack official modules.
 ## Modules
 
 | Name | Source | Version |
-| ---- | ------ | ------- |
+|------|--------|---------|
 | <a name="module_app_aks"></a> [app\_aks](#module\_app\_aks) | ./modules/app_aks | n/a |
 | <a name="module_app_lb"></a> [app\_lb](#module\_app\_lb) | ./modules/app_lb | n/a |
 | <a name="module_cert_manager"></a> [cert\_manager](#module\_cert\_manager) | ./modules/cert_manager | n/a |
@@ -85,14 +85,14 @@ resources that lack official modules.
 ## Resources
 
 | Name | Type |
-| ---- | ---- |
+|------|------|
 | [azapi_resource_list.az_zones](https://registry.terraform.io/providers/azure/azapi/latest/docs/data-sources/resource_list) | data source |
 | [azurerm_subscription.current](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/subscription) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-| ---- | ----------- | ---- | ------- | :------: |
+|------|-------------|------|---------|:--------:|
 | <a name="input_additional_vault_list_only_principal_ids"></a> [additional\_vault\_list\_only\_principal\_ids](#input\_additional\_vault\_list\_only\_principal\_ids) | Tenant-local principal object IDs allowed to list Key Vault metadata. Leave empty for customer deployments. | `set(string)` | `[]` | no |
 | <a name="input_allowed_ip_ranges"></a> [allowed\_ip\_ranges](#input\_allowed\_ip\_ranges) | Allowed public IP addresses or CIDR ranges. | `list(string)` | `[]` | no |
 | <a name="input_allowed_subscriptions"></a> [allowed\_subscriptions](#input\_allowed\_subscriptions) | List of allowed customer subscriptions coma seperated values | `string` | `""` | no |
@@ -161,7 +161,7 @@ resources that lack official modules.
 ## Outputs
 
 | Name | Description |
-| ---- | ----------- |
+|------|-------------|
 | <a name="output_address"></a> [address](#output\_address) | n/a |
 | <a name="output_aks_max_node_count"></a> [aks\_max\_node\_count](#output\_aks\_max\_node\_count) | n/a |
 | <a name="output_aks_min_node_count"></a> [aks\_min\_node\_count](#output\_aks\_min\_node\_count) | n/a |
