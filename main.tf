@@ -87,6 +87,8 @@ module "vault" {
   enable_database_vault_key = var.enable_database_vault_key
   enable_storage_vault_key  = var.enable_storage_vault_key
 
+  additional_list_only_principal_ids = var.additional_vault_list_only_principal_ids
+
   tags = var.tags
 }
 

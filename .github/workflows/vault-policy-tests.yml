@@ -1,0 +1,26 @@
+name: Vault policy tests
+
+on:
+  pull_request:
+    paths:
+      - "**/*.tf"
+      - "tests/**"
+      - ".github/workflows/vault-policy-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  policies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4
+        with:
+          terraform_version: "1.9.8"
+      - run: terraform init -backend=false -input=false
+      - run: terraform validate -no-color
+      - run: terraform test -filter=tests/vault_list_policies.tftest.hcl -no-color

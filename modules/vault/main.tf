@@ -55,6 +55,28 @@ resource "azurerm_key_vault_access_policy" "identity" {
   depends_on = [azurerm_key_vault.default]
 }
 
+resource "azurerm_key_vault_access_policy" "additional_list_only" {
+  for_each = toset([for id in var.additional_list_only_principal_ids : lower(id)])
+
+  key_vault_id = azurerm_key_vault.default.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = each.value
+
+  key_permissions         = ["List"]
+  secret_permissions      = ["List"]
+  certificate_permissions = ["List"]
+
+  lifecycle {
+    precondition {
+      condition = !contains([
+        lower(data.azurerm_client_config.current.object_id),
+        lower(var.identity_object_id),
+      ], each.value)
+      error_message = "List-only principals must not overlap the deployer or workload identity policies."
+    }
+  }
+}
+
 resource "azurerm_key_vault_key" "etcd" {
   name         = "generated-etcd-key"
   key_vault_id = azurerm_key_vault.default.id
