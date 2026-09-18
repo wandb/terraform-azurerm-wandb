@@ -27,7 +27,7 @@ variable "domain_name" {
 variable "subdomain" {
   type        = string
   default     = null
-  description = "Subdomain for accessing the Weights & Biases UI. Default creates record at Route53 Route."
+  description = "Optional subdomain for accessing the Weights & Biases UI."
 }
 
 variable "wandb_version" {

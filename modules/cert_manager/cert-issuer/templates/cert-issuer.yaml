@@ -5,13 +5,15 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   acme:
-    # The ACME server URL
+    # External ACME directory used for certificate issuance. Let's Encrypt
+    # production issues publicly trusted certificates; staging is for testing.
     server: {{ .Values.acmeServer }}
     email: {{ .Values.acmeEmail }}
-    # Name of a secret used to store the ACME account private key
+    # This secret contains the ACME account key, not the W&B TLS private key.
     privateKeySecretRef:
       name: {{ .Values.privateKeySecretRef }}
-    # Enable the HTTP-01 challenge provider
+    # Let's Encrypt reaches the public hostname on port 80. AGIC routes the
+    # temporary solver ingress through Azure Application Gateway.
     solvers:
     - http01:
         ingress:

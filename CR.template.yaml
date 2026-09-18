@@ -1,0 +1,312 @@
+# W&B deployment template for Azure AKS.
+#
+# Copy this file to CR.yaml and replace every REPLACE_ME_* value with outputs
+# from the matching Terraform deployment before applying:
+#   cp CR.template.yaml CR.yaml
+#   kubectl apply --dry-run=server -f CR.yaml
+#   kubectl apply -f CR.yaml
+#
+# Keep the completed CR.yaml out of source control. The storage access key is
+# currently supplied inline because all application containers cannot yet be
+# assumed to use Azure Workload Identity for storage access.
+#
+# Create the three referenced Kubernetes secrets in the same namespace as this
+# WeightsAndBiases resource. The following commands create or update them. Avoid
+# placing real secret values in shell history; prefer reading them from a secure
+# secret manager or Terraform output.
+#
+#   kubectl create secret generic wandb-license \
+#     --namespace REPLACE_ME_NAMESPACE \
+#     --from-literal=license='REPLACE_ME_WANDB_LICENSE' \
+#     --dry-run=client -o yaml | kubectl apply -f -
+#
+#   kubectl create secret generic wandb-mysql \
+#     --namespace REPLACE_ME_NAMESPACE \
+#     --from-literal=password='REPLACE_ME_MYSQL_PASSWORD' \
+#     --dry-run=client -o yaml | kubectl apply -f -
+#
+#   kubectl create secret generic wandb-redis \
+#     --namespace REPLACE_ME_NAMESPACE \
+#     --from-literal=password='REPLACE_ME_REDIS_ACCESS_KEY' \
+#     --dry-run=client -o yaml | kubectl apply -f -
+#
+# Verify only the secret names and expected keys; do not print their values:
+#   kubectl get secret -n REPLACE_ME_NAMESPACE \
+#     wandb-license wandb-mysql wandb-redis \
+#     -o custom-columns=NAME:.metadata.name,TYPE:.type
+
+apiVersion: apps.wandb.com/v1
+kind: WeightsAndBiases
+metadata:
+  # Usually "wandb". Change this only when you intentionally want a different
+  # W&B custom-resource name.
+  name: wandb
+  # Namespace in which the application and its three secrets will reside.
+  namespace: REPLACE_ME_NAMESPACE
+  labels:
+    app.kubernetes.io/name: weightsandbiases
+    app.kubernetes.io/instance: wandb
+spec:
+  values:
+    api:
+      serviceAccount:
+        name: wandb-api
+        annotations:
+          # Client ID of the user-assigned managed identity created for W&B.
+          azure.workload.identity/client-id: REPLACE_ME_MANAGED_IDENTITY_CLIENT_ID
+        labels:
+          azure.workload.identity/use: "true"
+      podLabels:
+        azure.workload.identity/use: "true"
+      pod:
+        labels:
+          azure.workload.identity/use: "true"
+
+    app:
+      serviceAccount:
+        name: wandb-app
+        annotations:
+          azure.workload.identity/client-id: REPLACE_ME_MANAGED_IDENTITY_CLIENT_ID
+        labels:
+          azure.workload.identity/use: "true"
+      podLabels:
+        azure.workload.identity/use: "true"
+      pod:
+        labels:
+          azure.workload.identity/use: "true"
+      # Full AKS OIDC issuer URL, including the trailing slash. These subjects
+      # must use the same namespace as metadata.namespace above.
+      internalJWTMap:
+        - issuer: REPLACE_ME_AKS_OIDC_ISSUER_URL
+          subject: system:serviceaccount:REPLACE_ME_NAMESPACE:wandb-weave-trace
+        - issuer: REPLACE_ME_AKS_OIDC_ISSUER_URL
+          subject: system:serviceaccount:REPLACE_ME_NAMESPACE:wandb-weave-trace-worker
+
+    bufstream:
+      serviceAccount:
+        name: bufstream-service-account
+        annotations:
+          azure.workload.identity/client-id: REPLACE_ME_MANAGED_IDENTITY_CLIENT_ID
+        labels:
+          azure.workload.identity/use: "true"
+      podLabels:
+        azure.workload.identity/use: "true"
+      pod:
+        labels:
+          azure.workload.identity/use: "true"
+
+    console:
+      serviceAccount:
+        name: wandb-console
+        annotations:
+          azure.workload.identity/client-id: REPLACE_ME_MANAGED_IDENTITY_CLIENT_ID
+        labels:
+          azure.workload.identity/use: "true"
+      podLabels:
+        azure.workload.identity/use: "true"
+      pod:
+        labels:
+          azure.workload.identity/use: "true"
+      extraEnv:
+        # Keep this format; replace the identity, tenant, and issuer values.
+        BUCKET_ACCESS_IDENTITY: "CLIENT_ID=REPLACE_ME_MANAGED_IDENTITY_CLIENT_ID - TENANT_ID=REPLACE_ME_AZURE_TENANT_ID - OIDC_ISSUER_URL=REPLACE_ME_AKS_OIDC_ISSUER_URL"
+
+    executor:
+      serviceAccount:
+        name: wandb-executor
+        annotations:
+          azure.workload.identity/client-id: REPLACE_ME_MANAGED_IDENTITY_CLIENT_ID
+        labels:
+          azure.workload.identity/use: "true"
+      podLabels:
+        azure.workload.identity/use: "true"
+      pod:
+        labels:
+          azure.workload.identity/use: "true"
+
+    filemeta:
+      serviceAccount:
+        name: wandb-filemeta
+        annotations:
+          azure.workload.identity/client-id: REPLACE_ME_MANAGED_IDENTITY_CLIENT_ID
+        labels:
+          azure.workload.identity/use: "true"
+
+    filestream:
+      serviceAccount:
+        name: wandb-filestream
+        annotations:
+          azure.workload.identity/client-id: REPLACE_ME_MANAGED_IDENTITY_CLIENT_ID
+        labels:
+          azure.workload.identity/use: "true"
+      podLabels:
+        azure.workload.identity/use: "true"
+      pod:
+        labels:
+          azure.workload.identity/use: "true"
+
+    global:
+      # Public HTTPS URL configured in DNS for the Application Gateway.
+      host: https://REPLACE_ME_WANDB_HOSTNAME
+      cloudProvider: azure
+      # Match the Terraform deployment size unless intentionally overridden.
+      size: REPLACE_ME_DEPLOYMENT_SIZE
+      operator:
+        # Namespace where the W&B operator is installed; commonly "wandb".
+        namespace: REPLACE_ME_OPERATOR_NAMESPACE
+
+      licenseSecret:
+        # Must match the wandb-license command documented above.
+        name: wandb-license
+        key: license
+
+      defaultBucket:
+        provider: az
+        # Azure Storage account name, without a URL or protocol prefix.
+        name: REPLACE_ME_STORAGE_ACCOUNT_NAME
+        # Blob container and optional prefix, for example "wandb/".
+        path: REPLACE_ME_STORAGE_CONTAINER_AND_PATH
+        # Sensitive: never commit a completed CR containing this value.
+        accessKey: REPLACE_ME_AZURE_STORAGE_ACCESS_KEY
+
+      azureIdentityForBucket:
+        clientID: REPLACE_ME_MANAGED_IDENTITY_CLIENT_ID
+        tenantID: REPLACE_ME_AZURE_TENANT_ID
+
+      extraEnv:
+        # Azure Key Vault URI must include the trailing slash.
+        GORILLA_CUSTOMER_SECRET_STORE_AZ_CONFIG_VAULT_URI: https://REPLACE_ME_KEY_VAULT_NAME.vault.azure.net/
+        GORILLA_CUSTOMER_SECRET_STORE_SOURCE: az-secretmanager://wandb
+        GORILLA_SECRET_STORE_AZ_CONFIG_VAULT_URI: https://REPLACE_ME_KEY_VAULT_NAME.vault.azure.net/
+        GORILLA_SECRET_STORE_SOURCE: az-secretmanager://wandb
+
+      mysql:
+        # Azure Database for MySQL Flexible Server FQDN.
+        host: REPLACE_ME_MYSQL_HOSTNAME
+        port: 3306
+        database: REPLACE_ME_MYSQL_DATABASE
+        user: REPLACE_ME_MYSQL_USERNAME
+        passwordSecret:
+          # Must match the wandb-mysql command documented above.
+          name: wandb-mysql
+          passwordKey: password
+
+      redis:
+        # Azure Managed Redis service hostname. Private DNS resolves this name
+        # to the private endpoint from inside the deployment VNet.
+        host: REPLACE_ME_REDIS_HOSTNAME
+        port: REPLACE_ME_REDIS_TLS_PORT
+        external: false
+        params:
+          master: ""
+          # Required because Azure Managed Redis is configured as encrypted-only.
+          tls: true
+        secret:
+          # Must match the wandb-redis command documented above.
+          secretName: wandb-redis
+          secretKey: password
+
+    glue:
+      serviceAccount:
+        name: wandb-glue
+        annotations:
+          azure.workload.identity/client-id: REPLACE_ME_MANAGED_IDENTITY_CLIENT_ID
+        labels:
+          azure.workload.identity/use: "true"
+      podLabels:
+        azure.workload.identity/use: "true"
+      pod:
+        labels:
+          azure.workload.identity/use: "true"
+
+    parquet:
+      serviceAccount:
+        name: wandb-parquet
+        annotations:
+          azure.workload.identity/client-id: REPLACE_ME_MANAGED_IDENTITY_CLIENT_ID
+        labels:
+          azure.workload.identity/use: "true"
+      podLabels:
+        azure.workload.identity/use: "true"
+      pod:
+        labels:
+          azure.workload.identity/use: "true"
+
+    settingsMigrationJob:
+      serviceAccount:
+        name: wandb-settings-migration-job
+        annotations:
+          azure.workload.identity/client-id: REPLACE_ME_MANAGED_IDENTITY_CLIENT_ID
+        labels:
+          azure.workload.identity/use: "true"
+      podLabels:
+        azure.workload.identity/use: "true"
+      pod:
+        labels:
+          azure.workload.identity/use: "true"
+
+    weave:
+      serviceAccount:
+        name: wandb-weave
+        annotations:
+          azure.workload.identity/client-id: REPLACE_ME_MANAGED_IDENTITY_CLIENT_ID
+        labels:
+          azure.workload.identity/use: "true"
+      podLabels:
+        azure.workload.identity/use: "true"
+      pod:
+        labels:
+          azure.workload.identity/use: "true"
+
+    weave-trace:
+      serviceAccount:
+        name: wandb-weave-trace
+        annotations:
+          azure.workload.identity/client-id: REPLACE_ME_MANAGED_IDENTITY_CLIENT_ID
+        labels:
+          azure.workload.identity/use: "true"
+      podLabels:
+        azure.workload.identity/use: "true"
+      pod:
+        labels:
+          azure.workload.identity/use: "true"
+
+    podLabels:
+      azure.workload.identity/use: "true"
+    pod:
+      labels:
+        azure.workload.identity/use: "true"
+
+    # Use the Azure-managed MySQL and Redis services instead of installing
+    # database/cache charts inside AKS.
+    mysql:
+      install: false
+    redis:
+      install: false
+
+    ingress:
+      labels: {}
+      annotations:
+        appgw.ingress.kubernetes.io/request-timeout: "300"
+        cert-manager.io/acme-challenge-type: http01
+        cert-manager.io/cluster-issuer: cert-issuer
+        kubernetes.io/ingress.class: azure/application-gateway
+      issuer:
+        # cert-manager and cert-issuer are installed separately by Terraform.
+        create: false
+      tls:
+        - hosts:
+            - REPLACE_ME_WANDB_HOSTNAME
+          secretName: wandb-ssl-cert
+      secondary:
+        # Enable only when a private secondary ingress is required.
+        create: false
+        nameOverride: REPLACE_ME_NAMESPACE-private-ingress
+        annotations:
+          appgw.ingress.kubernetes.io/request-timeout: "300"
+          appgw.ingress.kubernetes.io/use-private-ip: "true"
+          kubernetes.io/ingress.class: azure/application-gateway
+        tls:
+          - hosts:
+              - REPLACE_ME_WANDB_HOSTNAME
+            secretName: wandb-ssl-cert

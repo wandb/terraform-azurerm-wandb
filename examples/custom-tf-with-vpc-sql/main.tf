@@ -8,16 +8,16 @@ provider "azurerm" {
 provider "kubernetes" {
   host                   = module.app_aks.cluster_host
   cluster_ca_certificate = base64decode(module.app_aks.cluster_ca_certificate)
-  client_key             = base64decode(module.wandb.cluster_client_key)
-  client_certificate     = base64decode(module.wandb.cluster_client_certificate)
+  client_key             = base64decode(module.app_aks.cluster_client_key)
+  client_certificate     = base64decode(module.app_aks.cluster_client_certificate)
 }
 
 provider "helm" {
   kubernetes {
     host                   = module.app_aks.cluster_host
-    cluster_ca_certificate = base64decode(module.wandb.cluster_ca_certificate)
-    client_key             = base64decode(module.wandb.cluster_client_key)
-    client_certificate     = base64decode(module.wandb.cluster_client_certificate)
+    cluster_ca_certificate = base64decode(module.app_aks.cluster_ca_certificate)
+    client_key             = base64decode(module.app_aks.cluster_client_key)
+    client_certificate     = base64decode(module.app_aks.cluster_client_certificate)
   }
 }
 
@@ -44,10 +44,14 @@ module "identity" {
 
 
 module "redis" {
-  source              = "../../modules/redis"
-  namespace           = var.namespace
-  resource_group_name = local.resource_group.name
-  location            = local.resource_group.location
+  source                   = "../../modules/redis"
+  namespace                = var.namespace
+  resource_group_name      = local.resource_group.name
+  location                 = local.resource_group.location
+  sku_name                 = var.redis_sku_name
+  private_endpoint_enabled = false
+
+  tags = var.tags
 }
 
 module "vault" {
@@ -66,7 +70,7 @@ module "storage" {
   source = "../../modules/storage"
 
   namespace           = var.namespace
-  resource_group_name = local.resource_group.name.name
+  resource_group_name = local.resource_group.name
   location            = local.resource_group.location
   create_queue        = !var.use_internal_queue
   deletion_protection = var.deletion_protection
@@ -82,6 +86,8 @@ module "app_lb" {
   location       = local.resource_group.location
   network        = local.network
   public_subnet  = local.public_subnet
+  private_subnet = local.private_subnet
+  private_link   = false
 
   tags = var.tags
 }
@@ -90,16 +96,19 @@ module "app_aks" {
   source     = "../../modules/app_aks"
   depends_on = [module.app_lb]
 
-  cluster_subnet_id     = local.private_subnet.id
-  etcd_key_vault_key_id = module.vault.etcd_key_id
-  gateway               = module.app_lb.gateway
-  identity              = module.identity.identity
-  location              = local.resource_group.location
-  namespace             = var.namespace
-  node_pool_vm_count    = var.kubernetes_node_count
-  node_pool_vm_size     = var.kubernetes_instance_type
-  public_subnet         = local.public_subnet
-  resource_group        = local.resource_group
+  cluster_subnet_id        = local.private_subnet.id
+  etcd_key_vault_key_id    = module.vault.etcd_key_id
+  key_vault_network_access = "Public"
+  gateway                  = module.app_lb.gateway
+  identity                 = module.identity.identity
+  location                 = local.resource_group.location
+  namespace                = var.namespace
+  node_pool_min_vm_per_az  = var.kubernetes_node_count
+  node_pool_max_vm_per_az  = var.kubernetes_node_count
+  node_pool_vm_size        = var.kubernetes_instance_type
+  node_pool_zones          = ["1"]
+  public_subnet            = local.public_subnet
+  resource_group           = local.resource_group
 
   tags = var.tags
 }
@@ -115,7 +124,7 @@ locals {
   bucket          = "az://${local.storage_account}/${local.blob_container}"
   queue           = (var.use_internal_queue || var.blob_container == "" || var.external_bucket == null) ? "internal://" : "az://${local.account_name}/${local.queue_name}"
 
-  redis_connection_string = "redis://:${module.redis.instance.primary_access_key}@${module.redis.instance.hostname}:${module.redis.instance.port}"
+  redis_connection_string = "redis://:${module.redis.instance.primary_access_key}@${module.redis.instance.hostname}:${module.redis.instance.port}?tls=true"
 }
 
 locals {
@@ -137,7 +146,7 @@ module "cert_manager" {
 
   ingress_class              = "azure/application-gateway"
   cert_manager_email         = "sysadmin@wandb.com"
-  cert_manager_chart_version = "v1.9.1"
+  cert_manager_chart_version = "v1.21.0"
   tags                       = var.tags
 
   depends_on = [module.app_aks]
@@ -150,7 +159,6 @@ module "wandb" {
   depends_on = [
     module.app_aks,
     module.cert_manager,
-    module.database,
     module.storage,
   ]
   operator_chart_version = "1.1.2"
@@ -181,6 +189,9 @@ module "wandb" {
           host     = module.redis.instance.hostname
           password = module.redis.instance.primary_access_key
           port     = module.redis.instance.port
+          params = {
+            tls = true
+          }
         }
 
         extraEnv = var.other_wandb_env

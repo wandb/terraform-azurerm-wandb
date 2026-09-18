@@ -4,9 +4,20 @@ variable "cluster_subnet_id" {
 }
 
 variable "etcd_key_vault_key_id" {
-  description = "The ID of the key (stored in Key Vault) used to encryypt etcd's persistent storage."
+  description = "ID of the Key Vault key used by AKS KMS to encrypt etcd data at rest."
   nullable    = false
   type        = string
+}
+
+variable "key_vault_network_access" {
+  type        = string
+  description = "Network access mode for the Key Vault used by AKS KMS; must match the vault configuration."
+  default     = "Public"
+
+  validation {
+    condition     = contains(["Private", "Public"], var.key_vault_network_access)
+    error_message = "key_vault_network_access must be either \"Private\" or \"Public\"."
+  }
 }
 
 variable "gateway" {

@@ -6,7 +6,7 @@ locals {
       min_node_count   = 1,
       max_node_count   = 4,
       node_instance    = "Standard_E8s_v5"
-      cache            = "3"
+      cache            = "Balanced_B10"
       root_volume_size = 128
     },
     medium = {
@@ -14,7 +14,7 @@ locals {
       min_node_count   = 1,
       max_node_count   = 4,
       node_instance    = "Standard_E16s_v5"
-      cache            = "3"
+      cache            = "Balanced_B10"
       root_volume_size = 128
     },
     large = {
@@ -22,7 +22,7 @@ locals {
       min_node_count   = 1,
       max_node_count   = 4,
       node_instance    = "Standard_E16s_v5"
-      cache            = "4"
+      cache            = "Balanced_B20"
       root_volume_size = 256
     },
     xlarge = {
@@ -30,7 +30,7 @@ locals {
       min_node_count   = 1,
       max_node_count   = 4,
       node_instance    = "Standard_E16s_v5"
-      cache            = "4"
+      cache            = "Balanced_B20"
       root_volume_size = 256
     },
     xxlarge = {
@@ -38,7 +38,7 @@ locals {
       min_node_count   = 1,
       max_node_count   = 4,
       node_instance    = "Standard_E16s_v5"
-      cache            = "5"
+      cache            = "Balanced_B50"
       root_volume_size = 256
     }
   }

@@ -12,16 +12,16 @@ resource "helm_release" "cert_manager" {
   create_namespace = true
 
   set {
-    name  = "installCRDs"
+    # cert-manager v1.15+ uses crds.enabled; the legacy installCRDs value is no
+    # longer used by current chart versions.
+    name  = "crds.enabled"
     value = true
   }
 }
 
-# It requires creating a module and referencing a custom helm chart for the
-# cert-issuer. It's not ideal given the amount of effort that has to be used to
-# create it for custom needs, but once it's created, it's a reusable, modular
-# solution.
-# https://stackoverflow.com/questions/69765121/how-to-avoid-clusterissuer-dependency-on-helm-cert-manager-crds-in-terraform-pla
+# Install the local ClusterIssuer chart only after the cert-manager CRDs and
+# webhook are available. The issuer registers an ACME account and configures the
+# Azure Application Gateway ingress class for HTTP-01 validation.
 resource "helm_release" "cert_issuer" {
   name       = "cert-issuer"
   chart      = "cert-issuer"

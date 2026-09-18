@@ -7,7 +7,3 @@ acmeServer: "https://acme-v02.api.letsencrypt.org/directory"
 ingressClass: "azure/application-gateway"
 
 privateKeySecretRef: "letsencrypt"
-
-# Set Values for cert-issuer dependency chart
-cert-manager:
-  installCRDs: true

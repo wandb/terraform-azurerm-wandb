@@ -8,6 +8,9 @@
 # .tfvars files
 **/*.tfvars
 
+# Saved Terraform plans can contain sensitive values from state and variables.
+**/tfplan*
+
 # Terraform lock file
 **/.terraform.lock.hcl
 
@@ -23,3 +26,7 @@
 
 **/wandb/*
 **/policy.json
+
+# Rendered W&B custom resources can contain live storage credentials. Keep the
+# sanitized CR.template.yaml tracked and ignore environment-specific CR files.
+*CR.yaml
