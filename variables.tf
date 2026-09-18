@@ -384,6 +384,21 @@ variable "enable_storage_vault_key" {
   description = "Flag to enable managed key encryption for the storage account."
 }
 
+variable "additional_vault_list_only_principal_ids" {
+  type        = set(string)
+  description = "Tenant-local principal object IDs allowed to list Key Vault metadata. Leave empty for customer deployments."
+  default     = []
+  nullable    = false
+
+  validation {
+    condition = alltrue([
+      for id in var.additional_vault_list_only_principal_ids :
+      can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", id))
+    ])
+    error_message = "Additional list-only principals must be non-null UUID object IDs."
+  }
+}
+
 variable "disable_storage_vault_key_id" {
   type        = bool
   default     = false

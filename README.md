@@ -93,6 +93,7 @@ resources that lack official modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_additional_vault_list_only_principal_ids"></a> [additional\_vault\_list\_only\_principal\_ids](#input\_additional\_vault\_list\_only\_principal\_ids) | Tenant-local principal object IDs allowed to list Key Vault metadata. Leave empty for customer deployments. | `set(string)` | `[]` | no |
 | <a name="input_allowed_ip_ranges"></a> [allowed\_ip\_ranges](#input\_allowed\_ip\_ranges) | Allowed public IP addresses or CIDR ranges. | `list(string)` | `[]` | no |
 | <a name="input_allowed_subscriptions"></a> [allowed\_subscriptions](#input\_allowed\_subscriptions) | List of allowed customer subscriptions coma seperated values | `string` | `""` | no |
 | <a name="input_app_wandb_env"></a> [app\_wandb\_env](#input\_app\_wandb\_env) | Extra environment variables for W&B | `map(string)` | `{}` | no |
