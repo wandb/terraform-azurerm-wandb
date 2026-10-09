@@ -22,3 +22,8 @@ output "cluster_ca_certificate" {
 output "oidc_issuer_url" {
   value = azurerm_kubernetes_cluster.default.oidc_issuer_url
 }
+
+output "kube_audit_log_analytics_workspace_id" {
+  description = "ID of the Log Analytics workspace receiving AKS control-plane audit logs (null when audit logging is disabled)."
+  value       = local.kube_audit_workspace_id
+}
