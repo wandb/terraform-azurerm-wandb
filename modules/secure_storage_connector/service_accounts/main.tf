@@ -1,17 +1,16 @@
 locals {
   k8s_sa_map = {
-    api                  = "wandb-api",
-    console              = "wandb-console",
-    executor             = "wandb-executor",
-    parquet              = "wandb-parquet",
-    filestream           = "wandb-filestream",
-    filemeta             = "wandb-filemeta",
-    glue                 = "wandb-glue",
-    weave                = "wandb-weave",
-    weaveTrace           = "wandb-weave-trace",
-    settingsMigrationJob = "wandb-settings-migration-job",
-    bufstream            = "bufstream-service-account",
-    bucketAccess         = "wandb-bucket-access"
+    api          = "wandb-api",
+    console      = "wandb-console",
+    executor     = "wandb-executor",
+    parquet      = "wandb-parquet",
+    filestream   = "wandb-filestream",
+    filemeta     = "wandb-filemeta",
+    glue         = "wandb-glue",
+    weave        = "wandb-weave",
+    weaveTrace   = "wandb-weave-trace",
+    bufstream    = "bufstream-service-account",
+    bucketAccess = "wandb-bucket-access"
     # "flatRunFieldsUpdater" = "wandb-flat-run-fields-updater",
   }
 }

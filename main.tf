@@ -586,18 +586,6 @@ locals {
         podLabels = { "azure.workload.identity/use" = "true" }
       }
 
-      settingsMigrationJob = {
-        serviceAccount = {
-          name        = local.k8s_sa_map.settingsMigrationJob
-          annotations = { "azure.workload.identity/client-id" = module.identity.identity.client_id }
-          labels      = { "azure.workload.identity/use" = "true" }
-        }
-        pod = {
-          labels = { "azure.workload.identity/use" = "true" }
-        }
-        podLabels = { "azure.workload.identity/use" = "true" }
-      }
-
       glue = {
         serviceAccount = {
           name        = local.k8s_sa_map.glue
